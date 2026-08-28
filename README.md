@@ -79,6 +79,16 @@ Open `vs2022/CMotive.NativeFrontend.vcxproj` to build the C frontend with Visual
 
 The older package scaffold project remains available for package-source references, but it is no longer the active frontend build path.
 
+
+## VS2022 compatibility update
+
+The native frontend has been adjusted for MSVC/Visual Studio 2022 C compilation:
+
+- The parser helper previously named `accept` is now `parser_accept`, avoiding collision with Winsock's `accept()` declaration from Windows headers.
+- The stack formatting buffer previously named `small` is now `stackbuf`, avoiding the Windows `small` macro/type collision.
+- Windows builds alias `strtok_r` to MSVC `strtok_s`, preventing implicit-int pointer warnings under MSVC C mode.
+- Temporary generated C files use `%TEMP%`/`%TMP%` on Windows instead of a hard-coded `/tmp` path.
+
 ## Complete feature pass update
 
 The C frontend includes concrete paths for template-oriented lowering, exception cleanup frames, package loading, native sockets, STL helpers, auto `Get`/`Set`/`Getall`/`Setall` materialization, `Operation` overload lowering, `Tstore`/`ThreadStore`, package-scope `Global` declarations from any source location, and `Fptr` function-pointer typedef declarations. `Overridable` is the formal vtable keyword; pure virtual methods use `Overridable` and `()=0;` with no body.

@@ -17,9 +17,16 @@
 #include <errno.h>
 #include <time.h>
 #if defined(_WIN32)
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
+#endif
+#ifndef NOMINMAX
+#define NOMINMAX 1
+#endif
 #include <direct.h>
 #include <process.h>
 #include <windows.h>
+#define strtok_r strtok_s
 #define PATH_SEP '\\'
 #else
 #include <unistd.h>
@@ -28,7 +35,7 @@
 #define PATH_SEP '/'
 #endif
 
-#define CMOTIVE_VERSION "0.2.3-cfrontend"
+#define CMOTIVE_VERSION "0.2.4-cfrontend"
 
 static void *xmalloc(size_t n) { void *p = malloc(n ? n : 1); if (!p) { fprintf(stderr, "cmotive: out of memory\n"); exit(99); } return p; }
 static void *xrealloc(void *p, size_t n) { void *r = realloc(p, n ? n : 1); if (!r) { fprintf(stderr, "cmotive: out of memory\n"); exit(99); } return r; }
@@ -66,7 +73,7 @@ static void sb_reserve(Str *b, size_t add) { if (b->n + add + 1u > b->cap) { whi
 static void sb_addn(Str *b, const char *s, size_t n) { sb_reserve(b, n); memcpy(b->s + b->n, s, n); b->n += n; b->s[b->n] = 0; }
 static void sb_add(Str *b, const char *s) { if (s) sb_addn(b, s, strlen(s)); }
 static void sb_ch(Str *b, char c) { sb_reserve(b, 1u); b->s[b->n++] = c; b->s[b->n] = 0; }
-static void sb_printf(Str *b, const char *fmt, ...) { char small[4096]; va_list ap; int n; va_start(ap, fmt); n = vsnprintf(small, sizeof(small), fmt, ap); va_end(ap); if (n < 0) return; if ((size_t)n < sizeof(small)) { sb_addn(b, small, (size_t)n); } else { char *p = (char*)xmalloc((size_t)n + 1u); va_start(ap, fmt); vsnprintf(p, (size_t)n + 1u, fmt, ap); va_end(ap); sb_addn(b, p, (size_t)n); free(p); } }
+static void sb_printf(Str *b, const char *fmt, ...) { char stackbuf[4096]; va_list ap; int n; va_start(ap, fmt); n = vsnprintf(stackbuf, sizeof(stackbuf), fmt, ap); va_end(ap); if (n < 0) return; if ((size_t)n < sizeof(stackbuf)) { sb_addn(b, stackbuf, (size_t)n); } else { char *p = (char*)xmalloc((size_t)n + 1u); va_start(ap, fmt); vsnprintf(p, (size_t)n + 1u, fmt, ap); va_end(ap); sb_addn(b, p, (size_t)n); free(p); } }
 static char *sb_take(Str *b) { char *r = b->s; b->s = NULL; b->n = b->cap = 0; return r; }
 
 /* dynamic string vector */
@@ -150,7 +157,7 @@ typedef struct Parser { Tok *t; int n, i; Program *prog; char *package; } Parser
 static Tok *pk(Parser *p, int off) { int j = p->i + off; if (j >= p->n) j = p->n - 1; return &p->t[j]; }
 static void skip_eol(Parser *p) { while (pk(p,0)->kind == TK_EOL) p->i++; }
 static int tok_is(Parser *p, const char *s) { return streq(pk(p,0)->v, s); }
-static int accept(Parser *p, const char *s) { skip_eol(p); if (tok_is(p,s)) { p->i++; return 1; } return 0; }
+static int parser_accept(Parser *p, const char *s) { skip_eol(p); if (tok_is(p,s)) { p->i++; return 1; } return 0; }
 static char *take_value(Parser *p) { char *r; skip_eol(p); r = xstrdup(pk(p,0)->v); p->i++; return r; }
 static void parse_error(Parser *p, const char *msg) { fprintf(stderr, "cmotive parse error at %d:%d: %s near '%s'\n", pk(p,0)->line, pk(p,0)->col, msg, pk(p,0)->v); }
 static int is_type_start(Tok *t) { static const char *types[] = {"Boolean","Bool","Char","Char16","Char32","Uchar","I16","Int16","I32","Int32","I64","Int","U16","Uint16","U32","Uint32","U64","Uint","Float","Double","Ldouble","Void","Type","Dynamic","Tstore","ThreadStore","Vector","Map","BinarySearchTree","CString","Path","Filesystem","Socket","Net","Thread","Threading","Algorithms","OStream","Formatter","Character","StringParser","Wide16String","Wide32String","Mutex",NULL}; int i; if (t->kind != TK_ID) return 0; for (i=0; types[i]; ++i) if (streq(t->v, types[i])) return 1; return 1; }
@@ -182,28 +189,28 @@ static char *collect_type(Parser *p) {
  return sb_take(&b);
 }
 static char *collect_until(Parser *p, const char *end) { Str b; int depth = 0; sb_init(&b); while (p->i < p->n) { Tok *t = pk(p,0); if (depth == 0 && streq(t->v, end)) break; if (streq(t->v, "(") || streq(t->v,"[") || streq(t->v,"{")) depth++; if (streq(t->v, ")") || streq(t->v,"]") || streq(t->v,"}")) depth--; if (t->kind != TK_EOL) { if (b.n) sb_ch(&b, ' '); sb_add(&b, t->v); } p->i++; } return sb_take(&b); }
-static void collect_body(Parser *p, Func *f) { int start, depth = 0, end; skip_eol(p); if (!accept(p, "{")) { f->body = NULL; f->body_n = 0; return; } start = p->i; depth = 1; while (p->i < p->n && depth) { if (streq(pk(p,0)->v,"{")) depth++; else if (streq(pk(p,0)->v,"}")) { depth--; if (depth == 0) break; } p->i++; } end = p->i; f->body_n = end - start; if (f->body_n > 0) { f->body = (Tok*)xmalloc((size_t)f->body_n * sizeof(Tok)); memcpy(f->body, &p->t[start], (size_t)f->body_n * sizeof(Tok)); } accept(p, "}"); }
+static void collect_body(Parser *p, Func *f) { int start, depth = 0, end; skip_eol(p); if (!parser_accept(p, "{")) { f->body = NULL; f->body_n = 0; return; } start = p->i; depth = 1; while (p->i < p->n && depth) { if (streq(pk(p,0)->v,"{")) depth++; else if (streq(pk(p,0)->v,"}")) { depth--; if (depth == 0) break; } p->i++; } end = p->i; f->body_n = end - start; if (f->body_n > 0) { f->body = (Tok*)xmalloc((size_t)f->body_n * sizeof(Tok)); memcpy(f->body, &p->t[start], (size_t)f->body_n * sizeof(Tok)); } parser_accept(p, "}"); }
 static char *op_name(const char *op) { if (streq(op,"+")) return xstrdup("Plus"); if (streq(op,"-")) return xstrdup("Minus"); if (streq(op,"*")) return xstrdup("Multiply"); if (streq(op,"/")) return xstrdup("Divide"); if (streq(op,"%")) return xstrdup("Modulo"); if (streq(op,"==")) return xstrdup("Equal"); return xstrdup("Op"); }
-static void parse_params_until_paren(Parser *p, Func *f) { while (p->i < p->n) { skip_eol(p); if (streq(pk(p,0)->v, "(")) break; if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v, ":")) { char *name = take_value(p); accept(p, ":"); { char *type = collect_type(p); add_param(f, name, type); free(type); } free(name); if (accept(p, ",")) continue; } else { p->i++; } } }
+static void parse_params_until_paren(Parser *p, Func *f) { while (p->i < p->n) { skip_eol(p); if (streq(pk(p,0)->v, "(")) break; if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v, ":")) { char *name = take_value(p); parser_accept(p, ":"); { char *type = collect_type(p); add_param(f, name, type); free(type); } free(name); if (parser_accept(p, ",")) continue; } else { p->i++; } } }
 static Func parse_func_formal(Parser *p, const char *method_of, const char *forced_name, const char *forced_ret, int ctor, int dtor) { Func f; memset(&f,0,sizeof(f)); f.package=xstrdup(p->package); f.method_of=xstrdup(method_of?method_of:""); f.ctor=ctor; f.dtor=dtor; if (forced_ret) f.ret=xstrdup(forced_ret); else f.ret = dtor ? xstrdup("Void") : (ctor ? xstrdup("Void") : collect_type(p)); if (forced_name) f.name=xstrdup(forced_name); else f.name=take_value(p); if (streq(f.name,"Operation")) { char *op = take_value(p); char *on = op_name(op); free(f.name); f.name=xstrdup("Operation"); f.op=on; free(op); }
- parse_params_until_paren(p,&f); accept(p,"("); accept(p,")"); skip_eol(p); if (accept(p,"=")) { accept(p,"0"); accept(p,";"); f.pure=1; } else collect_body(p,&f); return f; }
-static Func parse_func_keyword(Parser *p, const char *method_of) { Func f; memset(&f,0,sizeof(f)); f.package=xstrdup(p->package); f.method_of=xstrdup(method_of?method_of:""); accept(p,"func"); f.name=take_value(p); accept(p,"("); while (!accept(p,")")) { if (pk(p,0)->kind == TK_ID) { char *n = take_value(p); char *type = xstrdup("I32"); if (accept(p,":")) { free(type); type=collect_type(p); } add_param(&f,n,type); free(n); free(type); accept(p,","); } else p->i++; }
- f.ret=xstrdup("I32"); if (accept(p,":")) { free(f.ret); f.ret=collect_type(p); } collect_body(p,&f); return f; }
+ parse_params_until_paren(p,&f); parser_accept(p,"("); parser_accept(p,")"); skip_eol(p); if (parser_accept(p,"=")) { parser_accept(p,"0"); parser_accept(p,";"); f.pure=1; } else collect_body(p,&f); return f; }
+static Func parse_func_keyword(Parser *p, const char *method_of) { Func f; memset(&f,0,sizeof(f)); f.package=xstrdup(p->package); f.method_of=xstrdup(method_of?method_of:""); parser_accept(p,"func"); f.name=take_value(p); parser_accept(p,"("); while (!parser_accept(p,")")) { if (pk(p,0)->kind == TK_ID) { char *n = take_value(p); char *type = xstrdup("I32"); if (parser_accept(p,":")) { free(type); type=collect_type(p); } add_param(&f,n,type); free(n); free(type); parser_accept(p,","); } else p->i++; }
+ f.ret=xstrdup("I32"); if (parser_accept(p,":")) { free(f.ret); f.ret=collect_type(p); } collect_body(p,&f); return f; }
 static void parse_class(Parser *p) {
  char *name, *base = NULL;
  Class *c;
  int access_depth = 0;
- if (!accept(p,"Class")) accept(p,"class");
+ if (!parser_accept(p,"Class")) parser_accept(p,"class");
  name = take_value(p);
  skip_eol(p);
- if (accept(p,"Inherits") || accept(p,"extends")) {
+ if (parser_accept(p,"Inherits") || parser_accept(p,"extends")) {
   base = take_value(p);
   if (pk(p,0)->kind == TK_ID && (streq(pk(p,0)->v,"Public") || streq(pk(p,0)->v,"Private") || streq(pk(p,0)->v,"Protected"))) p->i++;
  }
  c = prog_add_class(p->prog, name, base ? base : "", p->package);
  free(name);
  if (base) free(base);
- accept(p,"{");
+ parser_accept(p,"{");
  while (p->i < p->n) {
   skip_eol(p);
   if (streq(pk(p,0)->v,"}")) {
@@ -211,20 +218,20 @@ static void parse_class(Parser *p) {
    if (access_depth > 0) { access_depth--; continue; }
    break;
   }
-  if (accept(p,"Public") || accept(p,"Private") || accept(p,"Protected")) {
-   if (accept(p,"{")) access_depth++;
+  if (parser_accept(p,"Public") || parser_accept(p,"Private") || parser_accept(p,"Protected")) {
+   if (parser_accept(p,"{")) access_depth++;
    continue;
   }
-  if (accept(p,";")) continue;
-  if (accept(p,"Overridable") || accept(p,"virtual")) {
+  if (parser_accept(p,";")) continue;
+  if (parser_accept(p,"Overridable") || parser_accept(p,"virtual")) {
    Func f = parse_func_formal(p, c->name, NULL, NULL, 0, 0);
    class_add_method(c, f);
    continue;
   }
-  if (accept(p,"Hit")) {
+  if (parser_accept(p,"Hit")) {
    char *sender = xstrdup(""), *hid = xstrdup("");
-   if (accept(p,":")) { free(hid); hid = take_value(p); }
-   else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v, ":")) { free(sender); sender = take_value(p); accept(p,":"); free(hid); hid = take_value(p); }
+   if (parser_accept(p,":")) { free(hid); hid = take_value(p); }
+   else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v, ":")) { free(sender); sender = take_value(p); parser_accept(p,":"); free(hid); hid = take_value(p); }
    { Func f = parse_func_formal(p,c->name,NULL,NULL,0,0); f.hit_sender=sender; f.hit_id=hid; class_add_method(c,f); }
    continue;
   }
@@ -241,11 +248,11 @@ static void parse_class(Parser *p) {
    char *fname = take_value(p);
    char *type, *init = NULL;
    int block = 0;
-   accept(p,":");
+   parser_accept(p,":");
    type = collect_type(p);
-   if (accept(p,"=")) init = collect_until(p,";");
-   accept(p,";");
-   if (accept(p,"Block")) block = 1;
+   if (parser_accept(p,"=")) init = collect_until(p,";");
+   parser_accept(p,";");
+   if (parser_accept(p,"Block")) block = 1;
    add_field_arr(&c->fields,&c->field_n,&c->field_cap,fname,type,init?init:"0",block);
    free(fname); free(type); if (init) free(init);
    continue;
@@ -253,15 +260,15 @@ static void parse_class(Parser *p) {
   if (is_type_start(pk(p,0))) { Func f = parse_func_formal(p, c->name, NULL, NULL, 0, 0); class_add_method(c,f); continue; }
   p->i++;
  }
- accept(p,";");
+ parser_accept(p,";");
 }
-static void parse_dynamic_struct(Parser *p) { char *name; accept(p,"Dynamic"); accept(p,"Struct"); name=take_value(p); free(p->prog->dyn_name); p->prog->dyn_name=xstrdup(name); accept(p,"{"); while (!accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } accept(p,";"); free(name); }
-static void parse_dynamic_expand(Parser *p) { char *name = take_value(p); (void)name; accept(p,"Expand"); accept(p,"{"); while (!accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } accept(p,";"); free(name); }
-static void skip_template(Parser *p) { accept(p,"Template"); while (p->i < p->n && !streq(pk(p,0)->v,"Class") && !is_type_start(pk(p,0))) p->i++; if (streq(pk(p,0)->v,"Class")) { int depth=0; while (p->i < p->n) { if (streq(pk(p,0)->v,"{")) depth++; else if (streq(pk(p,0)->v,"}")) { depth--; if (depth == 0) { p->i++; break; } } p->i++; } accept(p,";"); } else { Func tmp = parse_func_formal(p,NULL,NULL,NULL,0,0); (void)tmp; } }
-static void parse_fptr(Parser *p) { Func f; memset(&f,0,sizeof(f)); accept(p,"Fptr"); f.fptr=1; f.package=xstrdup(p->package); f.method_of=xstrdup(""); f.ret=collect_type(p); f.name=take_value(p); parse_params_until_paren(p,&f); accept(p,"("); accept(p,")"); accept(p,";"); prog_add_func(p->prog,f); }
-static void parse_global(Parser *p) { char *name, *type, *init = NULL; if (accept(p,"Global")) { name=take_value(p); accept(p,":"); type=collect_type(p); } else { name=take_value(p); accept(p,":"); if (accept(p,"Global")) type=collect_type(p); else type=collect_type(p); } if (accept(p,"=")) init = collect_until(p,";"); accept(p,";"); prog_add_global(p->prog,name,type,init?init:"0",p->package); free(name); free(type); if (init) free(init); }
-static void parse_package(Parser *p) { Str b; if (!accept(p,"Package")) accept(p,"package"); sb_init(&b); while (p->i < p->n && !accept(p,";")) { if (pk(p,0)->kind != TK_EOL) sb_add(&b, pk(p,0)->v); p->i++; } if (b.n) { free(p->package); p->package = sb_take(&b); } else free(b.s); }
-static void parse_program(Parser *p) { while (p->i < p->n && pk(p,0)->kind != TK_EOF) { skip_eol(p); if (pk(p,0)->kind == TK_EOF) break; if (accept(p,";")) continue; if (streq(pk(p,0)->v,"Package") || streq(pk(p,0)->v,"package")) { parse_package(p); continue; } if (streq(pk(p,0)->v,"Plugin")) { while (p->i < p->n && !accept(p,";") && pk(p,0)->kind != TK_EOL) p->i++; continue; } if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) { parse_class(p); continue; } if (streq(pk(p,0)->v,"Dynamic") && streq(pk(p,1)->v,"Struct")) { parse_dynamic_struct(p); continue; } if (p->prog->dyn_name && streq(pk(p,0)->v,p->prog->dyn_name) && streq(pk(p,1)->v,"Expand")) { parse_dynamic_expand(p); continue; } if (streq(pk(p,0)->v,"Template")) { skip_template(p); continue; } if (streq(pk(p,0)->v,"Fptr")) { parse_fptr(p); continue; } if (streq(pk(p,0)->v,"Global") || (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":"))) { parse_global(p); continue; } if (streq(pk(p,0)->v,"func")) { Func f = parse_func_keyword(p,NULL); prog_add_func(p->prog,f); continue; } if (streq(pk(p,0)->v,"Hit")) { char *sender=xstrdup(""), *hid=xstrdup(""); accept(p,"Hit"); if (accept(p,":")) { free(hid); hid=take_value(p); } else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":")) { free(sender); sender=take_value(p); accept(p,":"); free(hid); hid=take_value(p); } { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); f.hit_sender=sender; f.hit_id=hid; prog_add_func(p->prog,f); } continue; }
+static void parse_dynamic_struct(Parser *p) { char *name; parser_accept(p,"Dynamic"); parser_accept(p,"Struct"); name=take_value(p); free(p->prog->dyn_name); p->prog->dyn_name=xstrdup(name); parser_accept(p,"{"); while (!parser_accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); parser_accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } parser_accept(p,";"); free(name); }
+static void parse_dynamic_expand(Parser *p) { char *name = take_value(p); (void)name; parser_accept(p,"Expand"); parser_accept(p,"{"); while (!parser_accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); parser_accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } parser_accept(p,";"); free(name); }
+static void skip_template(Parser *p) { parser_accept(p,"Template"); while (p->i < p->n && !streq(pk(p,0)->v,"Class") && !is_type_start(pk(p,0))) p->i++; if (streq(pk(p,0)->v,"Class")) { int depth=0; while (p->i < p->n) { if (streq(pk(p,0)->v,"{")) depth++; else if (streq(pk(p,0)->v,"}")) { depth--; if (depth == 0) { p->i++; break; } } p->i++; } parser_accept(p,";"); } else { Func tmp = parse_func_formal(p,NULL,NULL,NULL,0,0); (void)tmp; } }
+static void parse_fptr(Parser *p) { Func f; memset(&f,0,sizeof(f)); parser_accept(p,"Fptr"); f.fptr=1; f.package=xstrdup(p->package); f.method_of=xstrdup(""); f.ret=collect_type(p); f.name=take_value(p); parse_params_until_paren(p,&f); parser_accept(p,"("); parser_accept(p,")"); parser_accept(p,";"); prog_add_func(p->prog,f); }
+static void parse_global(Parser *p) { char *name, *type, *init = NULL; if (parser_accept(p,"Global")) { name=take_value(p); parser_accept(p,":"); type=collect_type(p); } else { name=take_value(p); parser_accept(p,":"); if (parser_accept(p,"Global")) type=collect_type(p); else type=collect_type(p); } if (parser_accept(p,"=")) init = collect_until(p,";"); parser_accept(p,";"); prog_add_global(p->prog,name,type,init?init:"0",p->package); free(name); free(type); if (init) free(init); }
+static void parse_package(Parser *p) { Str b; if (!parser_accept(p,"Package")) parser_accept(p,"package"); sb_init(&b); while (p->i < p->n && !parser_accept(p,";")) { if (pk(p,0)->kind != TK_EOL) sb_add(&b, pk(p,0)->v); p->i++; } if (b.n) { free(p->package); p->package = sb_take(&b); } else free(b.s); }
+static void parse_program(Parser *p) { while (p->i < p->n && pk(p,0)->kind != TK_EOF) { skip_eol(p); if (pk(p,0)->kind == TK_EOF) break; if (parser_accept(p,";")) continue; if (streq(pk(p,0)->v,"Package") || streq(pk(p,0)->v,"package")) { parse_package(p); continue; } if (streq(pk(p,0)->v,"Plugin")) { while (p->i < p->n && !parser_accept(p,";") && pk(p,0)->kind != TK_EOL) p->i++; continue; } if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) { parse_class(p); continue; } if (streq(pk(p,0)->v,"Dynamic") && streq(pk(p,1)->v,"Struct")) { parse_dynamic_struct(p); continue; } if (p->prog->dyn_name && streq(pk(p,0)->v,p->prog->dyn_name) && streq(pk(p,1)->v,"Expand")) { parse_dynamic_expand(p); continue; } if (streq(pk(p,0)->v,"Template")) { skip_template(p); continue; } if (streq(pk(p,0)->v,"Fptr")) { parse_fptr(p); continue; } if (streq(pk(p,0)->v,"Global") || (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":"))) { parse_global(p); continue; } if (streq(pk(p,0)->v,"func")) { Func f = parse_func_keyword(p,NULL); prog_add_func(p->prog,f); continue; } if (streq(pk(p,0)->v,"Hit")) { char *sender=xstrdup(""), *hid=xstrdup(""); parser_accept(p,"Hit"); if (parser_accept(p,":")) { free(hid); hid=take_value(p); } else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":")) { free(sender); sender=take_value(p); parser_accept(p,":"); free(hid); hid=take_value(p); } { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); f.hit_sender=sender; f.hit_id=hid; prog_add_func(p->prog,f); } continue; }
  if (is_type_start(pk(p,0))) { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); prog_add_func(p->prog,f); continue; }
  parse_error(p,"unrecognized declaration"); p->i++; } }
 
@@ -1057,14 +1064,26 @@ static int run_cmdline(const char *cmd)
 #endif
     return rc;
 }
+static const char *default_temp_dir(void)
+{
+#if defined(_WIN32)
+    const char *d = getenv("TEMP");
+    if (!d || !*d) d = getenv("TMP");
+    return (d && *d) ? d : ".";
+#else
+    return "/tmp";
+#endif
+}
 static char *make_temp_path(const char *prefix, const char *ext)
 {
     char buf[4096];
     unsigned long r = (unsigned long)time(NULL);
+    const char *base = prefix && *prefix ? prefix : "cmotive_cfrontend";
+    const char *dir = default_temp_dir();
 #if defined(_WIN32)
-    snprintf(buf, sizeof(buf), "%s_%lu_%d%s", prefix, r, _getpid(), ext);
+    snprintf(buf, sizeof(buf), "%s%c%s_%lu_%d%s", dir, PATH_SEP, base, r, _getpid(), ext);
 #else
-    snprintf(buf, sizeof(buf), "%s_%lu_%d%s", prefix, r, getpid(), ext);
+    snprintf(buf, sizeof(buf), "%s%c%s_%lu_%d%s", dir, PATH_SEP, base, r, getpid(), ext);
 #endif
     return xstrdup(buf);
 }
@@ -1074,7 +1093,7 @@ static int write_debug_files(const char *out, Program *p, Args *a) { Str meta, s
 static int cmotive_main(int argc, char **argv) { Args a; PPContext pp; Program prog; Parser ps; TokVec tv; char *root, *pptext, *csrc, *out, *tmpc, *cc, *qtmp, *qout, *cmd; int i, rc; Str combined; memset(&a,0,sizeof(a)); parse_args(argc,argv,&a); if(a.version){ printf("CMotive compiler %s\n",CMOTIVE_VERSION); return 0; } cc = getenv("CMOTIVE_CC") ? xstrdup(getenv("CMOTIVE_CC")) : xstrdup("cc"); if(a.print_linker){ puts(getenv("CMOTIVE_LD")?getenv("CMOTIVE_LD"):cc); return 0; } if(a.print_toolchain){ printf("cc=%s\nld=%s\n",cc,getenv("CMOTIVE_LD")?getenv("CMOTIVE_LD"):cc); return 0; } if(a.print_arch){ puts(a.target_arch?a.target_arch:"native"); return 0; } if(a.inputs.n==0 && a.objs.n==0){ fprintf(stderr,"cmotive: no input files\n"); return 2; } root=find_root_from_argv0(argv[0]); memset(&pp,0,sizeof(pp)); pp.root=root; { char *lib=path_join(root,"lib"); sv_push(&pp.include_dirs,lib); free(lib); } for(i=0;i<a.includes.n;i++) sv_push(&pp.include_dirs,a.includes.v[i]); for(i=0;i<a.defs.n;i++){ char *eq=strchr(a.defs.v[i],'='); if(eq){ *eq=0; pp_set_macro(&pp,a.defs.v[i],eq+1); *eq='='; } else pp_set_macro(&pp,a.defs.v[i],"1"); }
  sb_init(&combined); for(i=0;i<a.inputs.n;i++){ pptext=pp_process_file(&pp,a.inputs.v[i]); if(!pptext)return 1; sb_add(&combined,pptext); sb_ch(&combined,'\n'); free(pptext); }
  memset(&prog,0,sizeof(prog)); tv=lex_text(combined.s); memset(&ps,0,sizeof(ps)); ps.t=tv.v; ps.n=tv.n; ps.prog=&prog; ps.package=xstrdup("StartPackage"); parse_program(&ps); scan_all_dynamic_expands(&prog); for(i=0;i<prog.class_n;i++){ if(prog.classes[i].base && *prog.classes[i].base && !find_class(&prog,prog.classes[i].base)){ fprintf(stderr,"cmotive: undefined base class %s for class %s\n",prog.classes[i].base,prog.classes[i].name); return 1; } }
- csrc=generate_c(&prog,a.target_arch?a.target_arch:"native"); if(a.emit_c){ out=a.out?a.out:xstrdup("a.c"); rc=write_file(out,csrc); if(a.debug && a.out) write_debug_files(a.out,&prog,&a); return rc; } out=a.out?a.out:xstrdup(a.compile_only?(a.inputs.n?"a.o":"a.obj"):"a.out"); tmpc=make_temp_path("/tmp/cmotive_cfrontend",".c"); write_file(tmpc,csrc); if(a.keep_c){ char *kc=(char*)xmalloc(strlen(out)+4); sprintf(kc,"%s.c",out); write_file(kc,csrc); free(kc); } qtmp=quote_arg(tmpc); qout=quote_arg(out); { Str cmdb; sb_init(&cmdb); sb_add(&cmdb,cc); sb_add(&cmdb," -I"); { char *inc=path_join(root,"lib/Sys"); char *qi=quote_arg(inc); sb_add(&cmdb,qi); free(qi); free(inc); } if(a.debug) sb_printf(&cmdb," -g%d",a.debug); if(a.opt&&*a.opt) { sb_ch(&cmdb,' '); sb_ch(&cmdb,'-'); sb_add(&cmdb,a.opt); } if(a.compile_only) sb_add(&cmdb," -c "); else sb_add(&cmdb," "); sb_add(&cmdb,qtmp); if(!a.compile_only){ for(i=0;i<a.objs.n;i++){ char*q=quote_arg(a.objs.v[i]); sb_ch(&cmdb,' '); sb_add(&cmdb,q); free(q); } sb_add(&cmdb," -pthread -lm"); } sb_add(&cmdb," -o "); sb_add(&cmdb,qout); cmd=sb_take(&cmdb); }
+ csrc=generate_c(&prog,a.target_arch?a.target_arch:"native"); if(a.emit_c){ out=a.out?a.out:xstrdup("a.c"); rc=write_file(out,csrc); if(a.debug && a.out) write_debug_files(a.out,&prog,&a); return rc; } out=a.out?a.out:xstrdup(a.compile_only?(a.inputs.n?"a.o":"a.obj"):"a.out"); tmpc=make_temp_path("cmotive_cfrontend",".c"); write_file(tmpc,csrc); if(a.keep_c){ char *kc=(char*)xmalloc(strlen(out)+4); sprintf(kc,"%s.c",out); write_file(kc,csrc); free(kc); } qtmp=quote_arg(tmpc); qout=quote_arg(out); { Str cmdb; sb_init(&cmdb); sb_add(&cmdb,cc); sb_add(&cmdb," -I"); { char *inc=path_join(root,"lib/Sys"); char *qi=quote_arg(inc); sb_add(&cmdb,qi); free(qi); free(inc); } if(a.debug) sb_printf(&cmdb," -g%d",a.debug); if(a.opt&&*a.opt) { sb_ch(&cmdb,' '); sb_ch(&cmdb,'-'); sb_add(&cmdb,a.opt); } if(a.compile_only) sb_add(&cmdb," -c "); else sb_add(&cmdb," "); sb_add(&cmdb,qtmp); if(!a.compile_only){ for(i=0;i<a.objs.n;i++){ char*q=quote_arg(a.objs.v[i]); sb_ch(&cmdb,' '); sb_add(&cmdb,q); free(q); } sb_add(&cmdb," -pthread -lm"); } sb_add(&cmdb," -o "); sb_add(&cmdb,qout); cmd=sb_take(&cmdb); }
  rc=run_cmdline(cmd); if(rc==0 && a.debug && !a.compile_only) write_debug_files(out,&prog,&a); free(cmd); free(qtmp); free(qout); remove(tmpc); free(tmpc); return rc; }
 static int cmotivepp_main(int argc, char **argv) { PPContext pp; char *root, *out=NULL, *input=NULL, *text; int i; memset(&pp,0,sizeof(pp)); root=find_root_from_argv0(argv[0]); pp.root=root; { char *lib=path_join(root,"lib"); sv_push(&pp.include_dirs,lib); free(lib); } for(i=1;i<argc;i++){ if(streq(argv[i],"-I")&&i+1<argc) sv_push(&pp.include_dirs,argv[++i]); else if(starts_with(argv[i],"-I")) sv_push(&pp.include_dirs,argv[i]+2); else if(streq(argv[i],"-D")&&i+1<argc){ char *d=argv[++i], *eq=strchr(d,'='); if(eq){*eq=0; pp_set_macro(&pp,d,eq+1); *eq='=';} else pp_set_macro(&pp,d,"1"); } else if(starts_with(argv[i],"-D")){ char *d=argv[i]+2, *eq=strchr(d,'='); if(eq){*eq=0; pp_set_macro(&pp,d,eq+1); *eq='=';} else pp_set_macro(&pp,d,"1"); } else if(streq(argv[i],"-o")&&i+1<argc) out=argv[++i]; else input=argv[i]; } if(!input){fprintf(stderr,"cmotivepp: no input\n"); return 2;} text=pp_process_file(&pp,input); if(!text)return 1; if(out) return write_file(out,text); fputs(text,stdout); return 0; }
 static int syms_main(int argc, char **argv) { const char *out=NULL, *bin=NULL; int i; for(i=1;i<argc;i++){ if(streq(argv[i],"-o")&&i+1<argc) out=argv[++i]; else if(argv[i][0]!='-') bin=argv[i]; else if(streq(argv[i],"--metadata")&&i+1<argc) i++; } if(!out) out="cmotive_debugsymbols.syms"; { Str s; sb_init(&s); sb_add(&s,"CMotive debug symbols\n"); sb_printf(&s,"binary: %s\n",bin?bin:""); sb_add(&s,"debug_level: 0\noptimization: \n0x00000000 external-symbol-placeholder\n"); return write_file(out,s.s); } }
