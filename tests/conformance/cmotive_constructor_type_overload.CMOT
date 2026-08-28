@@ -1,0 +1,45 @@
+Class
+OverCtor
+{
+    Public
+    {
+        value : I32 = 0; Block
+
+        OverCtor
+        x : Int32
+        ()
+        {
+            value = 32;
+        }
+
+        OverCtor
+        x : Int
+        ()
+        {
+            value = 64;
+        }
+
+        I32
+        Value
+        ()
+        {
+            Return This.value;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    a : OverCtor* = New OverCtor((Int32)7);
+    b : OverCtor* = New OverCtor((Int)7);
+    got : I32 = a->Value() + b->Value();
+    Delete a;
+    Delete b;
+    If ( got == 96 )
+    {
+        Return 0;
+    }
+    Return 1;
+}

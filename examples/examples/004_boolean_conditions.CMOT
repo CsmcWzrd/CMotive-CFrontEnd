@@ -1,0 +1,12 @@
+// CMotive verified example 004: boolean_conditions
+// Coverage: boolean-style integer conditions
+func main() : Int {
+  Sys::Stdio::print("example 004: boolean_conditions\n");
+  var value = 4;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,12 @@
+Plugin Sys::Stdio
+
+GlobalCounter : I32 = 0;
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX027_GLOBAL_VARIABLE");
+    GlobalCounter = GlobalCounter + 1;
+    Return 0;
+}

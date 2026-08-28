@@ -1,0 +1,12 @@
+// CMotive verified example 098: thread_spawn
+// Coverage: Sys::Thread spawn scaffold
+func main() : Int {
+  Sys::Stdio::print("example 098: thread_spawn\n");
+  var value = 98;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

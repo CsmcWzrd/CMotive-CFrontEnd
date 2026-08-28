@@ -1,0 +1,50 @@
+CC ?= clang
+CFLAGS ?= -O2 -std=c11 -Wall -Wextra -D_DARWIN_C_SOURCE
+LDFLAGS ?=
+PREFIX ?= /usr/local
+BUILD_DIR ?= build
+BIN_DIR := $(BUILD_DIR)/bin
+TOOL_SRC := src/native/cmotivetool.c
+TOOLS := cmotive cmotivepp cmotive++ CMotiveSymsToDebugFile
+
+.PHONY: all clean install test full-test package
+all: $(TOOLS:%=$(BIN_DIR)/%)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BIN_DIR)/cmotive: $(TOOL_SRC) | $(BIN_DIR)
+	$(CC) $(CFLAGS) -o $@ $(TOOL_SRC) $(LDFLAGS)
+
+$(BIN_DIR)/cmotivepp: $(BIN_DIR)/cmotive | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive $@
+	chmod +x $@
+
+$(BIN_DIR)/cmotive++: $(BIN_DIR)/cmotive | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive $@
+	chmod +x $@
+
+$(BIN_DIR)/CMotiveSymsToDebugFile: $(BIN_DIR)/cmotive | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive $@
+	chmod +x $@
+
+test: all
+	sh scripts/run_tests.sh $(BIN_DIR)
+
+full-test: all
+	sh scripts/run_tests.sh $(BIN_DIR) "" --full
+
+package: all
+	sh scripts/package_release.sh --root . --out dist
+
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $(BIN_DIR)/cmotive $(DESTDIR)$(PREFIX)/bin/cmotive
+	cp $(BIN_DIR)/cmotivepp $(DESTDIR)$(PREFIX)/bin/cmotivepp
+	cp $(BIN_DIR)/cmotive++ $(DESTDIR)$(PREFIX)/bin/cmotive++
+	cp $(BIN_DIR)/CMotiveSymsToDebugFile $(DESTDIR)$(PREFIX)/bin/CMotiveSymsToDebugFile
+
+clean:
+	rm -rf $(BUILD_DIR) dist
+
+# macOS > 15: builds the CMotive frontend/tools from native C using clang by default.

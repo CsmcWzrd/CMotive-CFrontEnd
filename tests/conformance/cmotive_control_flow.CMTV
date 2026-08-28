@@ -1,0 +1,24 @@
+I32
+main
+()
+{
+    total : I32 = 0;
+    i : I32 = 0;
+    While ( i < 3 )
+    {
+        total = total + 1;
+        i++;
+    }
+    For ( i = 0; i < 2; i++ )
+    {
+        total = total + 1;
+    }
+    If ( total == 5 )
+    {
+        Return 0;
+    }
+    Else
+    {
+        Return 3;
+    }
+}

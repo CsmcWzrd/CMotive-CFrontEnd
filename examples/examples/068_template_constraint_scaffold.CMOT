@@ -1,0 +1,2 @@
+template <T: Comparable> func min(a: T, b: T) -> T { if a < b { return a; } return b; }
+func main() -> Int { return min<Int>(1,2); }

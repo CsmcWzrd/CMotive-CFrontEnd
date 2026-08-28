@@ -1,0 +1,21 @@
+Plugin Sys::Filesystem
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    p : Path;
+    p.Set(".");
+    If ( p.Exists() == False )
+    {
+        Return 1;
+    }
+    fs : Filesystem;
+    If ( fs.IsDirectory(".") == False )
+    {
+        Return 2;
+    }
+    cout.expect("%s").write("CMOTIVE_EX154_OBJECT_FILESYSTEM\n");
+    Return 0;
+}

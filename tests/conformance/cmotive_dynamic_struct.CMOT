@@ -1,0 +1,29 @@
+Dynamic Struct
+MyDynStruct
+{
+    Int16 a;
+    Int32 b;
+    Int c;
+};
+
+Int32
+main
+()
+{
+    MyDynStruct Expand
+    {
+        Uint16 d;
+        Uint32 e;
+        Uint f;
+        Float g;
+        Double h;
+        Ldouble i;
+        Char j;
+        Uchar k;
+    };
+    x : MyDynStruct;
+    x.a = (Int16)1;
+    x.d = (Uint16)2;
+    x.h = 3.0;
+    Return (x.a == 1 && x.d == 2) ? 0 : 1;
+}

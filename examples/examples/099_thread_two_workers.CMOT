@@ -1,0 +1,12 @@
+// CMotive verified example 099: thread_two_workers
+// Coverage: Sys::Thread workers scaffold
+func main() : Int {
+  Sys::Stdio::print("example 099: thread_two_workers\n");
+  var value = 99;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

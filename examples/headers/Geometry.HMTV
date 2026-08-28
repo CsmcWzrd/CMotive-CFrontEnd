@@ -1,0 +1,2 @@
+// CMotive Geometry header scaffold
+class Point { field x: Int; field y: Int; }

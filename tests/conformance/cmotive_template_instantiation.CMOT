@@ -1,0 +1,56 @@
+Template
+T : Type
+Class
+Box
+{
+    Public
+    {
+        value : T = 0;
+        Box
+        ()
+        {
+        }
+    }
+};
+
+Template
+T : Type
+T
+Identity
+x : T
+()
+{
+    Return x;
+}
+
+Template
+A : Type
+B : Type
+Class
+Pair
+{
+    Public
+    {
+        first : A = 0;
+        second : B = 0;
+    }
+};
+
+I32
+main
+()
+{
+    b : Box<I32>;
+    p : Pair<I32, Char>;
+    pb : Box<I32>* = New Box<I32>();
+    x : I32 = Identity<I32>(41);
+    Delete pb;
+    If ( x == 41 )
+    {
+        Return 0;
+    }
+    Else
+    {
+        Return 1;
+    }
+}

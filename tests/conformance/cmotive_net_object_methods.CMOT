@@ -1,0 +1,24 @@
+Plugin Sys::Net
+
+Int32
+main
+()
+{
+    s : Socket;
+    fd : Int32 = s.OpenTcpIPv4();
+    If ( fd >= 0 )
+    {
+        If ( s.IsOpen() == False )
+        {
+            Return 1;
+        }
+        s.Close();
+    }
+    n : Net;
+    fd2 : Int32 = n.TcpIPv4();
+    If ( fd2 >= 0 )
+    {
+        n.Close(fd2);
+    }
+    Return 0;
+}

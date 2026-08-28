@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+Plugin Sys::File
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX008_PLUGIN_DECLARATION");
+    value : I32 = 6;
+    Return 0;
+}

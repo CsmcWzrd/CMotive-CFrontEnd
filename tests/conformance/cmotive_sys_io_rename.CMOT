@@ -1,0 +1,11 @@
+Plugin Sys::IO
+
+I32
+main
+()
+{
+    cout.expect("%s").write("io-ok\n");
+    Sys::IO::print("io-print\n");
+    Sys::IO::println("io-line");
+    Return 0;
+}

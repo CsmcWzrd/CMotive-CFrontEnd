@@ -1,0 +1,2 @@
+func limit(value: Int, max: Int = 10) -> Int { if value > max { return max; } return value; }
+func main() -> Int { return limit(12); }

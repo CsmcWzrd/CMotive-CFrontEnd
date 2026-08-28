@@ -1,0 +1,2371 @@
+Package Sys::STL;
+
+Template
+T : Type
+Class
+Vector
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        Vector
+        ()
+        {
+            handle = cmotive_stl_vector_any_create();
+        }
+
+        ~Vector
+        ()
+        {
+            cmotive_stl_vector_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Assign
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_assign(handle, count, &value, Sizeof(T));
+        }
+
+        T
+        At
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Get
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Set
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_set(handle, index, &value, Sizeof(T));
+        }
+
+        T
+        Front
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_front(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Back
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void*
+        Data
+        ()
+        {
+            Return cmotive_stl_vector_any_data(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_vector_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_vector_any_size(handle);
+        }
+
+        Uint
+        MaxSize
+        ()
+        {
+            Return cmotive_stl_vector_any_max_size(Sizeof(T));
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_vector_any_reserve(handle, capacity, Sizeof(T));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_vector_any_capacity(handle);
+        }
+
+        Void
+        ShrinkToFit
+        ()
+        {
+            cmotive_stl_vector_any_shrink_to_fit(handle, Sizeof(T));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_vector_any_clear(handle);
+        }
+
+        Void
+        Insert
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Emplace
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Erase
+        index : Uint
+        ()
+        {
+            cmotive_stl_vector_any_erase(handle, index, Sizeof(T));
+        }
+
+        Void
+        PushBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        Void
+        EmplaceBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        T
+        PopBack
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_pop_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Resize
+        count : Uint
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, Null, Sizeof(T));
+        }
+
+        Void
+        ResizeFill
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, &value, Sizeof(T));
+        }
+
+        Void
+        Swap
+        other : Vector<T>*
+        ()
+        {
+            cmotive_stl_vector_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        CBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        CEnd
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        RBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_rbegin(handle, Sizeof(T));
+        }
+
+        Void*
+        REnd
+        ()
+        {
+            Return cmotive_stl_vector_any_rend(handle);
+        }
+
+        Void
+        Sort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Void
+        StableSort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Int
+        BinarySearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_binary_search_i64(handle, *((Int*)&value));
+        }
+
+        Int
+        LinearSearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value)) >= 0;
+        }
+
+    }
+};
+Template
+T : Type
+Class
+List
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        List
+        ()
+        {
+            handle = cmotive_stl_vector_any_create();
+        }
+
+        ~List
+        ()
+        {
+            cmotive_stl_vector_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Assign
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_assign(handle, count, &value, Sizeof(T));
+        }
+
+        T
+        At
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Get
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Set
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_set(handle, index, &value, Sizeof(T));
+        }
+
+        T
+        Front
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_front(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Back
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void*
+        Data
+        ()
+        {
+            Return cmotive_stl_vector_any_data(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_vector_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_vector_any_size(handle);
+        }
+
+        Uint
+        MaxSize
+        ()
+        {
+            Return cmotive_stl_vector_any_max_size(Sizeof(T));
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_vector_any_reserve(handle, capacity, Sizeof(T));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_vector_any_capacity(handle);
+        }
+
+        Void
+        ShrinkToFit
+        ()
+        {
+            cmotive_stl_vector_any_shrink_to_fit(handle, Sizeof(T));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_vector_any_clear(handle);
+        }
+
+        Void
+        Insert
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Emplace
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Erase
+        index : Uint
+        ()
+        {
+            cmotive_stl_vector_any_erase(handle, index, Sizeof(T));
+        }
+
+        Void
+        PushBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        Void
+        EmplaceBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        T
+        PopBack
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_pop_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Resize
+        count : Uint
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, Null, Sizeof(T));
+        }
+
+        Void
+        ResizeFill
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, &value, Sizeof(T));
+        }
+
+        Void
+        Swap
+        other : List<T>*
+        ()
+        {
+            cmotive_stl_vector_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        CBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        CEnd
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        RBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_rbegin(handle, Sizeof(T));
+        }
+
+        Void*
+        REnd
+        ()
+        {
+            Return cmotive_stl_vector_any_rend(handle);
+        }
+
+        Void
+        Sort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Void
+        StableSort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Int
+        BinarySearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_binary_search_i64(handle, *((Int*)&value));
+        }
+
+        Int
+        LinearSearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value)) >= 0;
+        }
+
+    }
+};
+Template
+T : Type
+Class
+Dlist
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        Dlist
+        ()
+        {
+            handle = cmotive_stl_vector_any_create();
+        }
+
+        ~Dlist
+        ()
+        {
+            cmotive_stl_vector_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Assign
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_assign(handle, count, &value, Sizeof(T));
+        }
+
+        T
+        At
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Get
+        index : Uint
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_get(handle, index, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Set
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_set(handle, index, &value, Sizeof(T));
+        }
+
+        T
+        Front
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_front(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        T
+        Back
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void*
+        Data
+        ()
+        {
+            Return cmotive_stl_vector_any_data(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_vector_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_vector_any_size(handle);
+        }
+
+        Uint
+        MaxSize
+        ()
+        {
+            Return cmotive_stl_vector_any_max_size(Sizeof(T));
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_vector_any_reserve(handle, capacity, Sizeof(T));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_vector_any_capacity(handle);
+        }
+
+        Void
+        ShrinkToFit
+        ()
+        {
+            cmotive_stl_vector_any_shrink_to_fit(handle, Sizeof(T));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_vector_any_clear(handle);
+        }
+
+        Void
+        Insert
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Emplace
+        index : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_insert(handle, index, &value, Sizeof(T));
+        }
+
+        Void
+        Erase
+        index : Uint
+        ()
+        {
+            cmotive_stl_vector_any_erase(handle, index, Sizeof(T));
+        }
+
+        Void
+        PushBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        Void
+        EmplaceBack
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_push_back(handle, &value, Sizeof(T));
+        }
+
+        T
+        PopBack
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_vector_any_pop_back(handle, &out, Sizeof(T));
+            Return out;
+        }
+
+        Void
+        Resize
+        count : Uint
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, Null, Sizeof(T));
+        }
+
+        Void
+        ResizeFill
+        count : Uint
+        value : T
+        ()
+        {
+            cmotive_stl_vector_any_resize(handle, count, &value, Sizeof(T));
+        }
+
+        Void
+        Swap
+        other : Dlist<T>*
+        ()
+        {
+            cmotive_stl_vector_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        CBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_begin(handle);
+        }
+
+        Void*
+        CEnd
+        ()
+        {
+            Return cmotive_stl_vector_any_end(handle, Sizeof(T));
+        }
+
+        Void*
+        RBegin
+        ()
+        {
+            Return cmotive_stl_vector_any_rbegin(handle, Sizeof(T));
+        }
+
+        Void*
+        REnd
+        ()
+        {
+            Return cmotive_stl_vector_any_rend(handle);
+        }
+
+        Void
+        Sort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Void
+        StableSort
+        ()
+        {
+            cmotive_stl_vector_any_sort_i64(handle);
+        }
+
+        Int
+        BinarySearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_binary_search_i64(handle, *((Int*)&value));
+        }
+
+        Int
+        LinearSearch
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_vector_any_find_i64(handle, *((Int*)&value)) >= 0;
+        }
+
+    }
+};
+Template
+K : Type
+V : Type
+Class
+Map
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        Map
+        ()
+        {
+            handle = cmotive_stl_map_any_create(0);
+        }
+
+        ~Map
+        ()
+        {
+            cmotive_stl_map_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_map_any_reserve(handle, capacity, Sizeof(V));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_map_any_capacity(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_map_any_size(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_map_any_empty(handle);
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_map_any_clear(handle);
+        }
+
+        Void
+        Insert
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Put
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        InsertOrAssign
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Emplace
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        V
+        At
+        key : K
+        ()
+        {
+            out : V = 0;
+            cmotive_stl_map_any_get(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        V
+        Get
+        key : K
+        fallback : V
+        ()
+        {
+            out : V = fallback;
+            cmotive_stl_map_any_get_or(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        Boolean
+        Contains
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_contains(handle, (Char*)key);
+        }
+
+        Uint
+        Count
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_count(handle, (Char*)key);
+        }
+
+        Void
+        Erase
+        key : K
+        ()
+        {
+            cmotive_stl_map_any_erase(handle, (Char*)key);
+        }
+
+        Void
+        Swap
+        other : Map<K,V>*
+        ()
+        {
+            cmotive_stl_map_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_map_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_map_any_end(handle);
+        }
+
+        Void*
+        Find
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_find(handle, (Char*)key);
+        }
+
+        Void*
+        LowerBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_lower_bound(handle, (Char*)key);
+        }
+
+        Void*
+        UpperBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_upper_bound(handle, (Char*)key);
+        }
+
+        Void*
+        EqualRange
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_equal_range(handle, (Char*)key);
+        }
+
+    }
+};
+Template
+K : Type
+V : Type
+Class
+Dict
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        Dict
+        ()
+        {
+            handle = cmotive_stl_map_any_create(0);
+        }
+
+        ~Dict
+        ()
+        {
+            cmotive_stl_map_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_map_any_reserve(handle, capacity, Sizeof(V));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_map_any_capacity(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_map_any_size(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_map_any_empty(handle);
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_map_any_clear(handle);
+        }
+
+        Void
+        Insert
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Put
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        InsertOrAssign
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Emplace
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        V
+        At
+        key : K
+        ()
+        {
+            out : V = 0;
+            cmotive_stl_map_any_get(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        V
+        Get
+        key : K
+        fallback : V
+        ()
+        {
+            out : V = fallback;
+            cmotive_stl_map_any_get_or(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        Boolean
+        Contains
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_contains(handle, (Char*)key);
+        }
+
+        Uint
+        Count
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_count(handle, (Char*)key);
+        }
+
+        Void
+        Erase
+        key : K
+        ()
+        {
+            cmotive_stl_map_any_erase(handle, (Char*)key);
+        }
+
+        Void
+        Swap
+        other : Dict<K,V>*
+        ()
+        {
+            cmotive_stl_map_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_map_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_map_any_end(handle);
+        }
+
+        Void*
+        Find
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_find(handle, (Char*)key);
+        }
+
+        Void*
+        LowerBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_lower_bound(handle, (Char*)key);
+        }
+
+        Void*
+        UpperBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_upper_bound(handle, (Char*)key);
+        }
+
+        Void*
+        EqualRange
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_equal_range(handle, (Char*)key);
+        }
+
+    }
+};
+Template
+K : Type
+V : Type
+Class
+HashDict
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        HashDict
+        ()
+        {
+            handle = cmotive_stl_map_any_create(0);
+        }
+
+        ~HashDict
+        ()
+        {
+            cmotive_stl_map_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_map_any_reserve(handle, capacity, Sizeof(V));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_map_any_capacity(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_map_any_size(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_map_any_empty(handle);
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_map_any_clear(handle);
+        }
+
+        Void
+        Insert
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Put
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        InsertOrAssign
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Emplace
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        V
+        At
+        key : K
+        ()
+        {
+            out : V = 0;
+            cmotive_stl_map_any_get(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        V
+        Get
+        key : K
+        fallback : V
+        ()
+        {
+            out : V = fallback;
+            cmotive_stl_map_any_get_or(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        Boolean
+        Contains
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_contains(handle, (Char*)key);
+        }
+
+        Uint
+        Count
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_count(handle, (Char*)key);
+        }
+
+        Void
+        Erase
+        key : K
+        ()
+        {
+            cmotive_stl_map_any_erase(handle, (Char*)key);
+        }
+
+        Void
+        Swap
+        other : HashDict<K,V>*
+        ()
+        {
+            cmotive_stl_map_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_map_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_map_any_end(handle);
+        }
+
+        Void*
+        Find
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_find(handle, (Char*)key);
+        }
+
+        Void*
+        LowerBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_lower_bound(handle, (Char*)key);
+        }
+
+        Void*
+        UpperBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_upper_bound(handle, (Char*)key);
+        }
+
+        Void*
+        EqualRange
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_equal_range(handle, (Char*)key);
+        }
+
+    }
+};
+Template
+K : Type
+V : Type
+Class
+MultiDict
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        MultiDict
+        ()
+        {
+            handle = cmotive_stl_map_any_create(1);
+        }
+
+        ~MultiDict
+        ()
+        {
+            cmotive_stl_map_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_map_any_reserve(handle, capacity, Sizeof(V));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_map_any_capacity(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_map_any_size(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_map_any_empty(handle);
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_map_any_clear(handle);
+        }
+
+        Void
+        Insert
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Put
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        InsertOrAssign
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Emplace
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        V
+        At
+        key : K
+        ()
+        {
+            out : V = 0;
+            cmotive_stl_map_any_get(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        V
+        Get
+        key : K
+        fallback : V
+        ()
+        {
+            out : V = fallback;
+            cmotive_stl_map_any_get_or(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        Boolean
+        Contains
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_contains(handle, (Char*)key);
+        }
+
+        Uint
+        Count
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_count(handle, (Char*)key);
+        }
+
+        Void
+        Erase
+        key : K
+        ()
+        {
+            cmotive_stl_map_any_erase(handle, (Char*)key);
+        }
+
+        Void
+        Swap
+        other : MultiDict<K,V>*
+        ()
+        {
+            cmotive_stl_map_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_map_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_map_any_end(handle);
+        }
+
+        Void*
+        Find
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_find(handle, (Char*)key);
+        }
+
+        Void*
+        LowerBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_lower_bound(handle, (Char*)key);
+        }
+
+        Void*
+        UpperBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_upper_bound(handle, (Char*)key);
+        }
+
+        Void*
+        EqualRange
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_equal_range(handle, (Char*)key);
+        }
+
+    }
+};
+Template
+K : Type
+V : Type
+Class
+MultiHashDict
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        MultiHashDict
+        ()
+        {
+            handle = cmotive_stl_map_any_create(1);
+        }
+
+        ~MultiHashDict
+        ()
+        {
+            cmotive_stl_map_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Reserve
+        capacity : Uint
+        ()
+        {
+            cmotive_stl_map_any_reserve(handle, capacity, Sizeof(V));
+        }
+
+        Uint
+        Capacity
+        ()
+        {
+            Return cmotive_stl_map_any_capacity(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_map_any_size(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_map_any_empty(handle);
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_map_any_clear(handle);
+        }
+
+        Void
+        Insert
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Put
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        InsertOrAssign
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        Void
+        Emplace
+        key : K
+        value : V
+        ()
+        {
+            cmotive_stl_map_any_put(handle, (Char*)key, &value, Sizeof(V));
+        }
+
+        V
+        At
+        key : K
+        ()
+        {
+            out : V = 0;
+            cmotive_stl_map_any_get(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        V
+        Get
+        key : K
+        fallback : V
+        ()
+        {
+            out : V = fallback;
+            cmotive_stl_map_any_get_or(handle, (Char*)key, &out, Sizeof(V));
+            Return out;
+        }
+
+        Boolean
+        Contains
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_contains(handle, (Char*)key);
+        }
+
+        Uint
+        Count
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_count(handle, (Char*)key);
+        }
+
+        Void
+        Erase
+        key : K
+        ()
+        {
+            cmotive_stl_map_any_erase(handle, (Char*)key);
+        }
+
+        Void
+        Swap
+        other : MultiHashDict<K,V>*
+        ()
+        {
+            cmotive_stl_map_any_swap(handle, other->handle);
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_map_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_map_any_end(handle);
+        }
+
+        Void*
+        Find
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_find(handle, (Char*)key);
+        }
+
+        Void*
+        LowerBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_lower_bound(handle, (Char*)key);
+        }
+
+        Void*
+        UpperBound
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_upper_bound(handle, (Char*)key);
+        }
+
+        Void*
+        EqualRange
+        key : K
+        ()
+        {
+            Return cmotive_stl_map_any_equal_range(handle, (Char*)key);
+        }
+
+    }
+};
+Template
+T : Type
+Class
+BinaryTree
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        BinaryTree
+        ()
+        {
+            handle = cmotive_stl_tree_any_create();
+        }
+
+        ~BinaryTree
+        ()
+        {
+            cmotive_stl_tree_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Insert
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_insert_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Erase
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_erase_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Find
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_tree_any_clear(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_tree_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_tree_any_size(handle);
+        }
+
+        Uint
+        Height
+        ()
+        {
+            Return cmotive_stl_tree_any_height(handle);
+        }
+
+        T
+        Min
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_min_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        T
+        Max
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_max_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+        Void*
+        InOrderBegin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        InOrderEnd
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+    }
+};
+Template
+T : Type
+Class
+BinarySearchTree
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        BinarySearchTree
+        ()
+        {
+            handle = cmotive_stl_tree_any_create();
+        }
+
+        ~BinarySearchTree
+        ()
+        {
+            cmotive_stl_tree_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Insert
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_insert_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Erase
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_erase_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Find
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_tree_any_clear(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_tree_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_tree_any_size(handle);
+        }
+
+        Uint
+        Height
+        ()
+        {
+            Return cmotive_stl_tree_any_height(handle);
+        }
+
+        T
+        Min
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_min_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        T
+        Max
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_max_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+        Void*
+        InOrderBegin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        InOrderEnd
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+    }
+};
+Template
+T : Type
+Class
+BTree
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        BTree
+        ()
+        {
+            handle = cmotive_stl_tree_any_create();
+        }
+
+        ~BTree
+        ()
+        {
+            cmotive_stl_tree_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Insert
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_insert_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Erase
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_erase_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Find
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_tree_any_clear(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_tree_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_tree_any_size(handle);
+        }
+
+        Uint
+        Height
+        ()
+        {
+            Return cmotive_stl_tree_any_height(handle);
+        }
+
+        T
+        Min
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_min_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        T
+        Max
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_max_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+        Void*
+        InOrderBegin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        InOrderEnd
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+    }
+};
+Template
+T : Type
+Class
+BPlusTree
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        BPlusTree
+        ()
+        {
+            handle = cmotive_stl_tree_any_create();
+        }
+
+        ~BPlusTree
+        ()
+        {
+            cmotive_stl_tree_any_destroy(handle);
+            handle = Null;
+        }
+
+        Void
+        Insert
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_insert_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Erase
+        value : T
+        ()
+        {
+            cmotive_stl_tree_any_erase_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Contains
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Boolean
+        Find
+        value : T
+        ()
+        {
+            Return cmotive_stl_tree_any_contains_i64(handle, *((Int*)&value));
+        }
+
+        Void
+        Clear
+        ()
+        {
+            cmotive_stl_tree_any_clear(handle);
+        }
+
+        Boolean
+        Empty
+        ()
+        {
+            Return cmotive_stl_tree_any_empty(handle);
+        }
+
+        Uint
+        Size
+        ()
+        {
+            Return cmotive_stl_tree_any_size(handle);
+        }
+
+        Uint
+        Height
+        ()
+        {
+            Return cmotive_stl_tree_any_height(handle);
+        }
+
+        T
+        Min
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_min_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        T
+        Max
+        ()
+        {
+            out : T = 0;
+            cmotive_stl_tree_any_max_i64(handle, (Int*)&out);
+            Return out;
+        }
+
+        Void*
+        Begin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        End
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+        Void*
+        InOrderBegin
+        ()
+        {
+            Return cmotive_stl_tree_any_begin(handle);
+        }
+
+        Void*
+        InOrderEnd
+        ()
+        {
+            Return cmotive_stl_tree_any_end(handle);
+        }
+
+    }
+};
+
+// Backward compatible package-level wrappers are retained by compiler lowering.

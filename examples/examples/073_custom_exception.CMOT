@@ -1,0 +1,2 @@
+class ParseError : Exception { constructor(msg: String) : Exception(msg) {} }
+func main() -> Int { try { throw ParseError("bad"); } catch e: ParseError { return 0; } }

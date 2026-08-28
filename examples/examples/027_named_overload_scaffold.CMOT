@@ -1,0 +1,12 @@
+// CMotive verified example 027: named_overload_scaffold
+// Coverage: named overload scaffold
+func main() : Int {
+  Sys::Stdio::print("example 027: named_overload_scaffold\n");
+  var value = 27;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

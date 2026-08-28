@@ -1,0 +1,12 @@
+// CMotive verified example 012: comparison_lt
+// Coverage: less-than comparison
+func main() : Int {
+  Sys::Stdio::print("example 012: comparison_lt\n");
+  var value = 12;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

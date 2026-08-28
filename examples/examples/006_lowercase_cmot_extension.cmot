@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX006_LOWERCASE_CMOT_EXTENSION");
+    value : I32 = 4;
+    Return 0;
+}

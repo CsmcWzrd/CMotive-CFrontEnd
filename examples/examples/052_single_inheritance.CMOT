@@ -1,0 +1,14 @@
+// CMotive verified example 052: single_inheritance
+// Coverage: single inheritance
+class Base52 { var seed; func id(x) : Int { return x; } }
+class Feature52 extends Base52 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 052: single_inheritance\n");
+  var value = 52;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

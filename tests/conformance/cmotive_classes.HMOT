@@ -1,0 +1,47 @@
+Class
+Animal
+{
+    Public
+    {
+        id : I32 = 0; Block
+
+        Animal
+        ()
+        {
+        }
+
+        ~Animal
+        ()
+        {
+        }
+
+        Overridable
+        I32
+        Speak
+        ()
+        {
+            Return 1;
+        }
+    }
+};
+
+Class
+Dog
+Inherits
+Animal Public
+{
+    Public
+    {
+        Dog
+        ()
+        {
+        }
+
+        I32
+        Speak
+        ()
+        {
+            Return 2;
+        }
+    }
+};

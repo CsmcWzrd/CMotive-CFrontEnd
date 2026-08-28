@@ -1,0 +1,49 @@
+CC ?= cc
+CFLAGS ?= -O2 -std=c11 -Wall -Wextra
+LDFLAGS ?=
+PREFIX ?= /usr/local
+BUILD_DIR ?= build
+BIN_DIR := $(BUILD_DIR)/bin
+EXEEXT ?= .exe
+TOOL_SRC := src/native/cmotivetool.c
+TOOLS := cmotive cmotivepp cmotive++ CMotiveSymsToDebugFile
+TOOL_BINS := $(TOOLS:%=$(BIN_DIR)/%$(EXEEXT))
+
+.PHONY: all clean install test full-test package
+all: $(TOOL_BINS)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BIN_DIR)/cmotive$(EXEEXT): $(TOOL_SRC) | $(BIN_DIR)
+	$(CC) $(CFLAGS) -o $@ $(TOOL_SRC) $(LDFLAGS)
+
+$(BIN_DIR)/cmotivepp$(EXEEXT): $(BIN_DIR)/cmotive$(EXEEXT) | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive$(EXEEXT) $@
+
+$(BIN_DIR)/cmotive++$(EXEEXT): $(BIN_DIR)/cmotive$(EXEEXT) | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive$(EXEEXT) $@
+
+$(BIN_DIR)/CMotiveSymsToDebugFile$(EXEEXT): $(BIN_DIR)/cmotive$(EXEEXT) | $(BIN_DIR)
+	cp $(BIN_DIR)/cmotive$(EXEEXT) $@
+
+test: all
+	sh scripts/run_tests.sh $(BIN_DIR) $(EXEEXT)
+
+full-test: all
+	sh scripts/run_tests.sh $(BIN_DIR) $(EXEEXT) --full
+
+package: all
+	sh scripts/package_release.sh --root . --out dist
+
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $(BIN_DIR)/cmotive$(EXEEXT) $(DESTDIR)$(PREFIX)/bin/cmotive$(EXEEXT)
+	cp $(BIN_DIR)/cmotivepp$(EXEEXT) $(DESTDIR)$(PREFIX)/bin/cmotivepp$(EXEEXT)
+	cp $(BIN_DIR)/cmotive++$(EXEEXT) $(DESTDIR)$(PREFIX)/bin/cmotive++$(EXEEXT)
+	cp $(BIN_DIR)/CMotiveSymsToDebugFile$(EXEEXT) $(DESTDIR)$(PREFIX)/bin/CMotiveSymsToDebugFile$(EXEEXT)
+
+clean:
+	rm -rf $(BUILD_DIR) dist
+
+# Windows POSIX/MinGW/clang shell: native C frontend; override CC, CFLAGS, EXEEXT as needed.

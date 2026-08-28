@@ -1,0 +1,2 @@
+Import Geometry;
+func main() -> Int { let p: Point = Point(1, 2); return p.lengthSquared(); }

@@ -1,0 +1,17 @@
+Plugin Sys::Stdio
+
+I32
+UnitA
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX135_SEPARATE_COMPILATION_UNIT_A");
+    value : I32 = UnitA();
+    Return 0;
+}

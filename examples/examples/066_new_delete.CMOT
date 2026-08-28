@@ -1,0 +1,7 @@
+// CMotive verified example 066: new_delete
+// Coverage: New/Delete runtime helpers
+func main() : Int {
+  Sys::Stdio::print("example 066: new_delete\n");
+  Delete(New(8));
+  return 0;
+}

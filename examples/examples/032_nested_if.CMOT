@@ -1,0 +1,12 @@
+// CMotive verified example 032: nested_if
+// Coverage: nested if control flow
+func main() : Int {
+  Sys::Stdio::print("example 032: nested_if\n");
+  var value = 32;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

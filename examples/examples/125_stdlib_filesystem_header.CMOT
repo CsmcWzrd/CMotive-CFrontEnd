@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/Filesystem.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX125_STDLIB_FILESYSTEM_HEADER");
+    value : I32 = 0;
+    Return 0;
+}

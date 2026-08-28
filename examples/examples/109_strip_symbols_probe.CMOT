@@ -1,0 +1,3 @@
+Export func publicSymbol() -> Int { return 1; }
+private func privateSymbol() -> Int { return 2; }
+func main() -> Int { return publicSymbol(); }

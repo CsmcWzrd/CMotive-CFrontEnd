@@ -1,0 +1,2 @@
+class Builder { field n: Int; constructor() { n = 0; } method add(x: Int) -> Builder { n = n + x; return this; } }
+func main() -> Int { return Builder().add(1).add(2).n; }

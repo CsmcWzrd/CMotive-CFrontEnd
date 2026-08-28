@@ -1,0 +1,45 @@
+CMotive standard-library object model revalidation
+=================================================
+
+Purpose:
+- Re-audited the latest CMotive source and examples archives after the prior all-in-one standard-library pass.
+- Fixed Sys::* packages so the preferred standard-library surface is class/object based, not functional-only.
+- Preserved previous compiler/runtime features: formatted IO lowering, native threading, real package loading, sockets, template instantiation, exception unwinding, auto Get/Set/Getall/Setall, Operation, Tstore/ThreadStore, Overridable, Global anywhere, and Fptr.
+
+Implemented/updated:
+- Rewrote lib/Sys/STL.HMOT as object-style template classes:
+  Vector, List, Dlist, Map, Dict, HashDict, MultiDict, MultiHashDict, BinaryTree, BinarySearchTree, BTree, BPlusTree.
+- Added C++23-style container method categories: construction/destruction, element access, capacity, modifiers, iterator endpoints, lookup, sorting/searching helpers, swap/clear/reserve operations.
+- Rewrote lib/Sys/Algorithms.HMOT around an Algorithms class with sorting/searching/min/max/compare/IsSorted/Reverse/RotateLeft/Unique methods.
+- Rewrote lib/Sys/IO.HMOT around OStream, IStream, and Formatter classes while preserving cout.expect(...).write(...) and cin.expect(...).read(...) compiler lowering.
+- Kept Sys::Stdio as a Sys::IO compatibility wrapper.
+- Added object-model runtime helpers for generic vector/list/dlist, map/dict/hash/multimap, ordered-tree-backed trees, algorithms, and stream state.
+- Fixed type handling so template types containing pointer template arguments, for example Dict<Char*,Int>, are not mistaken for top-level pointer variables.
+- Fixed array zero-initialization for local arrays.
+- Fixed member-name lowering so other->handle is not rewritten to other->this->handle.
+- Kept functional helper lowering available only for backward compatibility with older examples and tests.
+
+Added tests:
+- tests/conformance/cmotive_stl_object_methods.CMOT
+- tests/conformance/cmotive_algorithms_object_methods.CMOT
+- tests/conformance/cmotive_io_object_methods.CMOT
+
+Added examples:
+- examples/151_object_stl_vector_map_tree.CMOT
+- examples/152_object_algorithms.CMOT
+- examples/153_object_io_streams.CMOT
+
+Verification:
+- python3 -m py_compile src/cmotive/*.py tools/cmotive.py tools/cmotivepp.py tests/run_tests.py
+- make -f Makefile.linux clean all test
+- python3 tests/run_tests.py --bin build/bin --full
+- targeted compile/link/run for Lang-Examples 151-153
+
+Result:
+- CMotive tests: PASS
+- Full conformance suite: PASS
+- Example manifest count: 153
+- New examples 151-153: compile/link/run PASS
+
+Implementation note:
+- BTree and BPlusTree now expose object/class package APIs and use the same ordered-tree runtime backend as BinarySearchTree in this release. True page-node B-tree/B+tree balancing remains an internal storage-engine enhancement, but the public object-method API is present and tested.

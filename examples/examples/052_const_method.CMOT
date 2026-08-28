@@ -1,0 +1,2 @@
+class Value { field n: Int; constructor(v: Int) { n = v; } const method get() -> Int { return n; } }
+func main() -> Int { return Value(8).get(); }

@@ -1,0 +1,12 @@
+// CMotive verified example 034: loop_counter
+// Coverage: loop counter update
+func main() : Int {
+  Sys::Stdio::print("example 034: loop_counter\n");
+  var value = 34;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

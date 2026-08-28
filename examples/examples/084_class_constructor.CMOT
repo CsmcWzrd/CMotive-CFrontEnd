@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+Class
+ConstructedItem
+{
+    Public
+    {
+        value : I32 = 0;
+        ConstructedItem
+        ()
+        {
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX084_CLASS_CONSTRUCTOR");
+    item : ConstructedItem;
+    Return 0;
+}

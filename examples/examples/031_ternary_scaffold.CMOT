@@ -1,0 +1,1 @@
+func main() -> Int { let x: Int = true ? 1 : 2; return x; }

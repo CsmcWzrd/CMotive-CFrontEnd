@@ -1,0 +1,2 @@
+class Box { field value: Int; constructor(v: Int) { value = v; } }
+func main() -> Int { let b: Box = Box(3); return b.value; }

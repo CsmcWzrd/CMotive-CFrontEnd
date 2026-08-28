@@ -1,0 +1,12 @@
+// CMotive verified example 101: net_socket
+// Coverage: Sys::Net socket placeholder
+func main() : Int {
+  Sys::Stdio::print("example 101: net_socket\n");
+  var value = 101;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

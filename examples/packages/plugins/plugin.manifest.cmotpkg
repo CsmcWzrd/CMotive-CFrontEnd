@@ -1,0 +1,4 @@
+name=Examples::Plugins::Example
+kind=CMotivePackagePlugin
+source=example_plugin.CMOT
+requires=Examples::Core

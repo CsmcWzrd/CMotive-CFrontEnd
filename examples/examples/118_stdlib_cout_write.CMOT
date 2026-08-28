@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX118_STDLIB_COUT_WRITE");
+    cout.expect("%s\n").write("cout write ok");
+    Return 0;
+}

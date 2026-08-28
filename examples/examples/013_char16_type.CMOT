@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX013_CHAR16_TYPE");
+    letter16 : Char16 = 65;
+    Return 0;
+}

@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+I32
+main
+argc : I32
+argv : Char**
+()
+{
+    x : I32 = 0;
+    If ( x == 0 )
+    {
+        cout.expect("%s").write("CMotive formal main\n");
+    }
+    Else
+    {
+        Return 2;
+    }
+    Return 0;
+}

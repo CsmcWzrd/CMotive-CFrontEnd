@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { if Sys::Filesystem::exists(".") { return 0; } return 1; }

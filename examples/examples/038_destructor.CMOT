@@ -1,0 +1,3 @@
+Import Sys;
+class Trace { destructor() { Sys::Stdio::println("drop"); } }
+func main() -> Int { let t: Trace = Trace(); return 0; }

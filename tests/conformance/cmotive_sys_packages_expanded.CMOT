@@ -1,0 +1,33 @@
+Plugin Sys::Math
+Plugin Sys::String
+Plugin Sys::Wide
+Plugin Sys::Locks
+Plugin Sys::Filesystem
+Plugin Sys::Logging
+Plugin Sys::Exception
+
+I32
+main
+()
+{
+    root : Double = sqrt(9.0);
+    pival : Double = pi();
+    len : U64 = strlen("abc");
+    cmp : I32 = strcmp("abc", "abc");
+    upper : I32 = toUpperChar('a');
+    parsed : Void* = str_parse("a,b;c,d", ";", ",", '\\');
+    rows : U64 = str_parse_rows(parsed);
+    cols : U64 = str_parse_cols(parsed, 0);
+    cell : Char* = str_parse_at(parsed, 1, 1);
+    str_parse_free(parsed);
+    m : Mutex;
+    m.lock();
+    m.unlock();
+    existsFlag : Boolean = exists(".");
+    info("expanded sys packages");
+    If ( root >= 3.0 && len == 3 && cmp == 0 && upper == 65 && rows == 2 && cols == 2 && existsFlag )
+    {
+        Return 0;
+    }
+    Return 1;
+}

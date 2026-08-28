@@ -1,0 +1,3 @@
+// CMotive Sys standard-library header scaffold
+package Sys;
+// namespaces: Stdio, File, Filesystem, Logging, Thread, Net

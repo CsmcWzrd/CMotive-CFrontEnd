@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX063_FOR_LOOP");
+    i : I32 = 0;
+    sum : I32 = 0;
+    For ( i = 0; i < 3; i++ )
+    {
+        sum += 1;
+    }
+    Return sum == 3 ? 0 : 1;
+}

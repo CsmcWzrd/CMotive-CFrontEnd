@@ -1,0 +1,3 @@
+Import Sys;
+func worker() -> Int { return 1; }
+func main() -> Int { let a = Sys::Thread::spawn("a", worker); let b = Sys::Thread::spawn("b", worker); return a.join() + b.join(); }

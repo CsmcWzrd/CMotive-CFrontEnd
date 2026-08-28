@@ -1,0 +1,20 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX065_CONTINUE_LOOP");
+    i : I32 = 0;
+    sum : I32 = 0;
+    While ( i < 5 )
+    {
+        i++;
+        If ( i == 3 )
+        {
+            Continue;
+        }
+        sum += 1;
+    }
+    Return sum == 4 ? 0 : 1;
+}

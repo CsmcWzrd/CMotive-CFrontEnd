@@ -1,0 +1,10 @@
+count1: Tstore Int32 = 1;
+count2: ThreadStore Int32 = 2;
+
+Int32
+main
+()
+{
+    local: ThreadStore Int32 = 3;
+    Return count1 + count2 + local == 6 ? 0 : 1;
+}

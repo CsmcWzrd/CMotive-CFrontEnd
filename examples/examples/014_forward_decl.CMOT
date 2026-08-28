@@ -1,0 +1,3 @@
+func twice(x: Int) -> Int;
+func main() -> Int { return twice(5); }
+func twice(x: Int) -> Int { return x * 2; }

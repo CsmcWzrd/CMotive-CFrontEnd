@@ -1,0 +1,15 @@
+CMotive standard library, native sockets, IO rename, and Dynamic Struct update
+
+Implemented in this pass:
+- Preferred package rename: Sys::Stdio -> Sys::IO, with compatibility wrapper.
+- cout.expect(...).write(...) and cin.expect(...).read(...) remain runtime-backed printf/scanf style formatted IO.
+- Sys::STL package surfaces for Vector, List, Dlist, Map, Dict, HashDict, MultiDict, MultiHashDict, BinaryTree, BinarySearchTree, BTree, BPlusTree.
+- Runtime-backed helper functions for vector/list/dlist, map/dict/hash/multi-dict, and ordered tree containers.
+- Sys::Algorithms sorting/searching/min/max/compare helpers.
+- Sys::Thread native system-thread wrappers, not userspace scheduler.
+- Sys::Net TCP/UDP IPv4/IPv6 and raw/ICMP socket wrappers plus close/send/recv/bind/connect/listen/accept helpers.
+- Dynamic Struct and grow-only Expand syntax parsing and C struct emission.
+- Full test-suite plan document.
+
+Verification should run: python3 -m py_compile ..., make -f Makefile.linux clean all test, and clean archive spot-checks.
+- Added additional Sys::Algorithms helpers: bubble, shell, comb, gnome, radix/counting aliases, jump/exponential/interpolation search aliases.

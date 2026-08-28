@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+Extern
+I32
+HelperExtern
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX030_EXTERN_FUNCTION_DECORATOR");
+    v : I32 = HelperExtern();
+    Return 0;
+}

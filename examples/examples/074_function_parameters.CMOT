@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+I32
+MulPair
+a : I32
+b : I32
+()
+{
+    Return a * b;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX074_FUNCTION_PARAMETERS");
+    result : I32 = MulPair(3, 4);
+    Return result == 12 ? 0 : 1;
+}

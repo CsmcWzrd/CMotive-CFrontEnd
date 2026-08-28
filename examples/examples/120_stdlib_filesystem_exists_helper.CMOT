@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+Plugin Sys::Filesystem
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX120_STDLIB_FILESYSTEM_EXISTS_HELPER");
+    exists : I32 = 0;
+    Return 0;
+}

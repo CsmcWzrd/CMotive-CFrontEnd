@@ -1,0 +1,27 @@
+Plugin Sys::Stdio
+
+Class
+OuterBox
+{
+    Public
+    {
+        Class
+        InnerBox
+        {
+            Public
+            {
+                value : I32 = 0; Block
+            }
+        };
+        outerValue : I32 = 1; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX092_NESTED_CLASS");
+    outer : OuterBox;
+    Return 0;
+}

@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { try { throw Exception("boom"); } catch e: Exception { Sys::Stdio::println(e.message); return 0; } }

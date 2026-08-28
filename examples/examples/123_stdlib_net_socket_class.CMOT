@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/Net.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX123_STDLIB_NET_SOCKET_CLASS");
+    s : Socket;
+    Return 0;
+}

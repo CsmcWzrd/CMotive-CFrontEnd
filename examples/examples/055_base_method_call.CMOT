@@ -1,0 +1,14 @@
+// CMotive verified example 055: base_method_call
+// Coverage: base method call scaffold
+class Base55 { var seed; func id(x) : Int { return x; } }
+class Feature55 extends Base55 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 055: base_method_call\n");
+  var value = 55;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

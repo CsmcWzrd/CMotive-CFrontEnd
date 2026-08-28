@@ -1,0 +1,3 @@
+class Animal { method speak() -> Int { return 1; } }
+class Dog : Animal { method bark() -> Int { return 2; } }
+func main() -> Int { let d: Dog = Dog(); return d.speak() + d.bark(); }

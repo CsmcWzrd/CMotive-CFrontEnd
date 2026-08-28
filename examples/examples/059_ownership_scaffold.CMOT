@@ -1,0 +1,2 @@
+class Owner { field ptr: Int*; destructor() { Delete ptr; } }
+func main() -> Int { let o: Owner = Owner(); o.ptr = New Int(1); return 0; }

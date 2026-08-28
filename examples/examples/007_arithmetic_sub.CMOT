@@ -1,0 +1,12 @@
+// CMotive verified example 007: arithmetic_sub
+// Coverage: subtraction
+func main() : Int {
+  Sys::Stdio::print("example 007: arithmetic_sub\n");
+  var value = 7;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

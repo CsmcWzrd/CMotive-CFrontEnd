@@ -1,0 +1,12 @@
+// CMotive verified example 122: mini_cli_args
+// Coverage: mini CLI args scaffold
+func main() : Int {
+  Sys::Stdio::print("example 122: mini_cli_args\n");
+  var value = 122;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

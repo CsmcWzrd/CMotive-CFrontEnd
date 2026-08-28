@@ -1,0 +1,20 @@
+Plugin Sys::Stdio
+
+Class
+AccessBox
+{
+    Public
+    {
+        value : I32 = 0;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX099_MEMBER_ACCESS_VALUE");
+    item : AccessBox;
+    item.value = 3;
+    Return 0;
+}

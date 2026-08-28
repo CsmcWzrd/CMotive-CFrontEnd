@@ -1,0 +1,347 @@
+Package Sys::Locks;
+
+Class
+Mutex
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        Mutex
+        ()
+        {
+            handle = cmotive_sys_locks_mutex_create();
+        }
+
+        ~Mutex
+        ()
+        {
+            cmotive_sys_locks_mutex_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        lock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_lock(handle);
+        }
+
+        I32
+        tryLock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_trylock(handle);
+        }
+
+        I32
+        unlock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_unlock(handle);
+        }
+    }
+};
+
+Class
+RecursiveMutex
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        RecursiveMutex
+        ()
+        {
+            handle = cmotive_sys_locks_recursive_mutex_create();
+        }
+
+        ~RecursiveMutex
+        ()
+        {
+            cmotive_sys_locks_mutex_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        lock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_lock(handle);
+        }
+
+        I32
+        tryLock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_trylock(handle);
+        }
+
+        I32
+        unlock
+        ()
+        {
+            Return cmotive_sys_locks_mutex_unlock(handle);
+        }
+    }
+};
+
+Class
+RwLock
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        RwLock
+        ()
+        {
+            handle = cmotive_sys_locks_rwlock_create();
+        }
+
+        ~RwLock
+        ()
+        {
+            cmotive_sys_locks_rwlock_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        readLock
+        ()
+        {
+            Return cmotive_sys_locks_rwlock_rdlock(handle);
+        }
+
+        I32
+        writeLock
+        ()
+        {
+            Return cmotive_sys_locks_rwlock_wrlock(handle);
+        }
+
+        I32
+        unlock
+        ()
+        {
+            Return cmotive_sys_locks_rwlock_unlock(handle);
+        }
+    }
+};
+
+Class
+SpinLock
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        SpinLock
+        ()
+        {
+            handle = cmotive_sys_locks_spin_create();
+        }
+
+        ~SpinLock
+        ()
+        {
+            cmotive_sys_locks_spin_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        lock
+        ()
+        {
+            Return cmotive_sys_locks_spin_lock(handle);
+        }
+
+        I32
+        tryLock
+        ()
+        {
+            Return cmotive_sys_locks_spin_trylock(handle);
+        }
+
+        I32
+        unlock
+        ()
+        {
+            Return cmotive_sys_locks_spin_unlock(handle);
+        }
+    }
+};
+
+Void*
+mutexCreate
+()
+{
+    Return cmotive_sys_locks_mutex_create();
+}
+
+I32
+mutexLock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_mutex_lock(handle);
+}
+
+I32
+mutexTryLock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_mutex_trylock(handle);
+}
+
+I32
+mutexUnlock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_mutex_unlock(handle);
+}
+
+Void
+mutexDestroy
+handle : Void*
+()
+{
+    cmotive_sys_locks_mutex_destroy(handle);
+    Return;
+}
+
+Void*
+rwlockCreate
+()
+{
+    Return cmotive_sys_locks_rwlock_create();
+}
+
+I32
+rwlockReadLock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_rwlock_rdlock(handle);
+}
+
+I32
+rwlockWriteLock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_rwlock_wrlock(handle);
+}
+
+I32
+rwlockUnlock
+handle : Void*
+()
+{
+    Return cmotive_sys_locks_rwlock_unlock(handle);
+}
+
+Void
+rwlockDestroy
+handle : Void*
+()
+{
+    cmotive_sys_locks_rwlock_destroy(handle);
+    Return;
+}
+
+Class
+ConditionVariable
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        ConditionVariable
+        ()
+        {
+            handle = cmotive_sys_locks_cond_create();
+        }
+
+        ~ConditionVariable
+        ()
+        {
+            cmotive_sys_locks_cond_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        wait
+        mutex_handle : Void*
+        ()
+        {
+            Return cmotive_sys_locks_cond_wait(handle, mutex_handle);
+        }
+
+        I32
+        signal
+        ()
+        {
+            Return cmotive_sys_locks_cond_signal(handle);
+        }
+
+        I32
+        broadcast
+        ()
+        {
+            Return cmotive_sys_locks_cond_broadcast(handle);
+        }
+    }
+};
+
+Class
+Semaphore
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        Semaphore
+        ()
+        {
+            handle = cmotive_sys_locks_semaphore_create(0);
+        }
+
+        Semaphore
+        initial : I32
+        ()
+        {
+            handle = cmotive_sys_locks_semaphore_create(initial);
+        }
+
+        ~Semaphore
+        ()
+        {
+            cmotive_sys_locks_semaphore_destroy(handle);
+            handle = Null;
+        }
+
+        I32
+        post
+        ()
+        {
+            Return cmotive_sys_locks_semaphore_post(handle);
+        }
+
+        I32
+        wait
+        ()
+        {
+            Return cmotive_sys_locks_semaphore_wait(handle);
+        }
+
+        I32
+        tryWait
+        ()
+        {
+            Return cmotive_sys_locks_semaphore_trywait(handle);
+        }
+    }
+};

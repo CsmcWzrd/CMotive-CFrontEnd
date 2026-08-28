@@ -1,0 +1,13 @@
+// CMotive verified example 062: const_method
+// Coverage: const method scaffold
+class Feature62 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 062: const_method\n");
+  var value = 62;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

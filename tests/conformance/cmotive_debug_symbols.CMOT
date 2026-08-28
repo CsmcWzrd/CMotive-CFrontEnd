@@ -1,0 +1,46 @@
+Class
+DebugThing
+{
+    Public
+    {
+        x : I32 = 0; Block
+
+        DebugThing
+        ()
+        {
+            x = 5;
+        }
+
+        ~DebugThing
+        ()
+        {
+        }
+
+        I32
+        Add
+        y : I32
+        ()
+        {
+            Return This.x + y;
+        }
+    }
+};
+
+I32
+Helper
+left : I32
+right : I32
+()
+{
+    Return left + right;
+}
+
+I32
+main
+()
+{
+    obj : DebugThing* = New DebugThing();
+    value : I32 = obj->Add(7);
+    Delete obj;
+    Return Helper(value, 0) == 12 ? 0 : 1;
+}

@@ -1,0 +1,12 @@
+// CMotive verified example 035: break_scaffold
+// Coverage: break scaffold
+func main() : Int {
+  Sys::Stdio::print("example 035: break_scaffold\n");
+  var value = 35;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

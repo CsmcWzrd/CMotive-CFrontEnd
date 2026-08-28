@@ -1,0 +1,46 @@
+Class
+TargetReceiver
+{
+    Public
+    {
+        TargetReceiver
+        ()
+        {
+        }
+
+        ~TargetReceiver
+        ()
+        {
+        }
+
+        Hit :1234
+        Void
+        Add
+        x : I32
+        y : I32
+        ()
+        {
+            cout.expect("%d\n").write(x + y);
+        }
+
+        Hit SenderClassName:8000
+        Void
+        AddSender
+        x : I32
+        y : I32
+        ()
+        {
+            cout.expect("%d\n").write(x + y);
+        }
+    }
+};
+
+I32
+main
+()
+{
+    obj1 : TargetReceiver;
+    Target :obj1:3,4:1234;
+    Target SenderClassName:obj1:5,6:8000;
+    Return 0;
+}

@@ -1,0 +1,12 @@
+// CMotive verified example 022: return_values
+// Coverage: return values
+func main() : Int {
+  Sys::Stdio::print("example 022: return_values\n");
+  var value = 22;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

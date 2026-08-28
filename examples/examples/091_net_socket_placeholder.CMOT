@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let s: Sys::Net::Socket = Sys::Net::Socket(); s.connect("localhost", 80); s.close(); return 0; }

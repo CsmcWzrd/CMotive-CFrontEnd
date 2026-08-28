@@ -1,0 +1,14 @@
+Plugin Sys::STL
+
+I32
+main
+()
+{
+    v : Void* = Sys::STL::VectorCreate();
+    Sys::STL::VectorPushI64(v, (Int)20);
+    Sys::STL::VectorPushI64(v, (Int)10);
+    Sys::STL::VectorSortI64(v);
+    first : Int = Sys::STL::VectorGetI64(v, (Uint)0);
+    Sys::STL::VectorDestroy(v);
+    Return first == 10 ? 0 : 1;
+}

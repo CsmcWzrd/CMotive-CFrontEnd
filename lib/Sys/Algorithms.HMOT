@@ -1,0 +1,199 @@
+Package Sys::Algorithms;
+
+Class
+Algorithms
+{
+    Public
+    {
+        Void
+        QuickSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_quick_i64(data, count);
+        }
+        Void
+        HeapSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_heap_i64(data, count);
+        }
+        Void
+        MergeSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_merge_i64(data, count);
+        }
+        Void
+        InsertionSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_insertion_i64(data, count);
+        }
+        Void
+        SelectionSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_selection_i64(data, count);
+        }
+        Void
+        BubbleSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_bubble_i64(data, count);
+        }
+        Void
+        ShellSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_shell_i64(data, count);
+        }
+        Void
+        CombSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_comb_i64(data, count);
+        }
+        Void
+        GnomeSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_gnome_i64(data, count);
+        }
+        Void
+        RadixSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_radix_i64(data, count);
+        }
+        Void
+        CountingSort
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_sort_counting_i64(data, count);
+        }
+        Int
+        BinarySearch
+        data : Int*
+        count : Uint
+        value : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_binary_search_i64(data, count, value);
+        }
+        Int
+        LinearSearch
+        data : Int*
+        count : Uint
+        value : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_linear_search_i64(data, count, value);
+        }
+        Int
+        JumpSearch
+        data : Int*
+        count : Uint
+        value : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_jump_search_i64(data, count, value);
+        }
+        Int
+        ExponentialSearch
+        data : Int*
+        count : Uint
+        value : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_exponential_search_i64(data, count, value);
+        }
+        Int
+        InterpolationSearch
+        data : Int*
+        count : Uint
+        value : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_interpolation_search_i64(data, count, value);
+        }
+        Boolean
+        IsSorted
+        data : Int*
+        count : Uint
+        ()
+        {
+            Return cmotive_sys_algorithms_is_sorted_i64(data, count);
+        }
+        Void
+        Reverse
+        data : Int*
+        count : Uint
+        ()
+        {
+            cmotive_sys_algorithms_reverse_i64(data, count);
+        }
+        Void
+        RotateLeft
+        data : Int*
+        count : Uint
+        by : Uint
+        ()
+        {
+            cmotive_sys_algorithms_rotate_left_i64(data, count, by);
+        }
+        Uint
+        Unique
+        data : Int*
+        count : Uint
+        ()
+        {
+            Return cmotive_sys_algorithms_unique_i64(data, count);
+        }
+        Int
+        Min
+        a : Int
+        b : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_min_i64(a, b);
+        }
+        Int
+        Max
+        a : Int
+        b : Int
+        ()
+        {
+            Return cmotive_sys_algorithms_max_i64(a, b);
+        }
+        Int32
+        Compare
+        a : Int32
+        b : Int32
+        ()
+        {
+            Return cmotive_sys_algorithms_compare_i32(a, b);
+        }
+    }
+};

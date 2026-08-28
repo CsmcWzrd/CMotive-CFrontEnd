@@ -1,0 +1,28 @@
+CMotive complete feature pass update
+====================================
+
+Implemented/expanded in this pass:
+- Full-template instantiation path for concrete class/function template uses.
+- Exception unwinding with Try/Catch/Catchall/Throw and destructor cleanup frames.
+- Real Plugin package loading for .HMOT/.HMTV/.CMOT/.CMTV from source/lib/include paths.
+- Native Sys::Net sockets: TCP, UDP, raw, ICMP, IPv4 and IPv6 helpers.
+- Expanded Sys::STL containers and Sys::Algorithms support.
+- Auto Get/Set/Getall/Setall materialization for public non-Block fields.
+- Operation keyword based operator overload lowering.
+- Tstore and ThreadStore as thread-local storage classes.
+- Overridable as the formal vtable keyword; pure virtual Overridable methods use ()=0; with no body.
+- Global variables can be declared from package, function, or method scope and are emitted as package-qualified globals.
+- Fptr-prefixed function declarations emit function-pointer typedefs.
+
+Added tests:
+- tests/conformance/cmotive_global_anywhere.CMOT
+- tests/conformance/cmotive_fptr_function_pointer.CMOT
+- tests/conformance/cmotive_overridable_pure_virtual.CMOT
+
+Verification:
+- python3 -m py_compile src/cmotive/*.py tools/cmotive.py tools/cmotivepp.py tests/run_tests.py
+- make -f Makefile.linux clean all test
+- python3 tests/run_tests.py --bin build/bin --full
+- Targeted compile/link/run of Lang-Examples 146-149.
+
+Result: PASS.

@@ -1,0 +1,3 @@
+Package Mod;
+private func helper() -> Int { return 1; }
+Export func api() -> Int { return helper(); }

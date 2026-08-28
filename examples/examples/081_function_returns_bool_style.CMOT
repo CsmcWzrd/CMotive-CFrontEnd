@@ -1,0 +1,21 @@
+Plugin Sys::Stdio
+
+Boolean
+BoolFunc
+()
+{
+    Return True;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX081_FUNCTION_RETURNS_BOOL_STYLE");
+    ok : Boolean = BoolFunc();
+    If ( ok )
+    {
+        Return 0;
+    }
+    Return 1;
+}

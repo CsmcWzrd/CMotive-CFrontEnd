@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/STL.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX124_STDLIB_STL_VECTOR_SCAFFOLD");
+    value : I32 = 0;
+    Return 0;
+}

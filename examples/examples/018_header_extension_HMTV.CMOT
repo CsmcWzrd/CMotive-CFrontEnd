@@ -1,0 +1,12 @@
+// CMotive verified example 018: header_extension_HMTV
+// Coverage: HMTV header extension
+func main() : Int {
+  Sys::Stdio::print("example 018: header_extension_HMTV\n");
+  var value = 18;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

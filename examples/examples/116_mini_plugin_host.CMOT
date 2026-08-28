@@ -1,0 +1,3 @@
+Import Sys;
+func loadPlugin(path: String) -> Plugin { return Plugin::load(path); }
+func main() -> Int { let p = loadPlugin("example_plugin"); Sys::Stdio::println(p.name()); return 0; }

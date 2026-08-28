@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+Class
+BlockItem
+{
+    Public
+    {
+        hidden : I32 = 0; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX095_BLOCK_MEMBER");
+    item : BlockItem;
+    Return 0;
+}

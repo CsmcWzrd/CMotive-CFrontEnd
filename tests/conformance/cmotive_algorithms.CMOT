@@ -1,0 +1,11 @@
+Plugin Sys::Algorithms
+
+I32
+main
+()
+{
+    a : Int = Sys::Algorithms::MinI64((Int)10, (Int)3);
+    b : Int = Sys::Algorithms::MaxI64((Int)10, (Int)3);
+    c : I32 = Sys::Algorithms::CompareI32((I32)4, (I32)4);
+    Return (a == 3 && b == 10 && c == 0) ? 0 : 1;
+}

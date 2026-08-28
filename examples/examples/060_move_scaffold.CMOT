@@ -1,0 +1,3 @@
+class Buffer { field p: Int*; }
+func consume(b: Buffer) -> Int { return 0; }
+func main() -> Int { let b: Buffer = Buffer(); return consume(move(b)); }

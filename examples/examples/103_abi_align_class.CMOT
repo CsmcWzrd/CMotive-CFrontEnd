@@ -1,0 +1,2 @@
+class A { field x: Int; field y: Int; }
+func main() -> Int { return alignof(A); }

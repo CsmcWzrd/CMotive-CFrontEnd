@@ -1,0 +1,2 @@
+class Counter { field n: Int; constructor() { n = 0; } method inc() -> Int { n = n + 1; return n; } }
+func main() -> Int { let c: Counter = Counter(); return c.inc(); }

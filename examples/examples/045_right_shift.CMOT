@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX045_RIGHT_SHIFT");
+    x : I32 = 8 >> 2;
+    If ( x != 2 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

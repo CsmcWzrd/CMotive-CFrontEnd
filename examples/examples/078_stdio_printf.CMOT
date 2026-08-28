@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { Sys::Stdio::printf("name=%s", "cmotive"); return 0; }

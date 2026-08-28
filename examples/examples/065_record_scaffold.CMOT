@@ -1,0 +1,13 @@
+// CMotive verified example 065: record_scaffold
+// Coverage: record scaffold
+class Feature65 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 065: record_scaffold\n");
+  var value = 65;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

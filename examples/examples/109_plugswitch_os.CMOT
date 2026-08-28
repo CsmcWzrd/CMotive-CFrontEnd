@@ -1,0 +1,21 @@
+Plugin Sys::Stdio
+Plugswitch
+Plugcase OS:LINUX
+SelectedValue : I32 = 1;
+Plugcase OS:WIN32
+SelectedValue : I32 = 2;
+Plugdefault
+SelectedValue : I32 = 3;
+Plugend
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX109_PLUGSWITCH_OS");
+    If ( SelectedValue == 0 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

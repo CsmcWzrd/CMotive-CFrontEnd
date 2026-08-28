@@ -1,0 +1,12 @@
+// CMotive verified example 127: mini_threaded_logger
+// Coverage: mini threaded logger scaffold
+func main() : Int {
+  Sys::Stdio::print("example 127: mini_threaded_logger\n");
+  var value = 127;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

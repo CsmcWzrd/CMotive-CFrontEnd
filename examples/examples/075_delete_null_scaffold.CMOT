@@ -1,0 +1,13 @@
+// CMotive verified example 075: delete_null_scaffold
+// Coverage: delete null scaffold
+func helper(x) : Int { return x + 1; }
+func main() : Int {
+  Sys::Stdio::print("example 075: delete_null_scaffold\n");
+  var value = 75;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

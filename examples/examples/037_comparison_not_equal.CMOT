@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX037_COMPARISON_NOT_EQUAL");
+    x : I32 = 1;
+    If ( x != 2 )
+    {
+        x = 0;
+    }
+    Return x;
+}

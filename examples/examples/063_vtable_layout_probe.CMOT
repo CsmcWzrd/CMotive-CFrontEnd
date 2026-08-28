@@ -1,0 +1,3 @@
+class A { virtual method a() -> Int { return 1; } }
+class B : A { override method a() -> Int { return 2; } }
+func main() -> Int { return sizeof(B); }

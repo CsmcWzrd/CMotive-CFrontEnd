@@ -1,0 +1,12 @@
+// CMotive verified example 020: void_style_function
+// Coverage: void-style function scaffold
+func main() : Int {
+  Sys::Stdio::print("example 020: void_style_function\n");
+  var value = 20;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

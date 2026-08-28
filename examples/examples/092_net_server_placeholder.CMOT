@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let server: Sys::Net::Server = Sys::Net::Server(8080); server.close(); return 0; }

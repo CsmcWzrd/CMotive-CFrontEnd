@@ -1,0 +1,3 @@
+Import Sys;
+func worker() -> Int { let log = Sys::Logging::Logger("worker"); log.info("tick"); return 0; }
+func main() -> Int { let t = Sys::Thread::spawn("worker", worker); return t.join(); }

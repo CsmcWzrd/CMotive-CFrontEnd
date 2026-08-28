@@ -1,0 +1,38 @@
+Destroyed : I32 = 0;
+
+Class
+Guard
+{
+    Public
+    {
+        Guard
+        ()
+        {
+        }
+
+        ~Guard
+        ()
+        {
+            Destroyed = 99;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    Try
+    {
+        g : Guard;
+        Throw "boom";
+    }
+    Catchall
+    {
+        If ( Destroyed == 99 )
+        {
+            Return 0;
+        }
+    }
+    Return 1;
+}

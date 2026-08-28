@@ -1,0 +1,13 @@
+// CMotive verified example 086: stdio_print
+// Coverage: Sys::Stdio print
+func guarded(x) : Int { if (x > 0) { return x; } else { return 0; } }
+func main() : Int {
+  Sys::Stdio::print("example 086: stdio_print\n");
+  var value = 86;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

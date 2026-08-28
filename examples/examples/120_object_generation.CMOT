@@ -1,0 +1,12 @@
+// CMotive verified example 120: object_generation
+// Coverage: -c object generation probe
+func main() : Int {
+  Sys::Stdio::print("example 120: object_generation\n");
+  var value = 120;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

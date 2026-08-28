@@ -1,0 +1,1 @@
+func main() -> Int { let x: Int = 2; match x { 1 => return 1; 2 => return 0; _ => return 3; } }

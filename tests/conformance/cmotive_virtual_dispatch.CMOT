@@ -1,0 +1,54 @@
+Class
+VBase
+{
+    Public
+    {
+        VBase
+        ()
+        {
+        }
+
+        Overridable
+        I32
+        Value
+        ()
+        {
+            Return 1;
+        }
+    }
+};
+
+Class
+VDerived
+Inherits
+VBase Public
+{
+    Public
+    {
+        VDerived
+        ()
+        {
+        }
+
+        I32
+        Value
+        ()
+        {
+            Return 9;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    b : VBase* = New VDerived();
+    got : I32 = b->Value();
+    Delete b;
+    If ( got == 9 )
+    {
+        Return 0;
+    }
+    Return 1;
+}

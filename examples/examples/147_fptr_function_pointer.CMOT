@@ -1,0 +1,17 @@
+Plugin Sys::IO
+
+Fptr
+Int32
+Callback
+x: Int32
+()
+;
+
+Int32
+main
+()
+{
+    cb: Callback = 0;
+    cout.expect("%s\n").write("CMOTIVE_EX147_FPTR_FUNCTION_POINTER");
+    Return cb == 0 ? 0 : 1;
+}

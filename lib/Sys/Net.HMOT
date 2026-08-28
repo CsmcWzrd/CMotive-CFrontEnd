@@ -1,0 +1,305 @@
+Package Sys::Net;
+
+Class
+Socket
+{
+    Public
+    {
+        fd : I32 = -1; Block
+
+        Socket
+        ()
+        {
+            fd = -1;
+        }
+
+        ~Socket
+        ()
+        {
+            If ( fd >= 0 )
+            {
+                cmotive_sys_net_socket_close(fd);
+                fd = -1;
+            }
+        }
+
+        I32
+        OpenTcpIPv4
+        ()
+        {
+            fd = cmotive_sys_net_socket_tcp_ipv4();
+            Return fd;
+        }
+
+        I32
+        OpenTcpIPv6
+        ()
+        {
+            fd = cmotive_sys_net_socket_tcp_ipv6();
+            Return fd;
+        }
+
+        I32
+        OpenUdpIPv4
+        ()
+        {
+            fd = cmotive_sys_net_socket_udp_ipv4();
+            Return fd;
+        }
+
+        I32
+        OpenUdpIPv6
+        ()
+        {
+            fd = cmotive_sys_net_socket_udp_ipv6();
+            Return fd;
+        }
+
+        I32
+        OpenRawIPv4
+        ()
+        {
+            fd = cmotive_sys_net_socket_raw_ipv4();
+            Return fd;
+        }
+
+        I32
+        OpenRawIPv6
+        ()
+        {
+            fd = cmotive_sys_net_socket_raw_ipv6();
+            Return fd;
+        }
+
+        I32
+        OpenIcmpIPv4
+        ()
+        {
+            fd = cmotive_sys_net_socket_icmp_ipv4();
+            Return fd;
+        }
+
+        I32
+        OpenIcmpIPv6
+        ()
+        {
+            fd = cmotive_sys_net_socket_icmp_ipv6();
+            Return fd;
+        }
+
+        I32
+        Attach
+        new_fd : I32
+        ()
+        {
+            fd = new_fd;
+            Return fd;
+        }
+
+        I32
+        Fd
+        ()
+        {
+            Return fd;
+        }
+
+        Boolean
+        IsOpen
+        ()
+        {
+            Return fd >= 0;
+        }
+
+        I32
+        Close
+        ()
+        {
+            r : I32 = 0;
+            If ( fd >= 0 )
+            {
+                r = cmotive_sys_net_socket_close(fd);
+                fd = -1;
+            }
+            Return r;
+        }
+
+        I32
+        Send
+        buffer : Void*
+        size : Uint
+        ()
+        {
+            Return cmotive_sys_net_send(fd, buffer, size);
+        }
+
+        I32
+        Recv
+        buffer : Void*
+        size : Uint
+        ()
+        {
+            Return cmotive_sys_net_recv(fd, buffer, size);
+        }
+
+        I32
+        BindIPv4
+        ip : Char*
+        port : Uint16
+        ()
+        {
+            Return cmotive_sys_net_bind_ipv4(fd, ip, port);
+        }
+
+        I32
+        ConnectIPv4
+        ip : Char*
+        port : Uint16
+        ()
+        {
+            Return cmotive_sys_net_connect_ipv4(fd, ip, port);
+        }
+
+        I32
+        Listen
+        backlog : Int32
+        ()
+        {
+            Return cmotive_sys_net_listen(fd, backlog);
+        }
+
+        I32
+        Accept
+        ()
+        {
+            Return cmotive_sys_net_accept(fd);
+        }
+    }
+};
+
+Class
+Net
+{
+    Public
+    {
+        I32
+        TcpIPv4
+        ()
+        {
+            Return cmotive_sys_net_socket_tcp_ipv4();
+        }
+
+        I32
+        TcpIPv6
+        ()
+        {
+            Return cmotive_sys_net_socket_tcp_ipv6();
+        }
+
+        I32
+        UdpIPv4
+        ()
+        {
+            Return cmotive_sys_net_socket_udp_ipv4();
+        }
+
+        I32
+        UdpIPv6
+        ()
+        {
+            Return cmotive_sys_net_socket_udp_ipv6();
+        }
+
+        I32
+        RawIPv4
+        ()
+        {
+            Return cmotive_sys_net_socket_raw_ipv4();
+        }
+
+        I32
+        RawIPv6
+        ()
+        {
+            Return cmotive_sys_net_socket_raw_ipv6();
+        }
+
+        I32
+        IcmpIPv4
+        ()
+        {
+            Return cmotive_sys_net_socket_icmp_ipv4();
+        }
+
+        I32
+        IcmpIPv6
+        ()
+        {
+            Return cmotive_sys_net_socket_icmp_ipv6();
+        }
+
+        I32
+        Close
+        fd : I32
+        ()
+        {
+            Return cmotive_sys_net_socket_close(fd);
+        }
+    }
+};
+
+// Backward-compatible functional wrappers.
+I32
+socketTcpIPv4
+()
+{
+    Return cmotive_sys_net_socket_tcp_ipv4();
+}
+I32
+socketTcpIPv6
+()
+{
+    Return cmotive_sys_net_socket_tcp_ipv6();
+}
+I32
+socketUdpIPv4
+()
+{
+    Return cmotive_sys_net_socket_udp_ipv4();
+}
+I32
+socketUdpIPv6
+()
+{
+    Return cmotive_sys_net_socket_udp_ipv6();
+}
+I32
+socketRawIPv4
+()
+{
+    Return cmotive_sys_net_socket_raw_ipv4();
+}
+I32
+socketRawIPv6
+()
+{
+    Return cmotive_sys_net_socket_raw_ipv6();
+}
+I32
+socketIcmpIPv4
+()
+{
+    Return cmotive_sys_net_socket_icmp_ipv4();
+}
+I32
+socketIcmpIPv6
+()
+{
+    Return cmotive_sys_net_socket_icmp_ipv6();
+}
+I32
+socketClose
+fd : I32
+()
+{
+    Return cmotive_sys_net_socket_close(fd);
+}

@@ -1,0 +1,3 @@
+Package ExamplePlugin;
+@Plugin(name="Example", version="1.0")
+Export func pluginName() -> String { return "Example"; }

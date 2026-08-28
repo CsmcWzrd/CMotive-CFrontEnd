@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let log: Sys::Logging::Logger = Sys::Logging::Logger("test"); log.info("ready"); return 0; }

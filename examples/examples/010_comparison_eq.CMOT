@@ -1,0 +1,12 @@
+// CMotive verified example 010: comparison_eq
+// Coverage: equality comparison
+func main() : Int {
+  Sys::Stdio::print("example 010: comparison_eq\n");
+  var value = 10;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

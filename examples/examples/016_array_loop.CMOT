@@ -1,0 +1,1 @@
+func main() -> Int { let xs: Int[] = [1,2,3]; let total: Int = 0; for x in xs { total = total + x; } return total; }

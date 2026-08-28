@@ -1,0 +1,9 @@
+Plugin Sys::STL
+
+I32
+main
+()
+{
+    values : Vector<I32>;
+    Return 0;
+}

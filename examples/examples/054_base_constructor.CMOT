@@ -1,0 +1,14 @@
+// CMotive verified example 054: base_constructor
+// Coverage: base constructor scaffold
+class Base54 { var seed; func id(x) : Int { return x; } }
+class Feature54 extends Base54 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 054: base_constructor\n");
+  var value = 54;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,12 @@
+// CMotive verified example 126: mini_plugin_host
+// Coverage: mini plugin host scaffold
+func main() : Int {
+  Sys::Stdio::print("example 126: mini_plugin_host\n");
+  var value = 126;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

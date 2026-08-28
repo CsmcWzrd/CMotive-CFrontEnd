@@ -1,0 +1,48 @@
+Plugin Sys::String
+Plugin Sys::Wide
+
+Int32
+main
+()
+{
+    s : CString;
+    s.Set("hello");
+    If ( s.Length() != 5 )
+    {
+        Return 1;
+    }
+    If ( s.Contains("ell") == False )
+    {
+        Return 2;
+    }
+    If ( s.Compare("hello") != 0 )
+    {
+        Return 3;
+    }
+    c : Character;
+    If ( c.IsDigit('7') == False )
+    {
+        Return 4;
+    }
+    parser : StringParser;
+    parser.Parse("a,b;c,d", ";", ",", '\\');
+    If ( parser.Rows() != 2 )
+    {
+        Return 5;
+    }
+    If ( parser.Cols(0) != 2 )
+    {
+        Return 6;
+    }
+    w16 : Wide16String;
+    If ( w16.Length() != 0 )
+    {
+        Return 7;
+    }
+    w32 : Wide32String;
+    If ( w32.Length() != 0 )
+    {
+        Return 8;
+    }
+    Return 0;
+}

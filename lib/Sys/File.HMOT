@@ -1,0 +1,145 @@
+Package Sys::File;
+
+Class
+File
+{
+    Public
+    {
+        path : Char* = "";
+        handle : Void* = Null; Block
+
+        File
+        ()
+        {
+        }
+
+        ~File
+        ()
+        {
+            This.close();
+        }
+
+        I32
+        open
+        path_value : Char*
+        mode_value : Char*
+        ()
+        {
+            path = path_value;
+            handle = cmotive_sys_file_open(path_value, mode_value);
+            Return handle != Null;
+        }
+
+        I32
+        close
+        ()
+        {
+            r : I32 = cmotive_sys_file_close(handle);
+            handle = Null;
+            Return r;
+        }
+
+        I64
+        read
+        buffer : Void*
+        bytes : U64
+        ()
+        {
+            Return cmotive_sys_file_read(handle, buffer, bytes);
+        }
+
+        I64
+        write
+        buffer : Void*
+        bytes : U64
+        ()
+        {
+            Return cmotive_sys_file_write(handle, buffer, bytes);
+        }
+
+        I32
+        seek
+        offset : I64
+        origin : I32
+        ()
+        {
+            Return cmotive_sys_file_seek(handle, offset, origin);
+        }
+
+        I64
+        tell
+        ()
+        {
+            Return cmotive_sys_file_tell(handle);
+        }
+
+        I32
+        eof
+        ()
+        {
+            Return cmotive_sys_file_eof(handle);
+        }
+    }
+};
+
+Void*
+open
+path : Char*
+mode : Char*
+()
+{
+    Return cmotive_sys_file_open(path, mode);
+}
+
+I32
+close
+handle : Void*
+()
+{
+    Return cmotive_sys_file_close(handle);
+}
+
+I64
+read
+handle : Void*
+buffer : Void*
+bytes : U64
+()
+{
+    Return cmotive_sys_file_read(handle, buffer, bytes);
+}
+
+I64
+write
+handle : Void*
+buffer : Void*
+bytes : U64
+()
+{
+    Return cmotive_sys_file_write(handle, buffer, bytes);
+}
+
+I32
+flush
+handle : Void*
+()
+{
+    Return cmotive_sys_file_flush(handle);
+}
+
+I32
+remove
+path : Char*
+()
+{
+    Return cmotive_sys_file_remove(path);
+}
+
+I32
+rename
+old_path : Char*
+new_path : Char*
+()
+{
+    Return cmotive_sys_file_rename(old_path, new_path);
+}

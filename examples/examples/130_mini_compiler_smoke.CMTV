@@ -1,0 +1,12 @@
+// CMotive verified example 130: mini_compiler_smoke
+// Coverage: compiler smoke example
+func main() : Int {
+  Sys::Stdio::print("example 130: mini_compiler_smoke\n");
+  var value = 130;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

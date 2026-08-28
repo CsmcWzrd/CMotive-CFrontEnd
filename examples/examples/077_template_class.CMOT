@@ -1,0 +1,13 @@
+// CMotive verified example 077: template_class
+// Coverage: template class scaffold
+func generic_identity(x) : Int { return x; }
+func main() : Int {
+  Sys::Stdio::print("example 077: template_class\n");
+  var value = 77;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

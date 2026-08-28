@@ -1,0 +1,55 @@
+Class
+DefaultMangle
+{
+    Public
+    {
+        DefaultMangle
+        ()
+        {
+        }
+
+        I32
+        Ping
+        ()
+        {
+            Return 12;
+        }
+    }
+};
+
+Package CustomPkg;
+
+Class
+CustomMangle
+{
+    Public
+    {
+        CustomMangle
+        ()
+        {
+        }
+
+        I32
+        Ping
+        ()
+        {
+            Return 34;
+        }
+    }
+};
+
+Package StartPackage;
+
+I32
+main
+()
+{
+    d : DefaultMangle;
+    c : CustomMangle;
+    got : I32 = d.Ping() + c.Ping();
+    If ( got == 46 )
+    {
+        Return 0;
+    }
+    Return 1;
+}

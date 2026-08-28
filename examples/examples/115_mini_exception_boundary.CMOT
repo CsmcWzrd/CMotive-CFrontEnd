@@ -1,0 +1,3 @@
+Import Sys;
+func risky() -> Int { throw Exception("bad"); }
+func main() -> Int { try { return risky(); } catch e: Exception { Sys::Stdio::println(e.message); return 0; } }

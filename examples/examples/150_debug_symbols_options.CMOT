@@ -1,0 +1,47 @@
+Class
+ExampleDebugSymbol
+{
+    Public
+    {
+        value : I32 = 0; Block
+
+        ExampleDebugSymbol
+        ()
+        {
+            value = 150;
+        }
+
+        ~ExampleDebugSymbol
+        ()
+        {
+        }
+
+        I32
+        Add
+        rhs : I32
+        ()
+        {
+            Return This.value + rhs;
+        }
+    }
+};
+
+I32
+ExampleHelper
+x : I32
+y : I32
+()
+{
+    Return x + y;
+}
+
+I32
+main
+()
+{
+    d : ExampleDebugSymbol* = New ExampleDebugSymbol();
+    total : I32 = d->Add(0);
+    Delete d;
+    cout.expect("%s\n").write("CMOTIVE_EX150_DEBUG_SYMBOLS_OPTIONS");
+    Return ExampleHelper(total, 0) == 150 ? 0 : 1;
+}

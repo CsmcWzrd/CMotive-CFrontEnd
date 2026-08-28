@@ -1,0 +1,558 @@
+Package Sys::Math;
+
+// Broad CMotive math package surface backed by native C math helpers.
+// Floating point functions mirror common Linux libm names where practical.
+
+Double
+sin
+x : Double
+()
+{
+    Return cmotive_sys_math_sin(x);
+}
+
+Double
+cos
+x : Double
+()
+{
+    Return cmotive_sys_math_cos(x);
+}
+
+Double
+tan
+x : Double
+()
+{
+    Return cmotive_sys_math_tan(x);
+}
+
+Double
+asin
+x : Double
+()
+{
+    Return cmotive_sys_math_asin(x);
+}
+
+Double
+acos
+x : Double
+()
+{
+    Return cmotive_sys_math_acos(x);
+}
+
+Double
+atan
+x : Double
+()
+{
+    Return cmotive_sys_math_atan(x);
+}
+
+Double
+atan2
+y : Double
+x : Double
+()
+{
+    Return cmotive_sys_math_atan2(y, x);
+}
+
+Double
+sinh
+x : Double
+()
+{
+    Return cmotive_sys_math_sinh(x);
+}
+
+Double
+cosh
+x : Double
+()
+{
+    Return cmotive_sys_math_cosh(x);
+}
+
+Double
+tanh
+x : Double
+()
+{
+    Return cmotive_sys_math_tanh(x);
+}
+
+Double
+exp
+x : Double
+()
+{
+    Return cmotive_sys_math_exp(x);
+}
+
+Double
+exp2
+x : Double
+()
+{
+    Return cmotive_sys_math_exp2(x);
+}
+
+Double
+expm1
+x : Double
+()
+{
+    Return cmotive_sys_math_expm1(x);
+}
+
+Double
+log
+x : Double
+()
+{
+    Return cmotive_sys_math_log(x);
+}
+
+Double
+log10
+x : Double
+()
+{
+    Return cmotive_sys_math_log10(x);
+}
+
+Double
+log2
+x : Double
+()
+{
+    Return cmotive_sys_math_log2(x);
+}
+
+Double
+log1p
+x : Double
+()
+{
+    Return cmotive_sys_math_log1p(x);
+}
+
+Double
+pow
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_pow(x, y);
+}
+
+Double
+sqrt
+x : Double
+()
+{
+    Return cmotive_sys_math_sqrt(x);
+}
+
+Double
+cbrt
+x : Double
+()
+{
+    Return cmotive_sys_math_cbrt(x);
+}
+
+Double
+hypot
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_hypot(x, y);
+}
+
+Double
+ceil
+x : Double
+()
+{
+    Return cmotive_sys_math_ceil(x);
+}
+
+Double
+floor
+x : Double
+()
+{
+    Return cmotive_sys_math_floor(x);
+}
+
+Double
+trunc
+x : Double
+()
+{
+    Return cmotive_sys_math_trunc(x);
+}
+
+Double
+round
+x : Double
+()
+{
+    Return cmotive_sys_math_round(x);
+}
+
+Double
+nearbyint
+x : Double
+()
+{
+    Return cmotive_sys_math_nearbyint(x);
+}
+
+Double
+rint
+x : Double
+()
+{
+    Return cmotive_sys_math_rint(x);
+}
+
+Double
+fabs
+x : Double
+()
+{
+    Return cmotive_sys_math_fabs(x);
+}
+
+Double
+fmod
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_fmod(x, y);
+}
+
+Double
+remainder
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_remainder(x, y);
+}
+
+Double
+copysign
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_copysign(x, y);
+}
+
+Double
+fmax
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_fmax(x, y);
+}
+
+Double
+fmin
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_fmin(x, y);
+}
+
+Double
+fdim
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_fdim(x, y);
+}
+
+Double
+erf
+x : Double
+()
+{
+    Return cmotive_sys_math_erf(x);
+}
+
+Double
+erfc
+x : Double
+()
+{
+    Return cmotive_sys_math_erfc(x);
+}
+
+Double
+tgamma
+x : Double
+()
+{
+    Return cmotive_sys_math_tgamma(x);
+}
+
+Double
+lgamma
+x : Double
+()
+{
+    Return cmotive_sys_math_lgamma(x);
+}
+
+I32
+isfinite
+x : Double
+()
+{
+    Return cmotive_sys_math_isfinite(x);
+}
+
+I32
+isnan
+x : Double
+()
+{
+    Return cmotive_sys_math_isnan(x);
+}
+
+I32
+isinf
+x : Double
+()
+{
+    Return cmotive_sys_math_isinf(x);
+}
+
+I32
+isnormal
+x : Double
+()
+{
+    Return cmotive_sys_math_isnormal(x);
+}
+
+I32
+signbit
+x : Double
+()
+{
+    Return cmotive_sys_math_signbit(x);
+}
+
+I32
+fpclassify
+x : Double
+()
+{
+    Return cmotive_sys_math_fpclassify(x);
+}
+
+I64
+absI64
+x : I64
+()
+{
+    Return cmotive_sys_math_abs_i64(x);
+}
+
+U64
+minU64
+x : U64
+y : U64
+()
+{
+    Return cmotive_sys_math_min_u64(x, y);
+}
+
+U64
+maxU64
+x : U64
+y : U64
+()
+{
+    Return cmotive_sys_math_max_u64(x, y);
+}
+
+Double
+pi
+()
+{
+    Return cmotive_sys_math_pi();
+}
+
+Double
+e
+()
+{
+    Return cmotive_sys_math_e();
+}
+
+Double
+fma
+x : Double
+y : Double
+z : Double
+()
+{
+    Return cmotive_sys_math_fma(x, y, z);
+}
+
+Double
+ldexp
+x : Double
+exp_value : I32
+()
+{
+    Return cmotive_sys_math_ldexp(x, exp_value);
+}
+
+Double
+scalbn
+x : Double
+exp_value : I32
+()
+{
+    Return cmotive_sys_math_scalbn(x, exp_value);
+}
+
+I32
+ilogb
+x : Double
+()
+{
+    Return cmotive_sys_math_ilogb(x);
+}
+
+Double
+logb
+x : Double
+()
+{
+    Return cmotive_sys_math_logb(x);
+}
+
+Double
+nextafter
+x : Double
+y : Double
+()
+{
+    Return cmotive_sys_math_nextafter(x, y);
+}
+
+Double
+modf
+x : Double
+integer_part : Double*
+()
+{
+    Return cmotive_sys_math_modf(x, integer_part);
+}
+
+Double
+frexp
+x : Double
+exponent_part : I32*
+()
+{
+    Return cmotive_sys_math_frexp_value(x, exponent_part);
+}
+
+Float
+sinf
+x : Float
+()
+{
+    Return cmotive_sys_math_sinf(x);
+}
+
+Float
+cosf
+x : Float
+()
+{
+    Return cmotive_sys_math_cosf(x);
+}
+
+Float
+tanf
+x : Float
+()
+{
+    Return cmotive_sys_math_tanf(x);
+}
+
+Float
+sqrtf
+x : Float
+()
+{
+    Return cmotive_sys_math_sqrtf(x);
+}
+
+Float
+powf
+x : Float
+y : Float
+()
+{
+    Return cmotive_sys_math_powf(x, y);
+}
+
+Ldouble
+sinl
+x : Ldouble
+()
+{
+    Return cmotive_sys_math_sinl(x);
+}
+
+Ldouble
+cosl
+x : Ldouble
+()
+{
+    Return cmotive_sys_math_cosl(x);
+}
+
+Ldouble
+tanl
+x : Ldouble
+()
+{
+    Return cmotive_sys_math_tanl(x);
+}
+
+Ldouble
+sqrtl
+x : Ldouble
+()
+{
+    Return cmotive_sys_math_sqrtl(x);
+}
+
+Ldouble
+powl
+x : Ldouble
+y : Ldouble
+()
+{
+    Return cmotive_sys_math_powl(x, y);
+}

@@ -1,0 +1,16 @@
+Hit SenderClassName:7000
+Void
+SenderTarget
+x : I32
+()
+{
+    cout.expect("%d\n").write(x);
+}
+
+I32
+main
+()
+{
+    Target SenderClassName::8:7000;
+    Return 0;
+}

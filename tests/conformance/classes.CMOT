@@ -1,0 +1,1 @@
+class Base { virtual func value(): Int { return 1; } } class Child extends Base { func value(): Int { return 2; } } func main(): Int { return 0; }

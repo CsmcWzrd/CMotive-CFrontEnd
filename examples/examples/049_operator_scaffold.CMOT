@@ -1,0 +1,2 @@
+class Vec { field x: Int; constructor(v: Int) { x = v; } operator +(other: Vec) -> Vec { return Vec(x + other.x); } }
+func main() -> Int { let z: Vec = Vec(1) + Vec(2); return z.x; }

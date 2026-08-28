@@ -1,0 +1,2 @@
+func positive(x: Int) -> Int { guard x > 0 else { return 0; } return x; }
+func main() -> Int { return positive(7); }

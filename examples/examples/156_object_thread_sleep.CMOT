@@ -1,0 +1,15 @@
+Plugin Sys::Thread
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    th : Thread;
+    th.SleepMs(0);
+    th.MicroSleep(0);
+    th.NanoSleep(0);
+    th.Yield();
+    cout.expect("%s").write("CMOTIVE_EX156_OBJECT_THREAD_SLEEP\n");
+    Return 0;
+}

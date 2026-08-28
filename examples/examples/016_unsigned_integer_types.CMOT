@@ -1,0 +1,13 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX016_UNSIGNED_INTEGER_TYPES");
+    a : Uchar = 255;
+    b : U16 = 65535;
+    c : U32 = 32U;
+    d : U64 = 64ULL;
+    Return 0;
+}

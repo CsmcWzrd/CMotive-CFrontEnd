@@ -1,0 +1,2 @@
+class Utils { template <T> method same(x: T) -> T { return x; } }
+func main() -> Int { return Utils().same<Int>(8); }

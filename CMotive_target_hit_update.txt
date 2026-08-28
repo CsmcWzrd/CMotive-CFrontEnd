@@ -1,0 +1,14 @@
+CMotive Target/Hit dispatch update
+
+Implemented:
+- Hit prefix metadata for free functions and methods.
+- Target parsing for sender/object/argument/id colon forms.
+- Codegen handler registry keyed by sender plus 64-bit hit id text.
+- Direct static lowering for matched Target routes.
+- Object receiver lowering for method Hits.
+- Runtime unresolved-route diagnostic using CMotive_UnresolvedTarget.
+- Conformance tests for direct, object, sender-qualified, and sender-qualified object routes.
+
+Verification command:
+python3 -m py_compile src/cmotive/*.py tools/cmotive.py tools/cmotivepp.py tests/run_tests.py
+make -f Makefile.linux clean all test

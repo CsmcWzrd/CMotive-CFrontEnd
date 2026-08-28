@@ -1,0 +1,12 @@
+// CMotive verified example 095: logging_info
+// Coverage: Sys::Logging info scaffold
+func main() : Int {
+  Sys::Stdio::print("example 095: logging_info\n");
+  var value = 95;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

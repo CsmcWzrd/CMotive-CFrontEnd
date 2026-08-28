@@ -1,0 +1,17 @@
+Plugin Sys::Stdio
+
+Enum SocketKind
+{
+    Tcp,
+    Udp,
+    IpRaw
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX105_ENUM_DECLARATION");
+    value : I32 = 0;
+    Return 0;
+}

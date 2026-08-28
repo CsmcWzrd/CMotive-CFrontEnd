@@ -1,0 +1,13 @@
+// CMotive verified example 068: nullable_pointer_scaffold
+// Coverage: nullable pointer scaffold
+func helper(x) : Int { return x + 1; }
+func main() : Int {
+  Sys::Stdio::print("example 068: nullable_pointer_scaffold\n");
+  var value = 68;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

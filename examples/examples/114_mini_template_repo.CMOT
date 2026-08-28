@@ -1,0 +1,2 @@
+template <T> class Repo { field item: T; constructor(v: T) { item = v; } method get() -> T { return item; } }
+func main() -> Int { return Repo<Int>(9).get(); }

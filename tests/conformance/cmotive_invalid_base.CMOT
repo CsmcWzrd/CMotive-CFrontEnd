@@ -1,0 +1,20 @@
+Class
+BadChild
+Inherits
+MissingBase Public
+{
+    Public
+    {
+        BadChild
+        ()
+        {
+        }
+    }
+};
+
+I32
+main
+()
+{
+    Return 0;
+}

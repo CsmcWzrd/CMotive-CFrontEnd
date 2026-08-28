@@ -1,0 +1,34 @@
+Plugin Sys::STL
+
+Int32
+main
+()
+{
+    v : Vector<Int>;
+    v.PushBack(3);
+    v.PushBack(1);
+    v.PushBack(2);
+    v.Sort();
+    If ( v.Size() != 3 )
+    {
+        Return 1;
+    }
+    If ( v.At(0) != 1 )
+    {
+        Return 2;
+    }
+    mp : Map<Char*,Int>;
+    mp.Put("one", 1);
+    If ( mp.Get("one", 0) != 1 )
+    {
+        Return 3;
+    }
+    tr : BinarySearchTree<Int>;
+    tr.Insert(8);
+    tr.Insert(4);
+    If ( !tr.Contains(8) )
+    {
+        Return 4;
+    }
+    Return 0;
+}

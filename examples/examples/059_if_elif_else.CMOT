@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX059_IF_ELIF_ELSE");
+    x : I32 = 2;
+    result : I32 = 0;
+    If ( x == 1 )
+    {
+        result = 1;
+    }
+    Elif ( x == 2 )
+    {
+        result = 0;
+    }
+    Else
+    {
+        result = 3;
+    }
+    Return result;
+}

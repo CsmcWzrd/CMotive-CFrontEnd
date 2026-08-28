@@ -1,0 +1,12 @@
+// CMotive verified example 129: mini_network_client
+// Coverage: mini network client placeholder
+func main() : Int {
+  Sys::Stdio::print("example 129: mini_network_client\n");
+  var value = 129;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,3 @@
+class Animal { virtual method speak() -> Int { return 1; } }
+class Dog : Animal { override method speak() -> Int { return 2; } }
+func main() -> Int { let d: Dog = Dog(); return d.speak(); }

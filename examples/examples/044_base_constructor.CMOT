@@ -1,0 +1,3 @@
+class Base { field x: Int; constructor(v: Int) { x = v; } }
+class Child : Base { constructor() : Base(4) { } }
+func main() -> Int { let c: Child = Child(); return c.x; }

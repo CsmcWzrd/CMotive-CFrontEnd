@@ -1,0 +1,16 @@
+I32
+main
+()
+{
+    result : I32 = 1;
+    Try
+    {
+        Throw "template-ready";
+        result = 9;
+    }
+    Catchall
+    {
+        result = 0;
+    }
+    Return result;
+}

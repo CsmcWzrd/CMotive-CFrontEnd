@@ -1,0 +1,17 @@
+Hit :90000
+Void
+PrintTarget
+x : I32
+y : I32
+()
+{
+    cout.expect("%d\n").write(x + y);
+}
+
+I32
+main
+()
+{
+    Target ::1,2:90000;
+    Return 0;
+}

@@ -1,0 +1,15 @@
+Replace X 12;
+
+Plugswitch
+Plugcase DEFINED: ( X >= 10 ) && ( X <= 100 )
+Value : I32 = 0;
+Plugdefault
+Value : I32 = 9;
+Plugend
+
+I32
+main
+()
+{
+    Return Value;
+}

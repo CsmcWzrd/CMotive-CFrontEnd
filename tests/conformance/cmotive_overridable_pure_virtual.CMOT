@@ -1,0 +1,18 @@
+Class
+Printable
+{
+    Public
+    {
+        Overridable
+        Void
+        Print
+        ()=0;
+    }
+};
+
+Int32
+main
+()
+{
+    Return 0;
+}

@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX023_CONST_TYPE");
+    answer : Const I32 = 42;
+    Return 0;
+}

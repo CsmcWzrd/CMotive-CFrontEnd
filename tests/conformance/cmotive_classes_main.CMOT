@@ -1,0 +1,9 @@
+#include "cmotive_classes.HMOT"
+
+I32
+main
+()
+{
+    d : Dog;
+    Return 0;
+}

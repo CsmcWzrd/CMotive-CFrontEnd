@@ -1,0 +1,8 @@
+Class
+ExampleTiny
+{
+    Public
+    {
+        value : I32 = 1; Block
+    }
+};

@@ -1,0 +1,13 @@
+Plugin Sys::Stdio
+
+I32
+main
+argc : I32
+argv : Char**
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX002_MAIN_ARGS");
+    seen : I32 = argc;
+    unused : Char** = argv;
+    Return 0;
+}

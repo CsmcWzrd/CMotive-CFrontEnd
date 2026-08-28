@@ -1,0 +1,12 @@
+// CMotive verified example 108: separate_impl_unit
+// Coverage: separate compilation implementation
+func main() : Int {
+  Sys::Stdio::print("example 108: separate_impl_unit\n");
+  var value = 108;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

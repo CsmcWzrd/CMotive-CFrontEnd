@@ -1,0 +1,14 @@
+Fptr
+Int32
+Callback
+x: Int32
+()
+;
+
+Int32
+main
+()
+{
+    cb: Callback = 0;
+    Return cb == 0 ? 0 : 1;
+}

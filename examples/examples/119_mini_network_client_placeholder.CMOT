@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let socket = Sys::Net::Socket(); if socket.connect("example.com", 80) { socket.close(); } return 0; }

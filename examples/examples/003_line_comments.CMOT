@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX003_LINE_COMMENTS");
+    // A CMotive comment
+    value : I32 = 1;
+    Return 0;
+}

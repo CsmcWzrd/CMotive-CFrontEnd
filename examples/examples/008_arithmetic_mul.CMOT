@@ -1,0 +1,12 @@
+// CMotive verified example 008: arithmetic_mul
+// Coverage: multiplication
+func main() : Int {
+  Sys::Stdio::print("example 008: arithmetic_mul\n");
+  var value = 8;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

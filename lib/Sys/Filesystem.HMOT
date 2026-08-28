@@ -1,0 +1,223 @@
+Package Sys::Filesystem;
+
+Class
+Path
+{
+    Public
+    {
+        path : Char* = Null; Block
+
+        Path
+        ()
+        {
+            path = Null;
+        }
+
+        Void
+        Set
+        value : Char*
+        ()
+        {
+            path = value;
+            Return;
+        }
+
+        Char*
+        Get
+        ()
+        {
+            Return path;
+        }
+
+        Boolean
+        Exists
+        ()
+        {
+            Return cmotive_sys_filesystem_exists(path);
+        }
+
+        Boolean
+        IsFile
+        ()
+        {
+            Return cmotive_sys_filesystem_is_file(path);
+        }
+
+        Boolean
+        IsDirectory
+        ()
+        {
+            Return cmotive_sys_filesystem_is_directory(path);
+        }
+
+        I32
+        MakeDirectory
+        ()
+        {
+            Return cmotive_sys_filesystem_mkdir(path);
+        }
+
+        I32
+        Remove
+        ()
+        {
+            Return cmotive_sys_filesystem_remove(path);
+        }
+
+        I32
+        RenameTo
+        new_path : Char*
+        ()
+        {
+            r : I32 = cmotive_sys_filesystem_rename(path, new_path);
+            If ( r == 0 )
+            {
+                path = new_path;
+            }
+            Return r;
+        }
+
+        I64
+        Size
+        ()
+        {
+            Return cmotive_sys_filesystem_size(path);
+        }
+    }
+};
+
+Class
+Filesystem
+{
+    Public
+    {
+        Boolean
+        Exists
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_exists(path);
+        }
+
+        Boolean
+        IsFile
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_is_file(path);
+        }
+
+        Boolean
+        IsDirectory
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_is_directory(path);
+        }
+
+        I32
+        MakeDirectory
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_mkdir(path);
+        }
+
+        I32
+        Remove
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_remove(path);
+        }
+
+        I32
+        Rename
+        old_path : Char*
+        new_path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_rename(old_path, new_path);
+        }
+
+        I64
+        Size
+        path : Char*
+        ()
+        {
+            Return cmotive_sys_filesystem_size(path);
+        }
+
+        Char*
+        CurrentPath
+        ()
+        {
+            Return cmotive_sys_filesystem_current_path();
+        }
+    }
+};
+
+// Backward-compatible functional wrappers.
+Boolean
+exists
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_exists(path);
+}
+
+Boolean
+isFile
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_is_file(path);
+}
+
+Boolean
+isDirectory
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_is_directory(path);
+}
+
+I32
+mkdir
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_mkdir(path);
+}
+
+I32
+remove
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_remove(path);
+}
+
+I32
+rename
+old_path : Char*
+new_path : Char*
+()
+{
+    Return cmotive_sys_filesystem_rename(old_path, new_path);
+}
+
+I64
+size
+path : Char*
+()
+{
+    Return cmotive_sys_filesystem_size(path);
+}
+
+Char*
+currentPath
+()
+{
+    Return cmotive_sys_filesystem_current_path();
+}

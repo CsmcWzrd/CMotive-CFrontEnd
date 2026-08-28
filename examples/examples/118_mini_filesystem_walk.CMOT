@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { for entry in Sys::Filesystem::list(".") { Sys::Stdio::println(entry.path); } return 0; }

@@ -1,0 +1,16 @@
+I32
+main
+()
+{
+    a : Int16 = 1;
+    b : Int32 = 2;
+    c : Int = 3;
+    u1 : Uint16 = 4;
+    u2 : Uint32 = 5;
+    u3 : Uint = 6;
+    If ( Sizeof(c) == 8 && Sizeof(u3) == 8 && a == 1 && b == 2 && u1 == 4 && u2 == 5 )
+    {
+        Return 0;
+    }
+    Return 1;
+}

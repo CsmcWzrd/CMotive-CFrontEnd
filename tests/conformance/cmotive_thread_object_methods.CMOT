@@ -1,0 +1,17 @@
+Plugin Sys::Thread
+
+Int32
+main
+()
+{
+    th : Thread;
+    th.SleepMs(0);
+    th.MicroSleep(0);
+    th.NanoSleep(0);
+    th.Yield();
+    tm : Threading;
+    tm.MicroSleep(0);
+    tm.NanoSleep(0);
+    tm.Yield();
+    Return 0;
+}

@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { try { return 0; } finally { Sys::Stdio::println("cleanup"); } }

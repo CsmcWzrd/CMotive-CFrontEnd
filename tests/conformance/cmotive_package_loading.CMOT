@@ -1,0 +1,16 @@
+Plugin PackageUtil
+
+I32
+main
+()
+{
+    x : I32 = PackageAnswer();
+    If ( x == 7 )
+    {
+        Return 0;
+    }
+    Else
+    {
+        Return 1;
+    }
+}

@@ -1,0 +1,2 @@
+template <T> func identity(x: T) -> T { return x; }
+func main() -> Int { return identity<Int>(3); }

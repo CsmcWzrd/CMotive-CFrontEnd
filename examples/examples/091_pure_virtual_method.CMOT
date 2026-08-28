@@ -1,0 +1,22 @@
+Plugin Sys::Stdio
+
+Class
+InterfaceItem
+{
+    Public
+    {
+        Overridable
+        Void
+        Required
+        () = 0;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX091_PURE_VIRTUAL_METHOD");
+    item : InterfaceItem;
+    Return 0;
+}

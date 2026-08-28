@@ -1,0 +1,18 @@
+Package Examples::Plugins::Example;
+Plugin Examples::Core;
+
+Class
+ExamplePlugin
+{
+    Public
+    {
+        enabled : Boolean = True; Block
+    }
+};
+
+I32
+ExamplePluginEntry
+()
+{
+    Return 0;
+}

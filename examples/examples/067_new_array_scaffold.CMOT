@@ -1,0 +1,13 @@
+// CMotive verified example 067: new_array_scaffold
+// Coverage: array allocation scaffold
+func helper(x) : Int { return x + 1; }
+func main() : Int {
+  Sys::Stdio::print("example 067: new_array_scaffold\n");
+  var value = 67;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

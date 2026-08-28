@@ -1,0 +1,55 @@
+Package Sys::Exception;
+
+Class
+Exception
+{
+    Public
+    {
+        message : Char* = ""; Block
+        code : I32 = 0; Block
+
+        Exception
+        ()
+        {
+        }
+
+        Exception
+        msg : Char*
+        ()
+        {
+            message = msg;
+        }
+
+        Char*
+        what
+        ()
+        {
+            Return message;
+        }
+    }
+};
+
+Void
+throwText
+message : Char*
+()
+{
+    Throw message;
+}
+
+Void
+throwCode
+message : Char*
+code : I32
+()
+{
+    cmotive_sys_exception_set_code(code);
+    Throw message;
+}
+
+I32
+lastCode
+()
+{
+    Return cmotive_sys_exception_last_code();
+}

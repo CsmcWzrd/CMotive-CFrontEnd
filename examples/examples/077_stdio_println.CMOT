@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { Sys::Stdio::println("hello"); return 0; }

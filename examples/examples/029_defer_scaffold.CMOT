@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { defer Sys::Stdio::println("done"); return 0; }

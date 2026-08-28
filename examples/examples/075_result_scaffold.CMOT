@@ -1,0 +1,2 @@
+func parse(x: String) -> Result<Int, String> { return Ok(1); }
+func main() -> Int { let r: Result<Int,String> = parse("1"); return r.unwrap(); }

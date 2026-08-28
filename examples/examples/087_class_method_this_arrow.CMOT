@@ -1,0 +1,25 @@
+Plugin Sys::Stdio
+
+Class
+ThisItem
+{
+    Public
+    {
+        value : I32 = 0; Block
+        I32
+        ReadValue
+        ()
+        {
+            Return This->value;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX087_CLASS_METHOD_THIS_ARROW");
+    item : ThisItem;
+    Return 0;
+}

@@ -1,0 +1,20 @@
+Plugin Sys::Stdio
+
+Class
+HeapBox
+{
+    Public
+    {
+        value : I32 = 0; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX093_NEW_DELETE_CLASS_POINTER");
+    p : HeapBox* = New HeapBox();
+    Delete p;
+    Return 0;
+}

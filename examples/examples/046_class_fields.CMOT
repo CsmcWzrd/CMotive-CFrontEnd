@@ -1,0 +1,13 @@
+// CMotive verified example 046: class_fields
+// Coverage: class fields
+class Feature46 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 046: class_fields\n");
+  var value = 46;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

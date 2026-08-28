@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { Sys::Filesystem::remove("cmotive_tmp"); return 0; }

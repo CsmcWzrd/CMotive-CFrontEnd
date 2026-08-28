@@ -1,0 +1,10 @@
+// CMotive verified example 033: while_loop
+// Coverage: while loop
+func main() : Int {
+  Sys::Stdio::print("example 033: while_loop\n");
+  var i = 0;
+  while (i < 3) {
+    i = i + 1;
+  }
+  return 0;
+}

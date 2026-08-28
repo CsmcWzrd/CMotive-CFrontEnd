@@ -1,0 +1,1 @@
+func main() -> Int { let last: Int = 0; for i in 5..0 step -1 { last = i; } return last; }

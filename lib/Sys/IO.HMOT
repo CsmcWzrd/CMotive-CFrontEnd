@@ -1,0 +1,169 @@
+Package Sys::IO;
+
+Class
+OStream
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        OStream
+        ()
+        {
+            handle = Null;
+        }
+        Void
+        Expect
+        fmt : Char*
+        ()
+        {
+            cmotive_sys_io_set_output_format(fmt);
+        }
+        Int32
+        Write
+        text : Char*
+        ()
+        {
+            Return cmotive_sys_io_print(text);
+        }
+        Int32
+        WriteInt
+        value : Int
+        ()
+        {
+            Return cmotive_sys_io_printf("%lld", value);
+        }
+        Int32
+        Println
+        text : Char*
+        ()
+        {
+            Return cmotive_sys_io_println(text);
+        }
+        Int32
+        Flush
+        ()
+        {
+            Return cmotive_sys_io_flush();
+        }
+    }
+};
+
+Class
+IStream
+{
+    Public
+    {
+        handle : Void* = Null; Block
+        IStream
+        ()
+        {
+            handle = Null;
+        }
+        Void
+        Expect
+        fmt : Char*
+        ()
+        {
+            cmotive_sys_io_set_input_format(fmt);
+        }
+        Int32
+        ReadInt
+        out : Int*
+        ()
+        {
+            Return cmotive_sys_io_scan_int(out);
+        }
+        Int32
+        ReadString
+        out : Char*
+        ()
+        {
+            Return cmotive_sys_io_scan_string(out);
+        }
+    }
+};
+
+Class
+Formatter
+{
+    Public
+    {
+        Int32
+        Print
+        text : Char*
+        ()
+        {
+            Return cmotive_sys_io_print(text);
+        }
+        Int32
+        Println
+        text : Char*
+        ()
+        {
+            Return cmotive_sys_io_println(text);
+        }
+        Int32
+        Printf
+        fmt : Char*
+        ()
+        {
+            Return cmotive_sys_io_printf(fmt);
+        }
+        Int32
+        Sprintf
+        dst : Char*
+        fmt : Char*
+        ()
+        {
+            Return cmotive_sys_io_sprintf(dst, fmt);
+        }
+        Int32
+        Scanf
+        fmt : Char*
+        ()
+        {
+            Return cmotive_sys_io_scanf(fmt);
+        }
+    }
+};
+
+Int32
+Print
+text : Char*
+()
+{
+    Return cmotive_sys_io_print(text);
+}
+
+Int32
+Println
+text : Char*
+()
+{
+    Return cmotive_sys_io_println(text);
+}
+
+Int32
+Printf
+fmt : Char*
+()
+{
+    Return cmotive_sys_io_printf(fmt);
+}
+
+Int32
+Sprintf
+dst : Char*
+fmt : Char*
+()
+{
+    Return cmotive_sys_io_sprintf(dst, fmt);
+}
+
+Int32
+Scanf
+fmt : Char*
+()
+{
+    Return cmotive_sys_io_scanf(fmt);
+}

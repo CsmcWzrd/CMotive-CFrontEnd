@@ -1,0 +1,13 @@
+// CMotive verified example 057: abstract_scaffold
+// Coverage: abstract class scaffold
+class Feature57 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 057: abstract_scaffold\n");
+  var value = 57;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

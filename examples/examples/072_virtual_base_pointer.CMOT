@@ -1,0 +1,13 @@
+// CMotive verified example 072: virtual_base_pointer
+// Coverage: virtual dispatch base pointer scaffold
+func helper(x) : Int { return x + 1; }
+func main() : Int {
+  Sys::Stdio::print("example 072: virtual_base_pointer\n");
+  var value = 72;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

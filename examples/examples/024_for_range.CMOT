@@ -1,0 +1,1 @@
+func main() -> Int { let sum: Int = 0; for i in 0..5 { sum = sum + i; } return sum; }

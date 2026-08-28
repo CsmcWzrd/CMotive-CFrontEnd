@@ -1,0 +1,1 @@
+func main() -> Int { let xs: Int* = New Int[4]; xs[0] = 9; let v: Int = xs[0]; Delete[] xs; return v; }

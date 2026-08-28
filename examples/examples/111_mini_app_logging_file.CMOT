@@ -1,0 +1,3 @@
+Import Sys;
+class App { field log: Sys::Logging::Logger; constructor() { log = Sys::Logging::Logger("app"); } method run() -> Int { log.info("run"); let f = Sys::File::Handle("app.txt","w"); f.write("ok"); return 0; } }
+func main() -> Int { return App().run(); }

@@ -1,0 +1,2 @@
+@Target("x86_64")
+func main() -> Int { return 64; }

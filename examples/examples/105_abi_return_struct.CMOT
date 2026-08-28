@@ -1,0 +1,3 @@
+record Pair { a: Int; b: Int; }
+func makePair() -> Pair { return Pair{a:1,b:2}; }
+func main() -> Int { let p = makePair(); return p.a + p.b; }

@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX062_DO_WHILE_LOOP");
+    i : I32 = 0;
+    Do
+    {
+        i++;
+    }
+    While ( i < 3 );
+    Return i == 3 ? 0 : 1;
+}

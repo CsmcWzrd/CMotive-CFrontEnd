@@ -1,0 +1,12 @@
+// CMotive verified example 096: logging_error
+// Coverage: Sys::Logging error scaffold
+func main() : Int {
+  Sys::Stdio::print("example 096: logging_error\n");
+  var value = 96;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

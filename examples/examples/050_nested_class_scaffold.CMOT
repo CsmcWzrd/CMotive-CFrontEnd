@@ -1,0 +1,2 @@
+class Outer { class Inner { method value() -> Int { return 1; } } }
+func main() -> Int { let i: Outer::Inner = Outer::Inner(); return i.value(); }

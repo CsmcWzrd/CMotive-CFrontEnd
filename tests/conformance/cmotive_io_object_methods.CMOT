@@ -1,0 +1,13 @@
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    out : OStream;
+    out.Expect("%s");
+    out.Write("io-object-ok\n");
+    f : Formatter;
+    f.Println("formatter-object-ok");
+    Return 0;
+}

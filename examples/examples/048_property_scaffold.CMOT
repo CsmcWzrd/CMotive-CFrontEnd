@@ -1,0 +1,2 @@
+class User { field name: String; property Name: String { get { return name; } set(value: String) { name = value; } } }
+func main() -> Int { let u: User = User(); u.Name = "a"; return 0; }

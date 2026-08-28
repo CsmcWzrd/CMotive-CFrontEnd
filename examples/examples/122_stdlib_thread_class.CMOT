@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/Thread.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX122_STDLIB_THREAD_CLASS");
+    t : Thread;
+    Return 0;
+}

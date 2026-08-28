@@ -1,0 +1,234 @@
+Package Sys::Thread;
+
+Class
+Thread
+{
+    Public
+    {
+        handle : Void* = Null; Block
+
+        Thread
+        ()
+        {
+            handle = Null;
+        }
+
+        Void*
+        Start
+        entry : Void*
+        userdata : Void*
+        ()
+        {
+            handle = cmotive_sys_thread_start(entry, userdata);
+            Return handle;
+        }
+
+        I32
+        Join
+        ()
+        {
+            r : I32 = cmotive_sys_thread_join(handle);
+            handle = Null;
+            Return r;
+        }
+
+        I32
+        Detach
+        ()
+        {
+            r : I32 = cmotive_sys_thread_detach(handle);
+            handle = Null;
+            Return r;
+        }
+
+        Void*
+        Current
+        ()
+        {
+            Return cmotive_sys_thread_current();
+        }
+
+        I32
+        Yield
+        ()
+        {
+            Return cmotive_sys_thread_yield();
+        }
+
+        Void
+        SleepMs
+        milliseconds : Uint32
+        ()
+        {
+            cmotive_sys_thread_sleep_ms(milliseconds);
+            Return;
+        }
+
+        Void
+        MilliSleep
+        milliseconds : Uint32
+        ()
+        {
+            cmotive_sys_thread_sleep_ms(milliseconds);
+            Return;
+        }
+
+        Void
+        MicroSleep
+        microseconds : Uint
+        ()
+        {
+            cmotive_sys_thread_sleep_us(microseconds);
+            Return;
+        }
+
+        Void
+        NanoSleep
+        nanoseconds : Uint
+        ()
+        {
+            cmotive_sys_thread_sleep_ns(nanoseconds);
+            Return;
+        }
+    }
+};
+
+Class
+Threading
+{
+    Public
+    {
+        Void*
+        Start
+        entry : Void*
+        userdata : Void*
+        ()
+        {
+            Return cmotive_sys_thread_start(entry, userdata);
+        }
+
+        I32
+        Join
+        handle : Void*
+        ()
+        {
+            Return cmotive_sys_thread_join(handle);
+        }
+
+        I32
+        Detach
+        handle : Void*
+        ()
+        {
+            Return cmotive_sys_thread_detach(handle);
+        }
+
+        Void*
+        Current
+        ()
+        {
+            Return cmotive_sys_thread_current();
+        }
+
+        I32
+        Yield
+        ()
+        {
+            Return cmotive_sys_thread_yield();
+        }
+
+        Void
+        SleepMs
+        milliseconds : Uint32
+        ()
+        {
+            cmotive_sys_thread_sleep_ms(milliseconds);
+            Return;
+        }
+
+        Void
+        MicroSleep
+        microseconds : Uint
+        ()
+        {
+            cmotive_sys_thread_sleep_us(microseconds);
+            Return;
+        }
+
+        Void
+        NanoSleep
+        nanoseconds : Uint
+        ()
+        {
+            cmotive_sys_thread_sleep_ns(nanoseconds);
+            Return;
+        }
+    }
+};
+
+// Backward-compatible functional wrappers.
+Void*
+start
+entry : Void*
+userdata : Void*
+()
+{
+    Return cmotive_sys_thread_start(entry, userdata);
+}
+
+I32
+join
+handle : Void*
+()
+{
+    Return cmotive_sys_thread_join(handle);
+}
+
+I32
+detach
+handle : Void*
+()
+{
+    Return cmotive_sys_thread_detach(handle);
+}
+
+Void*
+current
+()
+{
+    Return cmotive_sys_thread_current();
+}
+
+Void
+sleepMs
+milliseconds : U32
+()
+{
+    cmotive_sys_thread_sleep_ms(milliseconds);
+    Return;
+}
+
+Void
+microSleep
+microseconds : Uint
+()
+{
+    cmotive_sys_thread_sleep_us(microseconds);
+    Return;
+}
+
+Void
+nanoSleep
+nanoseconds : Uint
+()
+{
+    cmotive_sys_thread_sleep_ns(nanoseconds);
+    Return;
+}
+
+I32
+yield
+()
+{
+    Return cmotive_sys_thread_yield();
+}

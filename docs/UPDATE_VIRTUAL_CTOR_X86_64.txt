@@ -1,0 +1,22 @@
+CMotive update iteration: keyword synonyms, virtual dispatch, exception destructor cleanup, typed constructor overloads, x86_64 native path.
+
+Implemented:
+- Lexer/codegen synonyms:
+  I16 = Int16
+  I32 = Int32
+  I64 = Int
+  U16 = Uint16
+  U32 = Uint32
+  U64 = Uint
+- Overridable methods now populate CMotiveVTable slot arrays.
+- Pointer/object method calls for virtual slots now lower through runtime vtable dispatch.
+- Try/Catch/Throw generated code now keeps cleanup frames for stack class objects constructed inside protected Try scopes and runs destructors during longjmp unwinding.
+- Constructor overload names and New helpers now use type-based symbols such as __ctor__I32 and __ctor__I64 instead of argument-count-only dispatch.
+- New overload resolution infers common argument types from casts, variables, literals, and simple numeric compatibility.
+- x86_64 target path canonicalizes x64/amd64/x86_64 and emits native toolchain flags (-m64 or Darwin -arch x86_64).
+
+Verification:
+- python3 -m py_compile src/cmotive/*.py tools/cmotive.py tools/cmotivepp.py tests/run_tests.py
+- make -f Makefile.linux clean all test
+- build/bin/cmotive --target-arch x86_64 tests/conformance/basic.CMOT -o build/basic_x64
+- file build/basic_x64 confirmed ELF 64-bit LSB x86-64 on the verification host.

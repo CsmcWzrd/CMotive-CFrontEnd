@@ -1,0 +1,16 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX057_ADDRESS_AND_POINTER_DEREF");
+    x : I32 = 1;
+    p : I32* = &x;
+    *p = 2;
+    If ( x != 2 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

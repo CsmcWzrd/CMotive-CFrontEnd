@@ -1,0 +1,39 @@
+Class
+NumberBox
+{
+    Public
+    {
+        value: Int32 = 0;
+        NumberBox
+        ()
+        {
+        }
+        NumberBox
+        v: Int32
+        ()
+        {
+            value = v;
+        }
+        Int32
+        Operation +
+        rhs: NumberBox
+        ()
+        {
+            Return value + rhs.value;
+        }
+    }
+};
+
+Int32
+main
+()
+{
+    a: NumberBox = New NumberBox(5);
+    b: NumberBox = New NumberBox(7);
+    c: Int32 = a + b;
+    If(c != 12)
+    {
+        Return 1;
+    }
+    Return 0;
+}

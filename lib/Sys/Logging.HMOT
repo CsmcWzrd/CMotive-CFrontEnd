@@ -1,0 +1,57 @@
+Package Sys::Logging;
+
+I32
+setLevel
+level : I32
+()
+{
+    Return cmotive_sys_logging_set_level(level);
+}
+
+I32
+trace
+message : Char*
+()
+{
+    Return cmotive_sys_logging_trace(message);
+}
+
+I32
+debug
+message : Char*
+()
+{
+    Return cmotive_sys_logging_debug(message);
+}
+
+I32
+info
+message : Char*
+()
+{
+    Return cmotive_sys_logging_info(message);
+}
+
+I32
+warn
+message : Char*
+()
+{
+    Return cmotive_sys_logging_warn(message);
+}
+
+I32
+error
+message : Char*
+()
+{
+    Return cmotive_sys_logging_error(message);
+}
+
+I32
+fatal
+message : Char*
+()
+{
+    Return cmotive_sys_logging_fatal(message);
+}

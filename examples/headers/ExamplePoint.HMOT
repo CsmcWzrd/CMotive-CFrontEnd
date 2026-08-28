@@ -1,0 +1,9 @@
+Class
+ExamplePoint
+{
+    Public
+    {
+        x : I32 = 0; Block
+        y : I32 = 0; Block
+    }
+};

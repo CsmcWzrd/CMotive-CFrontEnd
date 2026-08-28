@@ -1,0 +1,12 @@
+// CMotive verified example 121: mini_logging_file
+// Coverage: mini app logging + file scaffold
+func main() : Int {
+  Sys::Stdio::print("example 121: mini_logging_file\n");
+  var value = 121;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,12 @@
+// CMotive verified example 117: arm64_codegen_probe
+// Coverage: ARM64 codegen probe
+func main() : Int {
+  Sys::Stdio::print("example 117: arm64_codegen_probe\n");
+  var value = 117;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,12 @@
+// CMotive verified example 044: guard_scaffold
+// Coverage: guard scaffold
+func main() : Int {
+  Sys::Stdio::print("example 044: guard_scaffold\n");
+  var value = 44;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

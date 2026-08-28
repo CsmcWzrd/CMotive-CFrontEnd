@@ -1,0 +1,12 @@
+// CMotive verified example 103: package_decl
+// Coverage: package declaration scaffold
+func main() : Int {
+  Sys::Stdio::print("example 103: package_decl\n");
+  var value = 103;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

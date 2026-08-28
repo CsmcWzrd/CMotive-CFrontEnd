@@ -1,0 +1,12 @@
+// CMotive verified example 119: strip_symbols_probe
+// Coverage: strip-compatible symbol probe
+func main() : Int {
+  Sys::Stdio::print("example 119: strip_symbols_probe\n");
+  var value = 119;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

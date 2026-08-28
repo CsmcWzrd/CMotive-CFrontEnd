@@ -1,0 +1,13 @@
+// CMotive verified example 114: abi_calling_simple
+// Coverage: ABI calling convention probe
+class AbiProbe { var word; func call(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 114: abi_calling_simple\n");
+  var value = 114;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

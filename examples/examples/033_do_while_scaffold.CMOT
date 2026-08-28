@@ -1,0 +1,1 @@
+func main() -> Int { let i: Int = 0; do { i = i + 1; } while i < 2; return i; }

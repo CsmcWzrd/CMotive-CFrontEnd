@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX051_COMPOUND_DIV");
+    x : I32 = 10;
+    x /= 2;
+    If ( x != 5 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

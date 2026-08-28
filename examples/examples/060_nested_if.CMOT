@@ -1,0 +1,17 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX060_NESTED_IF");
+    x : I32 = 0;
+    If ( 1 == 1 )
+    {
+        If ( 2 == 2 )
+        {
+            x = 0;
+        }
+    }
+    Return x;
+}

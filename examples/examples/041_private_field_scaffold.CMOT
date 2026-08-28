@@ -1,0 +1,2 @@
+class Secret { private field value: Int; constructor() { value = 1; } method get() -> Int { return value; } }
+func main() -> Int { return Secret().get(); }

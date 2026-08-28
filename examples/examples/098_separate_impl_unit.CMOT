@@ -1,0 +1,2 @@
+Package Geometry;
+class Point { field x: Int; field y: Int; constructor(xv: Int, yv: Int) { x = xv; y = yv; } method lengthSquared() -> Int { return x*x + y*y; } }

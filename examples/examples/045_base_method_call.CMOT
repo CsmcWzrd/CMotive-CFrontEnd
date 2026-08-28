@@ -1,0 +1,3 @@
+class Base { method id() -> Int { return 1; } }
+class Child : Base { method id2() -> Int { return base.id() + 1; } }
+func main() -> Int { return Child().id2(); }

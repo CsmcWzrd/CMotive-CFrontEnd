@@ -1,0 +1,2 @@
+class Item { constructor(v: Int) {} }
+func main() -> Int { let mem: Void* = allocate(sizeof(Item)); let item: Item* = New(mem) Item(1); item.~Item(); return 0; }

@@ -1,0 +1,39 @@
+Class
+AutoData
+{
+    Public
+    {
+        value: Int32 = 0;
+        other: Int = 0;
+        hidden: Int32 = 9; Block
+
+        AutoData
+        ()
+        {
+        }
+    }
+};
+
+Int32
+main
+()
+{
+    a: AutoData;
+    a.Set@value(41);
+    a.Set@other((Int)1);
+    data: StartPackage__AutoData__PublicData = a.Getall();
+    If(data.value != 41)
+    {
+        Return 1;
+    }
+    If(a.Get@other() != 1)
+    {
+        Return 2;
+    }
+    a.Setall(2, 3);
+    If(a.Get@value() != 2)
+    {
+        Return 3;
+    }
+    Return 0;
+}

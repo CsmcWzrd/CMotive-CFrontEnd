@@ -1,0 +1,2 @@
+Import Sys;
+func main(args: String[]) -> Int { for arg in args { Sys::Stdio::println(arg); } return 0; }

@@ -1,0 +1,615 @@
+{
+  "name": "CMotive",
+  "version": "0.2.2-rc1",
+  "created_utc": 1787937745,
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "9c36661bfb9163294d8d400ff83a7fffed54ddbd071a5ec0857eb0c2e9fff487"
+    },
+    {
+      "path": "CMotive_complete_feature_pass_update.txt",
+      "sha256": "b098c8f50b9df4ec0ff40ccddd68d7250d0294a22602e4c884f79781ecc4274d"
+    },
+    {
+      "path": "CMotive_debug_symbols_optimization_update.txt",
+      "sha256": "73410cd2229e70aae270f49ea321534252b171dadcee872705fb9c4c4ef7acd1"
+    },
+    {
+      "path": "CMotive_stdlib_object_model_revalidation.txt",
+      "sha256": "50e03cd1248048dc2fa037b5492f47f0a211285053aa349b4db176f4def47220"
+    },
+    {
+      "path": "CMotive_stdlib_stl_net_dynamic_update.txt",
+      "sha256": "ea26adc2127ee88c8db231e3082a31018e2578fdf3e0f99f67b5034c2b7e2ecf"
+    },
+    {
+      "path": "CMotive_target_hit_update.txt",
+      "sha256": "55ad5de098f645c9436d07a62f04cd96ae55a95e545a67f73103b977fe139381"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3699d3a0be8293d99fffac46461ac3d89b61be25ace878aaecd8566b30935f78"
+    },
+    {
+      "path": "Makefile.linux",
+      "sha256": "5cd126bfdb6eca005d806894f46dd3a4440d8b67bd0bdd08906634a6a95850d9"
+    },
+    {
+      "path": "Makefile.mac",
+      "sha256": "28ded806445b545f6eedf36a848db54624b307ff3c0de3d62d6cf1baddaea04e"
+    },
+    {
+      "path": "Makefile.windows",
+      "sha256": "8828a9aa748156fe7b3839a53ff30a60eee89b3f5dbb5e3db9bf7160686da59d"
+    },
+    {
+      "path": "README.md",
+      "sha256": "feb700cf8a10ef110223804feca8893a4df7b96830542d8d530b4472f43196c6"
+    },
+    {
+      "path": "VERSION",
+      "sha256": "efb9fa72b979bbb0ee46d8939c8a57f64b4fb6b499a388bd716811a97cc0e4a4"
+    },
+    {
+      "path": "docs/ABI_FREEZE.md",
+      "sha256": "6030802d808acdaab14f59bc16f0137ecaa55445403fbb160d8767bc031d52bc"
+    },
+    {
+      "path": "docs/CLASSES_INHERITANCE_LIFECYCLE.md",
+      "sha256": "f432b7a52bdf9b0dfe1bb977cadffc26c0c7123631aae55dc112423bdf0e6209"
+    },
+    {
+      "path": "docs/CLI_FREEZE.md",
+      "sha256": "5585c0eb269f95288a7c8b8af3848ff23d32808ccac9ad69ddaafa1a8604afbe"
+    },
+    {
+      "path": "docs/CMOTIVE_1_0_GATE.md",
+      "sha256": "4bd06fc05da2a3912879ad6aa3851998e135a9a5330bf0410441fcd465c24651"
+    },
+    {
+      "path": "docs/CMOTIVE_REQUIREMENTS_VERIFICATION.md",
+      "sha256": "07e047febdcb672bd8976ddca09175e53d2484228ada17f31419c7f8fbe95c7f"
+    },
+    {
+      "path": "docs/CMOTIVE_STDLIB_OBJECT_MODEL_REVALIDATION.txt",
+      "sha256": "50e03cd1248048dc2fa037b5492f47f0a211285053aa349b4db176f4def47220"
+    },
+    {
+      "path": "docs/COMPLETE_LANGUAGE_FEATURE_PASS.md",
+      "sha256": "f41032009e068da9808162bf085f79b7668cf02d7b6d1be7bc574925467a1de2"
+    },
+    {
+      "path": "docs/DEBUG_SYMBOLS_OPTIMIZATION.md",
+      "sha256": "e38f9a032117bc0723e90217c4dc412f9ce247a7de8726c2457cbec9d237b4e7"
+    },
+    {
+      "path": "docs/FEATURE_STATUS.md",
+      "sha256": "2c67a8cffc0a6c189205f3978f7aa02ea2cdfb65fb6c2e027bf47264ec785f0a"
+    },
+    {
+      "path": "docs/FULL_TEST_SUITE_PLAN.md",
+      "sha256": "e4b10110d354ae1b87525e2b21d952f8c3a2d90eeb2b185b4d537257051489bc"
+    },
+    {
+      "path": "docs/GA_PROMOTION_POLICY.md",
+      "sha256": "9ab765fc8e09059a047125741f7e1e94ec9b3b31cbe4f13127c052ba956ede0a"
+    },
+    {
+      "path": "docs/RC_CUTOVER_POLICY.md",
+      "sha256": "8b3fb08613a3630915dd0123cb80c45248cd0d3cb8a60812d83e9a9f69caa7d0"
+    },
+    {
+      "path": "docs/RELEASE_PACKAGING.md",
+      "sha256": "17648c91d4a66fef625f69312fd6f211e7a40db94998dbcd7901f0c5e370bd3d"
+    },
+    {
+      "path": "docs/RELEASE_PROVENANCE.md",
+      "sha256": "5350035c39a3785b57756e58bd91902b78f78122b137c484098085f02910da1c"
+    },
+    {
+      "path": "docs/SEPARATE_COMPILATION.md",
+      "sha256": "061c29844ea11c9d57076a5ffbc07b50f01daafae055f65f7cc45356da79838d"
+    },
+    {
+      "path": "docs/STANDARD_LIBRARY.md",
+      "sha256": "cfca68a7d3cfcf7f9b1f58f6dbac8e1f8e437a385e4cb1a27d8e0e1ab3742144"
+    },
+    {
+      "path": "docs/STDLIB_OBJECT_MODEL_AUDIT.md",
+      "sha256": "55dde6caf07146e5167725ebc3404a7a7c9c74eaefe37db74b1236e3e6134315"
+    },
+    {
+      "path": "docs/SYS_OBJECT_PACKAGES.md",
+      "sha256": "ca039e4ddb32efa2aec289cf43b08ff552ad06f72cf45e43883af34a1e9f043b"
+    },
+    {
+      "path": "docs/SYS_PACKAGES_EXPANDED.md",
+      "sha256": "50a1ab71b60eade045db4a78a58c425f00759a2ee06cc9d6c8206690681fc572"
+    },
+    {
+      "path": "docs/SYS_STL_ALGORITHMS_NET_IO_DYNAMIC.md",
+      "sha256": "d5e763f1fbb6e53e50371f2ced7a1ea6305c374ee634a46ec8dc364e73e9f9e9"
+    },
+    {
+      "path": "docs/TARGET_HIT_DISPATCH.md",
+      "sha256": "a3ee6c505ee3f88c29055ad0cd74acabba05aec57ec6957ac06278de4c84a4e3"
+    },
+    {
+      "path": "docs/TEMPLATES_EXCEPTIONS_PACKAGES.md",
+      "sha256": "372af1faabf789c9b6281e4c5bfc2499599941f9d66ed9c3af91f733f323f825"
+    },
+    {
+      "path": "docs/UPDATE_VIRTUAL_CTOR_X86_64.txt",
+      "sha256": "2151f63616836a5339017554c52b7ccf4891dfb5dd8a5659b9d7c6fc13472340"
+    },
+    {
+      "path": "docs/VS2022_PACKAGES.md",
+      "sha256": "d3f4128b696fe4e3e966c878b3bda02bcd2d5de5f0bb7c9caffa4b98642ebdb7"
+    },
+    {
+      "path": "docs/X86_64_NATIVE_TOOLCHAIN.md",
+      "sha256": "117047542dfce3f834a818a432fe5f7d2bfd236bd38c77df34713afdd7af98a0"
+    },
+    {
+      "path": "examples/classes.CMOT",
+      "sha256": "fd1ec197de9b5d565b2a6afde98ae933a0e1b06161ffeeeff6b5961674490f01"
+    },
+    {
+      "path": "examples/control_flow.CMTV",
+      "sha256": "0d0a714efb7111db05fb4b64dee6a297c493d9ca874eb3784a35ebe2c3fcc453"
+    },
+    {
+      "path": "examples/hello.CMOT",
+      "sha256": "790d7411fb3f2df89559a2f27fe2fc34e702907939eb20d5dc42f654e22dca8c"
+    },
+    {
+      "path": "lib/Sys/Algorithms.HMOT",
+      "sha256": "225b0cb9022791ae6336fad66598240a52a6ce1ff59b963c35fca0261f88b66c"
+    },
+    {
+      "path": "lib/Sys/Exception.HMOT",
+      "sha256": "11e04b6560a4f71c3f07fbed04a7de7e75fcc11a15d8f560a4fa985c26761ca1"
+    },
+    {
+      "path": "lib/Sys/File.HMOT",
+      "sha256": "c6aca154e0da0796bca09658e83bd78c7470ca6372375f2f6405e4bee752a390"
+    },
+    {
+      "path": "lib/Sys/Filesystem.HMOT",
+      "sha256": "4df69b2cfa049c33734d6674cd638a6beb89a5c8fd278ee20dc133339ac774c1"
+    },
+    {
+      "path": "lib/Sys/IO.HMOT",
+      "sha256": "9323d45568a9faeeefadb29f97a656391f79ba72a64903823695d1de2e815404"
+    },
+    {
+      "path": "lib/Sys/Locks.HMOT",
+      "sha256": "02f9452d6b4df22f6c41821cbf36a7a250aadc06ee7f9b9e9bf8fadb1b8de299"
+    },
+    {
+      "path": "lib/Sys/Logging.HMOT",
+      "sha256": "b2ddd146c9182fcb93e2133b679755caf162e2cf24ea0829105c4b5c38860a45"
+    },
+    {
+      "path": "lib/Sys/Math.HMOT",
+      "sha256": "ea4ee4cef04ceb64292db27e981fa474365c55898e7e796a788aab7ce4dd04cc"
+    },
+    {
+      "path": "lib/Sys/Net.HMOT",
+      "sha256": "e27968584722f80c468eebf59414a68e229cfad0958e70c97000706dfc5b1d44"
+    },
+    {
+      "path": "lib/Sys/STL.HMOT",
+      "sha256": "f13d9d1faf6570a54b3e2154c954e7c4f94f0bd01a7a5ade09726070aafa53e2"
+    },
+    {
+      "path": "lib/Sys/Stdio.HMOT",
+      "sha256": "8f9d3bbaf44a1dc708003fcac8cf990a4eb26996c09a0dfac1d39c9171e2d730"
+    },
+    {
+      "path": "lib/Sys/String.HMOT",
+      "sha256": "7635f46d9ce4cba52eca6feed352398bd5e9d0719e174bef73c1bafc77a3d9bb"
+    },
+    {
+      "path": "lib/Sys/Thread.HMOT",
+      "sha256": "65c7ed00715e5279ba01e77a3e2a7311c91164dacae5a4146eabcb792d23aee2"
+    },
+    {
+      "path": "lib/Sys/Wide.HMOT",
+      "sha256": "47410e228ca5148533b7b56eedcf5f59bff7f02cdc2e377d82f0b87f690df904"
+    },
+    {
+      "path": "lib/Sys/runtime.c",
+      "sha256": "11dbe3a7a64175f528017ec69af7b8760d7fc38d607c246f123a08abf4f770eb"
+    },
+    {
+      "path": "release/ga/README.md",
+      "sha256": "ab7acafb1d8a6ca6f10d79c01f6cc7996948794e17226e5be1c4fa96c89c932f"
+    },
+    {
+      "path": "release/provenance/SOURCE_PROVENANCE.md",
+      "sha256": "e8353e59e7843d781bee078e42a714991d2d4ffd9098dd636664318ae2e0eb90"
+    },
+    {
+      "path": "release/provenance/manifest.json",
+      "sha256": "963148189c16ea83aaa58a26ba07e6853ecf3054db4f31af874faddc5445ef42"
+    },
+    {
+      "path": "release/rc/README.md",
+      "sha256": "be3af080a22f233b118eba771cc5e2b1cee34245cf5039a4dd0c2f3809c8f772"
+    },
+    {
+      "path": "scripts/check_cli_freeze.py",
+      "sha256": "81ec17da036ddcedae9751151863802262667798ca1b895cc987d5560ca47331"
+    },
+    {
+      "path": "scripts/cut_rc.sh",
+      "sha256": "5efa899359788f357d13b4298ec96a53fa48ea07d25074927674149b2c6def00"
+    },
+    {
+      "path": "scripts/package_release.py",
+      "sha256": "843984a3445a1bb59be3f333f0f68aeeed42a6adad8a2ebddfa83cc992306651"
+    },
+    {
+      "path": "scripts/promote_ga.sh",
+      "sha256": "accad5c502ad2d63c73335ad0db108d09479106585fb442b80b4344928cfb92f"
+    },
+    {
+      "path": "src/abi/platform.hpp",
+      "sha256": "9a4f4f69aab9bc3eb35177ab627721a6efb6fbdae389c3f51652a27a9856a579"
+    },
+    {
+      "path": "src/ast/ast_nodes.hpp",
+      "sha256": "f6e51260607d856487e9040d04e8e51d25682268e035e75d5b4ff82962f44890"
+    },
+    {
+      "path": "src/cmotive/__init__.py",
+      "sha256": "9165149da5136b5cfefa095d5ec043ef41277e111875c69bd9530c108c4e46fb"
+    },
+    {
+      "path": "src/cmotive/__pycache__/__init__.cpython-313.pyc",
+      "sha256": "ce91abb7e7634eaea7e4f034604825eda65481fe771b66a1614b68e7a7f962eb"
+    },
+    {
+      "path": "src/cmotive/__pycache__/ast.cpython-313.pyc",
+      "sha256": "8b4a35d20d892657d5d58d3260a71719c046f37e0816cb774ce1e07dd6561ba5"
+    },
+    {
+      "path": "src/cmotive/__pycache__/codegen.cpython-313.pyc",
+      "sha256": "fe2bfd686a2e25215d97792e113e75ffae80a714ba49d6b9f35dfdab2ddb0e12"
+    },
+    {
+      "path": "src/cmotive/__pycache__/compiler.cpython-313.pyc",
+      "sha256": "23e4e0271d6b1b75f79ff7de97b6bbfc957083c7dd4c23fec80b6870a57ded8f"
+    },
+    {
+      "path": "src/cmotive/__pycache__/lexer.cpython-313.pyc",
+      "sha256": "4898f92f476ae0d2fdfd0107e4cdef228e8c01fd84db8affcf94b8271199f9ab"
+    },
+    {
+      "path": "src/cmotive/__pycache__/parser.cpython-313.pyc",
+      "sha256": "0b60f8dcefa79e2c3a82fad95a5d15d2f568a4bffc0d52cbfedc059f864dfe90"
+    },
+    {
+      "path": "src/cmotive/__pycache__/preprocessor.cpython-313.pyc",
+      "sha256": "83146b962b6d0921b706c9b02c97f3493e5610cf1a91ac4313f4513e9dd7d852"
+    },
+    {
+      "path": "src/cmotive/__pycache__/semantic.cpython-313.pyc",
+      "sha256": "3dc8552955e90288925735929a84ec3e446c3dc44a9142c96fb86d90925fce4f"
+    },
+    {
+      "path": "src/cmotive/ast.py",
+      "sha256": "eef5b927e8fd4276843b006964fd79464fe13b61f8a52bf38f1eaf375b6863c2"
+    },
+    {
+      "path": "src/cmotive/codegen.py",
+      "sha256": "e6b5f0ea503589bfef0bd40b274a7dc8b5a262df0c7ddc0fb810891dc69d70c0"
+    },
+    {
+      "path": "src/cmotive/compiler.py",
+      "sha256": "7c4819f6405b5898da255125c01dbafe2f8da20caae2431e7e410035f0c755ad"
+    },
+    {
+      "path": "src/cmotive/lexer.py",
+      "sha256": "e6aa263cc5ced1f9802410b8af685f0f974ab1ddda28835322d9c50e9d450d4d"
+    },
+    {
+      "path": "src/cmotive/parser.py",
+      "sha256": "b19b8dab17fdf7703843d8491baf928678ab8a39ddd2f41b0985fe92e30b0d14"
+    },
+    {
+      "path": "src/cmotive/preprocessor.py",
+      "sha256": "785cc157422261ebcd46922730fa952b94cd96b793863f84011d249e5ef36edc"
+    },
+    {
+      "path": "src/cmotive/semantic.py",
+      "sha256": "c5294eb4abf03ef25e22d82794239621aea81df644e4fb9b4ac749dff4e815c0"
+    },
+    {
+      "path": "src/codegen/arm64/arm64_backend.cpp",
+      "sha256": "33633b6372094b508421d2635623f6a137c25724dd3c3b6ecb39a3d33263ae93"
+    },
+    {
+      "path": "src/codegen/native_codegen.cpp",
+      "sha256": "735d9c8a51adc7377bbf20fe483bc4d417ad631b0ad58d61e65379057098faad"
+    },
+    {
+      "path": "src/codegen/x86_64/x86_64_backend.cpp",
+      "sha256": "e919720c837352757f003cab0bf34a0ba090c1cb24b7053c5b01593381a9a5ff"
+    },
+    {
+      "path": "src/exceptions/exception_runtime.cpp",
+      "sha256": "3f719fc8068df5655176f6df08a9b35e91bce6364569c356a5adda2853429c0f"
+    },
+    {
+      "path": "src/frontend/lexer.cpp",
+      "sha256": "45e1b58169967cd62623d4ef98c61ef4088911dc0f0145791cb9b8c6e925580a"
+    },
+    {
+      "path": "src/frontend/parser.cpp",
+      "sha256": "8816a4a582935234732927b80f7518bc13fa70f3bac42db15d958e34de3010fe"
+    },
+    {
+      "path": "src/linker/macos_arm64.cpp",
+      "sha256": "281fa3d01c8582382f6b927c4556ba47f655c6f073b20cb0b1fd966f19d99441"
+    },
+    {
+      "path": "src/packages/package_manager.cpp",
+      "sha256": "48b037f12a102889ed85dc915e08020e90d3e4832ce857aa48334cc6c4e07d3a"
+    },
+    {
+      "path": "src/sema/semantic_analyzer.cpp",
+      "sha256": "6c2b42b98e0546f867037513aeffd8fb10b202b68601c362b10c9ad64fc61140"
+    },
+    {
+      "path": "src/separate_compilation/object_model.cpp",
+      "sha256": "ce685bae8d4f60d9d108be974e115045ca8c68f5949c445c3d22ff8ebcb5eaaa"
+    },
+    {
+      "path": "src/templates/template_engine.cpp",
+      "sha256": "1567e5207b46859cfe110c5d57616c70b0d3278213d952a7d55f8db3a6a074e0"
+    },
+    {
+      "path": "tests/__pycache__/run_tests.cpython-313.pyc",
+      "sha256": "978a7268008fd1dbb9b2dcdbc76cd02f3200014c35bdfdd46e96e670e7d626ab"
+    },
+    {
+      "path": "tests/abi/platform.CMOT",
+      "sha256": "7cd51e317eda9073a5c5ee30833c5b3469814dfbb571d024132ba6afae530ce4"
+    },
+    {
+      "path": "tests/abi/strip_symbols.sh",
+      "sha256": "b844d9b49ef2a9a9117debe5d389b93be79433affaf48bd60dc20d2a03605a6d"
+    },
+    {
+      "path": "tests/conformance/PackageUtil.HMOT",
+      "sha256": "bd6e4ee1ecd5e7b752a9d0c711c3388719bdf140648978f2df2e23828d2b0970"
+    },
+    {
+      "path": "tests/conformance/basic.CMOT",
+      "sha256": "7cd51e317eda9073a5c5ee30833c5b3469814dfbb571d024132ba6afae530ce4"
+    },
+    {
+      "path": "tests/conformance/classes.CMOT",
+      "sha256": "2456bdbb3595174fc9479d5fdddeecb9afc75c2ce7d45aeab7a63bca239c53c1"
+    },
+    {
+      "path": "tests/conformance/cmotive_algorithms.CMOT",
+      "sha256": "ca6537f65e721fa8c396cb831d933d02cbe12fd8bc55c216258f30f8bf6d82c8"
+    },
+    {
+      "path": "tests/conformance/cmotive_algorithms_object_methods.CMOT",
+      "sha256": "6cf08f9e2fe617e0982ad65a28d11adb6d9fccb0c482430b0112398ebd52d8d7"
+    },
+    {
+      "path": "tests/conformance/cmotive_auto_getset.CMOT",
+      "sha256": "4df969089a8cf0f20fa0f857ce434cfbdc837058cf305144d07bac86856bf3b5"
+    },
+    {
+      "path": "tests/conformance/cmotive_class_lifecycle.CMOT",
+      "sha256": "ea94922c7460560010cfc067e3133602c00debb719bbc2855251fbffaee0770a"
+    },
+    {
+      "path": "tests/conformance/cmotive_classes.HMOT",
+      "sha256": "a82a44e22a88839af0a532c9f78fa6fe8876c0185058e0e3d3f64cdc457533b1"
+    },
+    {
+      "path": "tests/conformance/cmotive_classes_main.CMOT",
+      "sha256": "ff790c4d5d6af5ab29816a0139b3d0739777bbddaf274c7f91d940adace4b8d6"
+    },
+    {
+      "path": "tests/conformance/cmotive_constructor_type_overload.CMOT",
+      "sha256": "d8f3e1c7c510781bc05d3401882aba9fc2d1a598af64c9a155dddd71b54422a5"
+    },
+    {
+      "path": "tests/conformance/cmotive_control_flow.CMTV",
+      "sha256": "b954039a7b10422b244c045f91db499731b629a9059ec8083a87879297cce96a"
+    },
+    {
+      "path": "tests/conformance/cmotive_debug_symbols.CMOT",
+      "sha256": "e6a88e195bbe355e3e29437fe76a9c5edf68b56d0e3d1eb9ef92138adde6e121"
+    },
+    {
+      "path": "tests/conformance/cmotive_dynamic_struct.CMOT",
+      "sha256": "0e797d764bfd3c6cbb7cb1f1af9266df0e686c219963bc7754ff954566c5d03d"
+    },
+    {
+      "path": "tests/conformance/cmotive_exception_destructor_unwind.CMOT",
+      "sha256": "970b0d0185e79862015b3a4b3e266667e5b9e86d04aa80e6d69cd751fb81afb2"
+    },
+    {
+      "path": "tests/conformance/cmotive_exception_unwinding.CMOT",
+      "sha256": "6862c773bd990e14aaf4b73de4683fce54458cdc422f44d3be1f6b300d6a1bb0"
+    },
+    {
+      "path": "tests/conformance/cmotive_filesystem_object_methods.CMOT",
+      "sha256": "3ee01449bf5dd1a428a1d9bce8718d3d1074e96d8dab9469c0134e7d823bd782"
+    },
+    {
+      "path": "tests/conformance/cmotive_formal_main.CMOT",
+      "sha256": "cc9cf0fe5e84eb576723c45befaf7413b0d70e25f474fac96f51c5b537c5eb81"
+    },
+    {
+      "path": "tests/conformance/cmotive_fptr_function_pointer.CMOT",
+      "sha256": "f2bf48a6385da9e52aa9a78a218d897b9d66da42ec82cd7da045dcb33a3737f5"
+    },
+    {
+      "path": "tests/conformance/cmotive_global_anywhere.CMOT",
+      "sha256": "19ebc405316073150db71389d13821239b8ff0ee027588b6c6771d1dfb981b1f"
+    },
+    {
+      "path": "tests/conformance/cmotive_invalid_base.CMOT",
+      "sha256": "5203ea1340c805fb47231105bef3a135b1a3919e157b9bd26e4f8050473754e6"
+    },
+    {
+      "path": "tests/conformance/cmotive_io_object_methods.CMOT",
+      "sha256": "a691944d7af737ef480c0135e3e03a7e4d4e8dff4afd150fd2cd2657378b9275"
+    },
+    {
+      "path": "tests/conformance/cmotive_keyword_synonyms.CMOT",
+      "sha256": "b727c7c0e0170ad703a7068cd1c57c3333e9d93890b73ffd4cbfdf63477389d1"
+    },
+    {
+      "path": "tests/conformance/cmotive_net_native_sockets.CMOT",
+      "sha256": "db7599058b6ec4dd753e7a6c847e4cdffa5d73a4ba1b067d0a9b0a7acb3782a3"
+    },
+    {
+      "path": "tests/conformance/cmotive_net_object_methods.CMOT",
+      "sha256": "6ea7cc4b5f53d9430301d740f1ca98178bda5fc76a3f7da7e643b373266e5baf"
+    },
+    {
+      "path": "tests/conformance/cmotive_operation_overload.CMOT",
+      "sha256": "feec0dfbf5796335c8379014713b567669d3142fccd588921551e0ec715bf0ff"
+    },
+    {
+      "path": "tests/conformance/cmotive_overridable_pure_virtual.CMOT",
+      "sha256": "90c63d682f91e0da51bfd796eeb9795e7e98e4f0c2a97e2cecbbb33aeda118ca"
+    },
+    {
+      "path": "tests/conformance/cmotive_package_loading.CMOT",
+      "sha256": "7fd62b7ad241b8a311a71c9dc2f801b1475612f9e7410b3af799297da46784ef"
+    },
+    {
+      "path": "tests/conformance/cmotive_package_method_mangling.CMOT",
+      "sha256": "ea44090a20571bc2deccf5772c46bf2168bac06060f3276253ea900592deb5b8"
+    },
+    {
+      "path": "tests/conformance/cmotive_preprocessor.CMOT",
+      "sha256": "112a116958aa89a9cbd7bca7cc201df6865a9cf9dae8788bcf08cfd9f6ef5a1c"
+    },
+    {
+      "path": "tests/conformance/cmotive_stl_containers.CMOT",
+      "sha256": "5e83afe7bac7dfd2bb535b1dabf31fe93b1d98040149422afbd96be7b73dda2e"
+    },
+    {
+      "path": "tests/conformance/cmotive_stl_object_methods.CMOT",
+      "sha256": "23728a6b4a5e4ba3e8331ada372d03a29d21afb52230d03f7b043f883ce946aa"
+    },
+    {
+      "path": "tests/conformance/cmotive_string_wide_object_methods.CMOT",
+      "sha256": "87c1ae1786a70ec32f751de8aea02a1f8bcc4f626fcd99e20f65687e2dcb015e"
+    },
+    {
+      "path": "tests/conformance/cmotive_sys_io_rename.CMOT",
+      "sha256": "3f4221a2a79b4c081044a8ad86cc426d0e727242234352c4f7b3d45d8826350f"
+    },
+    {
+      "path": "tests/conformance/cmotive_sys_packages_expanded.CMOT",
+      "sha256": "eb2f39a6bb8f0a8495e5352c5f36dbfa30d2f9513a36f4188fe6626298ce7a9b"
+    },
+    {
+      "path": "tests/conformance/cmotive_sys_stl_template.CMOT",
+      "sha256": "136d42c4652522feab985aeff30a3dad9dbfb3b450c67bdb9edec80285205711"
+    },
+    {
+      "path": "tests/conformance/cmotive_target_hit_direct.CMOT",
+      "sha256": "6cffd828fc27917ce5fe9b38ff003c6147bc4c818f6670acfe0b8c8d1869919d"
+    },
+    {
+      "path": "tests/conformance/cmotive_target_hit_object.CMOT",
+      "sha256": "9915373752e22b064aa46924019e64a1bdb0e8e23a476b1ca44a0b95d0a259c1"
+    },
+    {
+      "path": "tests/conformance/cmotive_target_hit_sender.CMOT",
+      "sha256": "5356b073af8abbdaaa56410b007fb0f17bed2ddb091fe93e3c9dedc05df98952"
+    },
+    {
+      "path": "tests/conformance/cmotive_template_instantiation.CMOT",
+      "sha256": "d42a939ae802e341c5b416c66b802bf5a2034a6ac4a7e5dd1055d252086fb127"
+    },
+    {
+      "path": "tests/conformance/cmotive_thread_native.CMOT",
+      "sha256": "9626ca287a69597810015e2ef20379db3134e583f1848a457c29370ad0d39b22"
+    },
+    {
+      "path": "tests/conformance/cmotive_thread_object_methods.CMOT",
+      "sha256": "fc65194c097b468fd41983c578295e57a7c1eb62ed05ae356f3cd4a39a68927c"
+    },
+    {
+      "path": "tests/conformance/cmotive_tstore_threadstore.CMOT",
+      "sha256": "136ba834479b0d5c4f1ea8fc04f23fdb6933e885c6e4ae61089d1d751bd69179"
+    },
+    {
+      "path": "tests/conformance/cmotive_virtual_dispatch.CMOT",
+      "sha256": "251f15913d0c7f35be81bb8835e2a86b6d15c4d2ab87fcec2e86948f568999ad"
+    },
+    {
+      "path": "tests/conformance/control_flow.CMOT",
+      "sha256": "ba35692ef473c82965db1e44b2ab086e378b3cc3ff6b2ca8d30f03a2e38a02ce"
+    },
+    {
+      "path": "tests/conformance/include.CMOT",
+      "sha256": "3f94d5d83b1257da689f26a26d775c47febe0b8304b90b83ad2c82eaee2d9a9c"
+    },
+    {
+      "path": "tests/conformance/sample.HMOT",
+      "sha256": "a7da27124acb5102a23401e77595d69e313972e24f72a6e26065a796b01957b0"
+    },
+    {
+      "path": "tests/run_tests.py",
+      "sha256": "3c97aa0bcb6e966a8a0a0b9c173cab8b5d84a47491422d3b71e9d097750f99c4"
+    },
+    {
+      "path": "tools/CMotiveSymsToDebugFile.py",
+      "sha256": "0d7d781109393f6c47190dda1262c3ef27c0a0802bd27910a434501c5077c4b6"
+    },
+    {
+      "path": "tools/__pycache__/CMotiveSymsToDebugFile.cpython-313.pyc",
+      "sha256": "2eb53d26282be417465edb3b6ae0485b4df0a7e0839ddf223635e9fae02c43dd"
+    },
+    {
+      "path": "tools/__pycache__/cmotive.cpython-313.pyc",
+      "sha256": "4ee433924ee2c6a509ca958db0b8e35c5672d33fe52234f7b2f02cf37477e085"
+    },
+    {
+      "path": "tools/__pycache__/cmotivepp.cpython-313.pyc",
+      "sha256": "e7a3f10fe0e888060f9238b25431deedb2864400c5c389b4a08707ee8f3b2885"
+    },
+    {
+      "path": "tools/cmotive.py",
+      "sha256": "dd4dda81f3da18d07f4f20e7c3f7220b88386e52250e8522dd9839212fffc28a"
+    },
+    {
+      "path": "tools/cmotivepp.py",
+      "sha256": "da047604c5c28d965622b75d0c6858155d8c6838d0dad8a6af54013fc8455bba"
+    },
+    {
+      "path": "tools/vs2022_build_packages.py",
+      "sha256": "72d219dd8afd5922a53f8ae88a0e9e911fba5036def3e7fd90f267c67c9d6d9f"
+    },
+    {
+      "path": "vs2022/CMotive.Packages.sln",
+      "sha256": "a55574a1ef9b68e6402364a04e439963c9844b5662f9a6a9625b13e5119fd49a"
+    },
+    {
+      "path": "vs2022/CMotive.Packages.vcxproj",
+      "sha256": "db5cb1a8ef8455eab2a2d6552f44034cea259d3fd28db2d794e377500d707b7e"
+    },
+    {
+      "path": "vs2022/CMotive.Packages.vcxproj.filters",
+      "sha256": "acd8dfe4bd9a985adefbafd09c53b8ca3ee5d4de394fc8b3d5c8ebc433c933a8"
+    }
+  ]
+}

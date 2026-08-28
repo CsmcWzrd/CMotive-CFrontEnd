@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "../headers/ExampleTiny.HMTV"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX113_INCLUDE_HMTV_HEADER");
+    tiny : ExampleTiny;
+    Return 0;
+}

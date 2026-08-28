@@ -1,0 +1,3 @@
+template <T> func sizeOfT() -> Int { return sizeof(T); }
+template <> func sizeOfT<String>() -> Int { return 24; }
+func main() -> Int { return sizeOfT<Int>(); }

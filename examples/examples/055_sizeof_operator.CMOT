@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX055_SIZEOF_OPERATOR");
+    x : I32 = 5;
+    s : U64 = Sizeof(x);
+    Return 0;
+}

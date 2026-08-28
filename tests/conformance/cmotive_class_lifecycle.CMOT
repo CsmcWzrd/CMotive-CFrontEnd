@@ -1,0 +1,72 @@
+Destroyed : I32 = 0;
+
+Class
+BaseLife
+{
+    Public
+    {
+        value : I32 = 0; Block
+
+        BaseLife
+        ()
+        {
+            value = 11;
+        }
+
+        ~BaseLife
+        ()
+        {
+        }
+
+        I32
+        Value
+        ()
+        {
+            Return This.value;
+        }
+    }
+};
+
+Class
+DerivedLife
+Inherits
+BaseLife Public
+{
+    Public
+    {
+        extra : I32 = 0; Block
+
+        DerivedLife
+        ()
+        {
+            extra = 31;
+        }
+
+        ~DerivedLife
+        ()
+        {
+            Destroyed = 7;
+        }
+
+        I32
+        Extra
+        ()
+        {
+            Return This.extra;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    obj : DerivedLife* = New DerivedLife();
+    got : I32 = obj->Extra();
+    Delete obj;
+    If ( got == 31 && Destroyed == 7 )
+    {
+        Return 0;
+    }
+    Return 1;
+}

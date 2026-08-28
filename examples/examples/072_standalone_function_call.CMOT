@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+I32
+AddPair
+a : I32
+b : I32
+()
+{
+    Return a + b;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX072_STANDALONE_FUNCTION_CALL");
+    result : I32 = AddPair(2, 3);
+    Return result == 5 ? 0 : 1;
+}

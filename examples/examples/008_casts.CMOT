@@ -1,0 +1,1 @@
+func main() -> Int { let x: Int = cast<Int>(7); return x; }

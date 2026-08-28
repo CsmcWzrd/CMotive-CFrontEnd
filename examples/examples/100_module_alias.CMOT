@@ -1,0 +1,2 @@
+Import Sys as S;
+func main() -> Int { S::Stdio::println("alias"); return 0; }

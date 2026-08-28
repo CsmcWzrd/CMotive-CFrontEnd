@@ -1,0 +1,12 @@
+// CMotive verified example 039: defer_scaffold
+// Coverage: defer scaffold
+func main() : Int {
+  Sys::Stdio::print("example 039: defer_scaffold\n");
+  var value = 39;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

@@ -1,0 +1,13 @@
+// CMotive verified example 047: constructor
+// Coverage: constructor scaffold
+class Feature47 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 047: constructor\n");
+  var value = 47;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

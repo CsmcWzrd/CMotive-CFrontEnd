@@ -1,0 +1,28 @@
+Plugin Sys::Algorithms
+
+Int32
+main
+()
+{
+    a : Int[4];
+    a[0] = 9;
+    a[1] = 2;
+    a[2] = 7;
+    a[3] = 4;
+    alg : Algorithms;
+    alg.QuickSort(a, 4);
+    If ( !alg.IsSorted(a, 4) )
+    {
+        Return 1;
+    }
+    If ( alg.BinarySearch(a, 4, 7) < 0 )
+    {
+        Return 2;
+    }
+    alg.Reverse(a, 4);
+    If ( a[0] != 9 )
+    {
+        Return 3;
+    }
+    Return 0;
+}

@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{197259B4-FDC5-40A3-9342-C5017346E405}") = "CMotive.LangExamples.Packages", "CMotive.LangExamples.Packages.vcxproj", "{A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}"
+EndProject
+Global
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|x64 = Debug|x64
+        Release|x64 = Release|x64
+        Debug|ARM64 = Debug|ARM64
+        Release|ARM64 = Release|ARM64
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Debug|x64.ActiveCfg = Debug|x64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Debug|x64.Build.0 = Debug|x64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Release|x64.ActiveCfg = Release|x64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Release|x64.Build.0 = Release|x64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Debug|ARM64.ActiveCfg = Debug|ARM64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Debug|ARM64.Build.0 = Debug|ARM64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Release|ARM64.ActiveCfg = Release|ARM64
+        {A7F94C2B-79F2-4D5C-9CA7-C4A7D23E6E11}.Release|ARM64.Build.0 = Release|ARM64
+    EndGlobalSection
+EndGlobal

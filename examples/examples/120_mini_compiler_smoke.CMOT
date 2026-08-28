@@ -1,0 +1,3 @@
+Import Sys;
+class Token { field text: String; constructor(t: String) { text = t; } }
+func main() -> Int { let t = Token("identifier"); Sys::Stdio::println(t.text); return 0; }

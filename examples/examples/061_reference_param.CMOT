@@ -1,0 +1,2 @@
+func addOne(x: Int&) -> Void { x = x + 1; }
+func main() -> Int { let a: Int = 1; addOne(a); return a; }

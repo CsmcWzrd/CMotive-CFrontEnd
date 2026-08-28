@@ -1,0 +1,2 @@
+class Node { field value: Int; constructor(v: Int) { value = v; } }
+func main() -> Int { let n: Node* = New Node(5); let v: Int = n.value; Delete n; return v; }

@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let f: Sys::File::Handle = Sys::File::Handle("tmp.txt", "r"); let s: String = f.readAll(); f.close(); return 0; }

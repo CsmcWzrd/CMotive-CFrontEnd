@@ -1,0 +1,25 @@
+Plugin Sys::Stdio
+
+I32
+FirstFunc
+()
+{
+    Return 1;
+}
+
+I32
+SecondFunc
+()
+{
+    Return 2;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX080_MULTIPLE_FUNCTIONS");
+    a : I32 = FirstFunc();
+    b : I32 = SecondFunc();
+    Return (a == 1 && b == 2) ? 0 : 1;
+}

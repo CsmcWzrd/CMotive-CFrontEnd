@@ -1,0 +1,10 @@
+Plugin Sys::Thread
+
+I32
+main
+()
+{
+    h : Void* = Sys::Thread::Current();
+    Sys::Thread::Yield();
+    Return h == Null ? 1 : 0;
+}

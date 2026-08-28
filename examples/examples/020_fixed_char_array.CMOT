@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX020_FIXED_CHAR_ARRAY");
+    text : Char[32] = "hello";
+    Return 0;
+}

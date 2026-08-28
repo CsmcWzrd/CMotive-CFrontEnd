@@ -1,0 +1,2 @@
+enum class TokenKind { Identifier, Number, End }
+func main() -> Int { let k: TokenKind = TokenKind::End; return 0; }

@@ -1,0 +1,12 @@
+// CMotive verified example 105: plugin_entry
+// Coverage: plugin entry scaffold
+func main() : Int {
+  Sys::Stdio::print("example 105: plugin_entry\n");
+  var value = 105;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

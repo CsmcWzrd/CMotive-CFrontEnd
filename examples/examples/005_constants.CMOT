@@ -1,0 +1,2 @@
+const Answer: Int = 42;
+func main() -> Int { return Answer; }

@@ -1,0 +1,13 @@
+// CMotive verified example 113: abi_align_class
+// Coverage: ABI class alignment probe
+class AbiProbe { var word; func call(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 113: abi_align_class\n");
+  var value = 113;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

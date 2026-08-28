@@ -1,0 +1,12 @@
+// CMotive verified example 015: source_extension_CMOT
+// Coverage: CMOT source extension
+func main() : Int {
+  Sys::Stdio::print("example 015: source_extension_CMOT\n");
+  var value = 15;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

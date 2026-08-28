@@ -1,0 +1,2 @@
+template <T> class Cell { field value: T; constructor(v: T) { value = v; } method get() -> T { return value; } }
+func main() -> Int { return Cell<Int>(4).get(); }

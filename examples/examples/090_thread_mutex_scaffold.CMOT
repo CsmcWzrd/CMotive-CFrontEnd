@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { let m: Sys::Thread::Mutex = Sys::Thread::Mutex(); m.lock(); m.unlock(); return 0; }

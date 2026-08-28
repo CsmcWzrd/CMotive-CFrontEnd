@@ -1,0 +1,28 @@
+Plugin Sys::Filesystem
+
+Int32
+main
+()
+{
+    fs : Filesystem;
+    p : Path;
+    p.Set(".");
+    If ( p.Exists() == False )
+    {
+        Return 1;
+    }
+    If ( p.IsDirectory() == False )
+    {
+        Return 2;
+    }
+    If ( fs.Exists(".") == False )
+    {
+        Return 3;
+    }
+    cur : Char* = fs.CurrentPath();
+    If ( cur == Null )
+    {
+        Return 4;
+    }
+    Return 0;
+}

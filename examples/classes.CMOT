@@ -1,0 +1,1 @@
+class Animal { var id; virtual func speak(): Int { return 1; } } class Dog extends Animal { func Dog(): Int { return 0; } func destroy(): Int { return 0; } func speak(): Int { return 2; } } func main(): Int { return 0; }

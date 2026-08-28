@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+Class
+DestroyedItem
+{
+    Public
+    {
+        value : I32 = 0;
+        ~DestroyedItem
+        ()
+        {
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX085_CLASS_DESTRUCTOR");
+    item : DestroyedItem;
+    Return 0;
+}

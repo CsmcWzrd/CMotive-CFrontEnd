@@ -1,0 +1,10 @@
+Template
+T : Type
+Class
+ExampleTemplateBox
+{
+    Public
+    {
+        data : Void* = Null; Block
+    }
+};

@@ -1,0 +1,17 @@
+Package Examples::Core;
+
+Class
+CorePackageItem
+{
+    Public
+    {
+        id : I32 = 0; Block
+    }
+};
+
+I32
+CorePackageEntry
+()
+{
+    Return 0;
+}

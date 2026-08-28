@@ -1,0 +1,2 @@
+class Math { static method two() -> Int { return 2; } }
+func main() -> Int { return Math::two(); }

@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+Static
+I32
+HelperStatic
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX028_STATIC_FUNCTION_DECORATOR");
+    v : I32 = HelperStatic();
+    Return 0;
+}

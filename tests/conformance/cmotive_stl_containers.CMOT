@@ -1,0 +1,22 @@
+Plugin Sys::STL
+
+I32
+main
+()
+{
+    v : Void* = Sys::STL::VectorCreate();
+    Sys::STL::VectorPushI64(v, (Int)7);
+    Sys::STL::VectorPushI64(v, (Int)3);
+    Sys::STL::VectorSortI64(v);
+    first : Int = Sys::STL::VectorGetI64(v, (Uint)0);
+    d : Void* = Sys::STL::DictCreate();
+    Sys::STL::DictPutI64(d, "alpha", (Int)10);
+    got : Int = Sys::STL::DictGetI64(d, "alpha", (Int)0);
+    t : Void* = Sys::STL::BinarySearchTreeCreate();
+    Sys::STL::BinarySearchTreeInsertI64(t, (Int)5);
+    found : I32 = Sys::STL::BinarySearchTreeContainsI64(t, (Int)5);
+    Sys::STL::VectorDestroy(v);
+    Sys::STL::DictDestroy(d);
+    Sys::STL::BinarySearchTreeDestroy(t);
+    Return (first == 3 && got == 10 && found == 1) ? 0 : 1;
+}

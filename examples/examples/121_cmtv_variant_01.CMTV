@@ -1,0 +1,2 @@
+Import Sys;
+func main() -> Int { Sys::Stdio::println("CMTV variant 1"); return 1; }

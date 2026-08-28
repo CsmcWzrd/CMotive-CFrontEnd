@@ -1,0 +1,15 @@
+CMotive debug symbols and optimization update
+
+Implemented:
+- Added tools/CMotiveSymsToDebugFile.py and Makefile target/install support for CMotiveSymsToDebugFile.
+- Added compiler support for -g, -g2, -g3, -O1, -O2, -O3, and -Os.
+- Added compiler-generated <output>.cmotive.debug.json metadata when -g/-g2/-g3 is used.
+- Added automatic <output>_cmot_debugsymbols.syms generation for debug builds.
+- The .syms file contains a 64-bit native function offset, mangled symbol, kind, package, class, source, full CMotive prototype, and generated C prototype.
+- The symbol tool can be run standalone against executables, libraries, or objects and merges nm/llvm-nm/objdump offsets with CMotive metadata.
+- Added tests/conformance/cmotive_debug_symbols.CMOT and test-suite checks for -g3 -O2 output.
+
+Verification commands:
+python3 -m py_compile src/cmotive/*.py tools/cmotive.py tools/cmotivepp.py tools/CMotiveSymsToDebugFile.py tests/run_tests.py
+make -f Makefile.linux clean all test
+make -f Makefile.linux package

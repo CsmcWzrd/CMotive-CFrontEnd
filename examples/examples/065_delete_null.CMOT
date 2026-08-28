@@ -1,0 +1,2 @@
+class Box {}
+func main() -> Int { let b: Box* = null; Delete b; return 0; }

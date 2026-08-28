@@ -1,0 +1,12 @@
+// CMotive verified example 104: package_import
+// Coverage: package import scaffold
+func main() : Int {
+  Sys::Stdio::print("example 104: package_import\n");
+  var value = 104;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

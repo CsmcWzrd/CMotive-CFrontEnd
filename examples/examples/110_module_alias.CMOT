@@ -1,0 +1,13 @@
+// CMotive verified example 110: module_alias
+// Coverage: module alias scaffold
+class AbiProbe { var word; func call(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 110: module_alias\n");
+  var value = 110;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

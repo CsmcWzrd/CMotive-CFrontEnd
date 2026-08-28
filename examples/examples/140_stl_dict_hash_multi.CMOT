@@ -1,0 +1,12 @@
+Plugin Sys::STL
+
+I32
+main
+()
+{
+    d : Void* = Sys::STL::DictCreate();
+    Sys::STL::DictPutI64(d, "answer", (Int)42);
+    got : Int = Sys::STL::DictGetI64(d, "answer", (Int)0);
+    Sys::STL::DictDestroy(d);
+    Return got == 42 ? 0 : 1;
+}

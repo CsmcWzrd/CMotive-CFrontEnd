@@ -1,0 +1,3 @@
+class Shape { virtual method area() -> Int { return 0; } }
+class Square : Shape { field side: Int; constructor(s: Int) { side = s; } override method area() -> Int { return side * side; } }
+func main() -> Int { let s: Shape* = New Square(5); let a = s.area(); Delete s; return a; }

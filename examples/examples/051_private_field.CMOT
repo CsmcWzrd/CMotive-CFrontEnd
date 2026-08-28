@@ -1,0 +1,13 @@
+// CMotive verified example 051: private_field
+// Coverage: private field scaffold
+class Feature51 { var slot; func method(x) : Int { return x; } }
+func main() : Int {
+  Sys::Stdio::print("example 051: private_field\n");
+  var value = 51;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

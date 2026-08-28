@@ -1,0 +1,3 @@
+class Base { virtual method id() -> Int { return 1; } }
+class Derived : Base { override method id() -> Int { return 2; } }
+func main() -> Int { let b: Base* = New Derived(); let v: Int = b.id(); Delete b; return v; }

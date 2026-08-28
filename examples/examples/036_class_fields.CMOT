@@ -1,0 +1,2 @@
+class Box { field value: Int; }
+func main() -> Int { let b: Box; b.value = 7; return b.value; }

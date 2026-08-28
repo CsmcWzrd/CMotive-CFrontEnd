@@ -1,0 +1,2 @@
+func fail() -> Void { throw Exception("x"); }
+func main() -> Int { try { fail(); } catch e: Exception { throw; } return 0; }

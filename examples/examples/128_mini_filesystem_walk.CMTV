@@ -1,0 +1,12 @@
+// CMotive verified example 128: mini_filesystem_walk
+// Coverage: mini filesystem walk scaffold
+func main() : Int {
+  Sys::Stdio::print("example 128: mini_filesystem_walk\n");
+  var value = 128;
+  if (value >= 0) {
+    value = value + 1;
+  } else {
+    value = 0;
+  }
+  return 0;
+}

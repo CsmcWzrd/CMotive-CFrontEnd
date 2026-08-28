@@ -1,0 +1,22 @@
+Plugin Sys::String
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    s : CString;
+    s.Set("alpha,beta;gamma,delta");
+    If ( s.Contains("beta") == False )
+    {
+        Return 1;
+    }
+    parser : StringParser;
+    parser.Parse(s.Get(), ";", ",", '\\');
+    If ( parser.Rows() != 2 )
+    {
+        Return 2;
+    }
+    cout.expect("%s").write("CMOTIVE_EX157_OBJECT_STRING_PARSER\n");
+    Return 0;
+}

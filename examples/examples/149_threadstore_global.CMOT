@@ -1,0 +1,12 @@
+Plugin Sys::IO
+
+threadCounter: ThreadStore Int32 = 9;
+
+Int32
+main
+()
+{
+    localCounter: Tstore Int32 = 3;
+    cout.expect("CMOTIVE_EX149_THREADSTORE_GLOBAL %d\n").write(threadCounter + localCounter);
+    Return threadCounter + localCounter - 12;
+}

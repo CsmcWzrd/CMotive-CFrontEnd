@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX094_NEW_DELETE_GENERIC");
+    p : Void* = New ();
+    Delete p;
+    Return 0;
+}

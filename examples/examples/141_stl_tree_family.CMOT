@@ -1,0 +1,12 @@
+Plugin Sys::STL
+
+I32
+main
+()
+{
+    t : Void* = Sys::STL::BinarySearchTreeCreate();
+    Sys::STL::BinarySearchTreeInsertI64(t, (Int)9);
+    found : I32 = Sys::STL::BinarySearchTreeContainsI64(t, (Int)9);
+    Sys::STL::BinarySearchTreeDestroy(t);
+    Return found == 1 ? 0 : 1;
+}

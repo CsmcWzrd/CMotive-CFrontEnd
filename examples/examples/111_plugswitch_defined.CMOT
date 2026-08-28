@@ -1,0 +1,20 @@
+Plugin Sys::Stdio
+Replace X 20;
+Plugswitch
+Plugcase Defined: ( X >= 10 ) && ( X <= 100 )
+DefinedValue : I32 = 22;
+Plugdefault
+DefinedValue : I32 = 33;
+Plugend
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX111_PLUGSWITCH_DEFINED");
+    If ( DefinedValue != 22 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

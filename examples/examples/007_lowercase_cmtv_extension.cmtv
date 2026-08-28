@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX007_LOWERCASE_CMTV_EXTENSION");
+    value : I32 = 5;
+    Return 0;
+}

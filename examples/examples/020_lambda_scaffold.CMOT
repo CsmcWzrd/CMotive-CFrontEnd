@@ -1,0 +1,1 @@
+func main() -> Int { let f: Func<Int,Int> = (x: Int) -> Int { return x + 1; }; return f(4); }
