@@ -1,0 +1,38 @@
+Plugin Sys::Stdio
+
+Class
+MultiBaseA
+{
+    Public
+    {
+        a : I32 = 0; Block
+    }
+};
+Class
+MultiBaseB
+{
+    Public
+    {
+        b : I32 = 0; Block
+    }
+};
+Class
+MultiChild
+Inherits
+MultiBaseA Public
+MultiBaseB Private
+{
+    Public
+    {
+        c : I32 = 0; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX089_MULTIPLE_INHERITANCE_METADATA");
+    item : MultiChild;
+    Return 0;
+}

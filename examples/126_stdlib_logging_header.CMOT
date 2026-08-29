@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/Logging.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX126_STDLIB_LOGGING_HEADER");
+    value : I32 = 0;
+    Return 0;
+}

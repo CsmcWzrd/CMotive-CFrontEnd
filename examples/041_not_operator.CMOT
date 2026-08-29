@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX041_NOT_OPERATOR");
+    x : I32 = 0;
+    If ( Not False )
+    {
+        x = 0;
+    }
+    Else
+    {
+        x = 1;
+    }
+    Return x;
+}

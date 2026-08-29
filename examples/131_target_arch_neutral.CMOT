@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX131_TARGET_ARCH_NEUTRAL");
+    archValue : I32 = 0;
+    Return 0;
+}

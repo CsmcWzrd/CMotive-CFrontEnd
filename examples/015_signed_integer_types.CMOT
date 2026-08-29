@@ -1,0 +1,12 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX015_SIGNED_INTEGER_TYPES");
+    a : I16 = -2;
+    b : I32 = 32;
+    c : I64 = 640000LL;
+    Return 0;
+}

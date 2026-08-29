@@ -1,0 +1,24 @@
+Plugin Sys::Stdio
+
+Class
+Camel_Case_Name
+{
+    Public
+    {
+        I32
+        Method_Name
+        ()
+        {
+            Return 0;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX098_CAMELCASE_NAMES");
+    item : Camel_Case_Name;
+    Return 0;
+}

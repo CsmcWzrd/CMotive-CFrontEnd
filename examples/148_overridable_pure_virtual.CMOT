@@ -1,0 +1,21 @@
+Plugin Sys::IO
+
+Class
+Printable
+{
+    Public
+    {
+        Overridable
+        Void
+        Print
+        ()=0;
+    }
+};
+
+Int32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX148_OVERRIDABLE_PURE_VIRTUAL");
+    Return 0;
+}

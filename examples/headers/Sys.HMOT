@@ -1,3 +1,10 @@
-// CMotive Sys standard-library header scaffold
-package Sys;
-// namespaces: Stdio, File, Filesystem, Logging, Thread, Net
+Package Sys;
+
+Class
+ExampleSysHeader
+{
+    Public
+    {
+        value : I32 = 0; Block
+    }
+};

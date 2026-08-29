@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+Fptr
+I32
+FptrCallback
+()
+;
+
+I32
+FptrTarget
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX076_FUNCTION_POINTER_KEYWORD");
+    value : I32 = FptrTarget();
+    Return value;
+}

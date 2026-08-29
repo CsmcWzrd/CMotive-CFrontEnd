@@ -1,0 +1,21 @@
+Plugin Sys::Stdio
+
+Class
+PointerBox
+{
+    Public
+    {
+        value : I32 = 0;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX100_MEMBER_ACCESS_POINTER");
+    p : PointerBox* = New PointerBox();
+    p->value = 4;
+    Delete p;
+    Return 0;
+}

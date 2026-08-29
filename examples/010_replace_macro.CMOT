@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+Replace LOCAL_VALUE 42;
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX010_REPLACE_MACRO");
+    value : I32 = LOCAL_VALUE;
+    If ( value != 42 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "../headers/ExamplePoint.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX112_INCLUDE_HMOT_HEADER");
+    point : ExamplePoint;
+    Return 0;
+}

@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "Sys/File.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX121_STDLIB_FILE_CLASS");
+    f : File;
+    Return 0;
+}

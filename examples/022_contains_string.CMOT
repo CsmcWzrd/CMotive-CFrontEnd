@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX022_CONTAINS_STRING");
+    text : Char[128] = Contains { leading {json} style text /} and /{ braces };
+    Return 0;
+}

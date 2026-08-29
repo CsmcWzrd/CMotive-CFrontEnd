@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+Template
+A : Type
+B : Type
+C : Type
+Class
+TemplateTriple
+{
+    Public
+    {
+        data : Void* = Null; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX102_TEMPLATE_MULTI_TYPE");
+    value : I32 = 0;
+    Return 0;
+}

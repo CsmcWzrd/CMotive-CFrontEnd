@@ -1,0 +1,20 @@
+Plugin Sys::Wide
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    w16 : Wide16String;
+    w32 : Wide32String;
+    If ( w16.Length() != 0 )
+    {
+        Return 1;
+    }
+    If ( w32.Length() != 0 )
+    {
+        Return 2;
+    }
+    cout.expect("%s").write("CMOTIVE_EX158_OBJECT_WIDE_STRINGS\n");
+    Return 0;
+}

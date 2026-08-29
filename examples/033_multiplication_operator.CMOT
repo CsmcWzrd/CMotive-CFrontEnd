@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX033_MULTIPLICATION_OPERATOR");
+    x : I32 = 10 * 5;
+    If ( x != 50 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

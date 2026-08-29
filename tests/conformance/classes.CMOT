@@ -1,1 +1,38 @@
-class Base { virtual func value(): Int { return 1; } } class Child extends Base { func value(): Int { return 2; } } func main(): Int { return 0; }
+Class
+Base
+{
+    Public
+    {
+        Overridable
+        I32
+        Value
+        ()
+        {
+            Return 1;
+        }
+    }
+};
+
+Class
+Child
+Inherits
+Base Public
+{
+    Public
+    {
+        Overridable
+        I32
+        Value
+        ()
+        {
+            Return 2;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    Return 0;
+}

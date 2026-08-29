@@ -1,1 +1,6 @@
-func main(): Int { return 0; }
+I32
+main
+()
+{
+    Return 0;
+}

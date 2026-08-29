@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+I32
+DefaultHelper
+value : I32 = 10
+()
+{
+    Return value;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX075_DEFAULT_ARGUMENT_SYNTAX");
+    result : I32 = DefaultHelper(4);
+    Return result == 4 ? 0 : 1;
+}

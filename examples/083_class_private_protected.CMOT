@@ -1,0 +1,27 @@
+Plugin Sys::Stdio
+
+Class
+VisibilityItem
+{
+    Private
+    {
+        hidden : I32 = 1;
+    }
+    Protected
+    {
+        guarded : I32 = 2;
+    }
+    Public
+    {
+        visible : I32 = 3;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX083_CLASS_PRIVATE_PROTECTED");
+    item : VisibilityItem;
+    Return 0;
+}

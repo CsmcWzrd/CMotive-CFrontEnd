@@ -1,0 +1,21 @@
+Dynamic Struct
+ExampleDyn
+{
+    Int16 a;
+    Int32 b;
+};
+
+Int32
+main
+()
+{
+    ExampleDyn Expand
+    {
+        Uint16 c;
+        Double d;
+    };
+    x : ExampleDyn;
+    x.a = (Int16)1;
+    x.c = (Uint16)2;
+    Return (x.a == 1 && x.c == 2) ? 0 : 1;
+}

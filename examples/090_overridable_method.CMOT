@@ -1,0 +1,25 @@
+Plugin Sys::Stdio
+
+Class
+OverrideItem
+{
+    Public
+    {
+        Overridable
+        I32
+        Run
+        ()
+        {
+            Return 0;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX090_OVERRIDABLE_METHOD");
+    item : OverrideItem;
+    Return 0;
+}

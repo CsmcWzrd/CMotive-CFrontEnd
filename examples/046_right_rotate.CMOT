@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX046_RIGHT_ROTATE");
+    x : U64 = 8ULL;
+    y : U64 = x >>> 1;
+    Return 0;
+}

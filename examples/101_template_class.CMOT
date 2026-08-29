@@ -1,0 +1,21 @@
+Plugin Sys::Stdio
+
+Template
+T : Type
+Class
+TemplateBox
+{
+    Public
+    {
+        data : Void* = Null; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX101_TEMPLATE_CLASS");
+    value : I32 = 0;
+    Return 0;
+}

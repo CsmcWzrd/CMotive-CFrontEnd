@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX067_RETURN_STATEMENT");
+    x : I32 = 0;
+    Return x;
+}

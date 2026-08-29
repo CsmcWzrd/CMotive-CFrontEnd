@@ -1,0 +1,23 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX066_SWITCH_CASE_DEFAULT");
+    mode : I32 = 2;
+    result : I32 = 0;
+    Switch ( mode )
+    {
+        Case 1:
+            result = 1;
+            Break;
+        Case 2:
+            result = 0;
+            Break;
+        Default:
+            result = 3;
+            Break;
+    }
+    Return result;
+}

@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX043_BITWISE_NOT");
+    x : I32 = ~0;
+    Return 0;
+}

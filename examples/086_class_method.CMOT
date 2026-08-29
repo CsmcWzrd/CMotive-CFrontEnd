@@ -1,0 +1,24 @@
+Plugin Sys::Stdio
+
+Class
+MethodItem
+{
+    Public
+    {
+        I32
+        Value
+        ()
+        {
+            Return 0;
+        }
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX086_CLASS_METHOD");
+    item : MethodItem;
+    Return 0;
+}

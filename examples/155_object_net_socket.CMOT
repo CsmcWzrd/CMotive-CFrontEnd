@@ -1,0 +1,16 @@
+Plugin Sys::Net
+Plugin Sys::IO
+
+Int32
+main
+()
+{
+    s : Socket;
+    fd : Int32 = s.OpenTcpIPv4();
+    If ( fd >= 0 )
+    {
+        s.Close();
+    }
+    cout.expect("%s").write("CMOTIVE_EX155_OBJECT_NET_SOCKET\n");
+    Return 0;
+}

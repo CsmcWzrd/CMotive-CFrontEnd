@@ -1,0 +1,11 @@
+Plugin Sys::Stdio
+#include "../headers/ExampleTemplate.HMOT"
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX114_INCLUDE_TEMPLATE_HEADER");
+    value : I32 = 0;
+    Return 0;
+}

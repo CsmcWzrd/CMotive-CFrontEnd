@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+Class
+SimpleItem
+{
+    Public
+    {
+        value : I32 = 0;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX082_CLASS_PUBLIC_FIELD");
+    item : SimpleItem;
+    Return 0;
+}

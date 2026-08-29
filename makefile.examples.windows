@@ -1,0 +1,18 @@
+BASE_MAKE ?= Makefile.windows
+BIN_DIR ?= build/bin
+EXEEXT ?= .exe
+
+.PHONY: all tools examples language clean-examples
+all: examples
+
+tools:
+	$(MAKE) -f $(BASE_MAKE) all
+
+examples: tools
+	sh scripts/run_examples.sh $(BIN_DIR) "$(EXEEXT)"
+
+language: tools
+	sh scripts/validate_language_files.sh $(BIN_DIR) "$(EXEEXT)"
+
+clean-examples:
+	rm -rf build/examples build/all_language_validate

@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX071_NESTED_LOOPS");
+    i : I32 = 0;
+    j : I32 = 0;
+    total : I32 = 0;
+    For ( i = 0; i < 2; i++ )
+    {
+        For ( j = 0; j < 2; j++ )
+        {
+            total++;
+        }
+    }
+    Return total == 4 ? 0 : 1;
+}

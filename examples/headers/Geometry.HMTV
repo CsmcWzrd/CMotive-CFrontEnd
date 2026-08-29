@@ -1,2 +1,9 @@
-// CMotive Geometry header scaffold
-class Point { field x: Int; field y: Int; }
+Class
+Point
+{
+    Public
+    {
+        x : I32 = 0; Block
+        y : I32 = 0; Block
+    }
+};

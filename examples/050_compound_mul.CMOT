@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX050_COMPOUND_MUL");
+    x : I32 = 5;
+    x *= 2;
+    If ( x != 10 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

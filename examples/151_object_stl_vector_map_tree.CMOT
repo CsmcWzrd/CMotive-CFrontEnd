@@ -1,0 +1,30 @@
+Plugin Sys::STL
+
+Int32
+main
+()
+{
+    v : Vector<Int>;
+    v.PushBack(10);
+    v.PushBack(2);
+    v.PushBack(7);
+    v.Sort();
+    If ( v.At(0) != 2 )
+    {
+        Return 1;
+    }
+    d : Dict<Char*,Int>;
+    d.Put("alpha", 11);
+    If ( !d.Contains("alpha") )
+    {
+        Return 2;
+    }
+    tree : BPlusTree<Int>;
+    tree.Insert(44);
+    tree.Insert(22);
+    If ( !tree.Contains(44) )
+    {
+        Return 3;
+    }
+    Return 0;
+}

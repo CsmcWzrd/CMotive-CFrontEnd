@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX021_INTEGER_ARRAY_INITIALIZER");
+    values : I32[3] = {1,2,3};
+    Return 0;
+}

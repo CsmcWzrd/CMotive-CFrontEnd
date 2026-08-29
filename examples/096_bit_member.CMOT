@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+
+Class
+BitBox
+{
+    Public
+    {
+        packed : Uchar { 3:left, 4:middle, 1:right } = 0xC5;
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX096_BIT_MEMBER");
+    item : BitBox;
+    Return 0;
+}

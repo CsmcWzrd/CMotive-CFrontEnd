@@ -1,0 +1,12 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX017_FLOATING_TYPES");
+    a : Float = 1.25F;
+    b : Double = 2.5;
+    c : Ldouble = 3.75L;
+    Return 0;
+}

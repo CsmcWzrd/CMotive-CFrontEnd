@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+Overridable
+I32
+OverTarget
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX079_OVERRIDABLE_FUNCTION_DECORATOR");
+    value : I32 = OverTarget();
+    Return 0;
+}

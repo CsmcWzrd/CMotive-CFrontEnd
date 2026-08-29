@@ -100,3 +100,25 @@ The C frontend includes concrete paths for template-oriented lowering, exception
 ## Sys object standard library update
 
 `Sys::Filesystem`, `Sys::Net`, `Sys::Thread`, `Sys::String`, and `Sys::Wide` expose class/object-first APIs, with compatibility wrappers retained. `Sys::Thread` includes `MicroSleep` and `NanoSleep`.
+
+## Merged examples package
+
+The language examples package is now merged into this main source package under `examples/`. The old separate language-examples archive layout is no longer required for normal source distribution or verification.
+
+Build and run all examples in one shot:
+
+```sh
+make -f makefile.examples.linux examples
+make -f makefile.examples.mac examples
+make -f makefile.examples.windows examples
+```
+
+Preprocess and compile-check every `.CMOT`, `.CMTV`, `.HMOT`, and `.HMTV` file in the merged tree:
+
+```sh
+make -f makefile.examples.linux language
+make -f makefile.examples.mac language
+make -f makefile.examples.windows language
+```
+
+The formal CMotive variable/member declaration style is `Name : Type = Value;`; the merged source and examples have been normalized away from the older lowercase `var`/`func`/`class` bootstrap style.

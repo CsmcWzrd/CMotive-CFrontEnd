@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX134_X64_KEYWORD_COVERAGE");
+    processor : Char* = "x86_64";
+    Return 0;
+}

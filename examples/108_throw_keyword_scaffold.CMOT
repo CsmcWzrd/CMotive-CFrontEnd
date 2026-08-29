@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX108_THROW_KEYWORD_SCAFFOLD");
+    value : I32 = 0;
+    If ( False )
+    {
+        Throw "not reached";
+    }
+    Return 0;
+}

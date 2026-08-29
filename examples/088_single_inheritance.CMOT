@@ -1,0 +1,30 @@
+Plugin Sys::Stdio
+
+Class
+BaseAnimal
+{
+    Public
+    {
+        baseValue : I32 = 1; Block
+    }
+};
+
+Class
+DogAnimal
+Inherits
+BaseAnimal Public
+{
+    Public
+    {
+        paws : I32 = 4; Block
+    }
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX088_SINGLE_INHERITANCE");
+    dog : DogAnimal;
+    Return 0;
+}

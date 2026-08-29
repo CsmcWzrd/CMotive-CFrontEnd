@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX056_C_STYLE_CAST");
+    d : Double = 5.5;
+    x : I32 = (I32)d;
+    If ( x != 5 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

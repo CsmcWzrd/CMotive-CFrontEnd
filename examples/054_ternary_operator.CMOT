@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX054_TERNARY_OPERATOR");
+    x : I32 = (1 == 1) ? 0 : 1;
+    Return x;
+}

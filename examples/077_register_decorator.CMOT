@@ -1,0 +1,18 @@
+Plugin Sys::Stdio
+
+Register
+I32
+RegisterTarget
+()
+{
+    Return 0;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX077_REGISTER_DECORATOR");
+    value : I32 = RegisterTarget();
+    Return 0;
+}

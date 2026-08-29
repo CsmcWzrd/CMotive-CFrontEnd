@@ -1,0 +1,10 @@
+Plugin Sys::Algorithms
+
+I32
+main
+()
+{
+    mn : Int = Sys::Algorithms::MinI64((Int)5, (Int)1);
+    mx : Int = Sys::Algorithms::MaxI64((Int)5, (Int)1);
+    Return (mn == 1 && mx == 5) ? 0 : 1;
+}

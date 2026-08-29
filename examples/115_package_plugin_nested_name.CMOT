@@ -1,0 +1,12 @@
+Package Examples::Nested::Name;
+Plugin Sys::Stdio
+Plugin Examples::Nested::Name
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX115_PACKAGE_PLUGIN_NESTED_NAME");
+    value : I32 = 0;
+    Return 0;
+}

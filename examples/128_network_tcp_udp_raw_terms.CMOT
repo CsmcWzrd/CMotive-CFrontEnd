@@ -1,0 +1,17 @@
+Plugin Sys::Stdio
+
+Enum NetworkMode
+{
+    Tcp,
+    Udp,
+    IpRaw
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX128_NETWORK_TCP_UDP_RAW_TERMS");
+    value : I32 = 0;
+    Return 0;
+}

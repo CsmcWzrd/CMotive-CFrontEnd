@@ -1,0 +1,10 @@
+Plugin Sys::IO
+
+I32
+main
+()
+{
+    cout.expect("%s").write("Sys::IO example\n");
+    Sys::IO::println("formatted IO package renamed from Sys::Stdio");
+    Return 0;
+}

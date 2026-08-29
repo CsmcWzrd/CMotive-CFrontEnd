@@ -1,2 +1,8 @@
 #include "sample.HMOT"
-func main(): Int { return SAMPLE_VALUE; }
+
+I32
+main
+()
+{
+    Return SAMPLE_VALUE;
+}

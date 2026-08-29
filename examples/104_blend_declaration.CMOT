@@ -1,0 +1,16 @@
+Plugin Sys::Stdio
+
+Blend
+{
+    Val : I32;
+    Big : I64;
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX104_BLEND_DECLARATION");
+    value : I32 = 0;
+    Return 0;
+}

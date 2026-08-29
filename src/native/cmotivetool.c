@@ -35,7 +35,7 @@
 #define PATH_SEP '/'
 #endif
 
-#define CMOTIVE_VERSION "0.2.4-cfrontend"
+#define CMOTIVE_VERSION "0.2.5-cfrontend-merged"
 
 static void *xmalloc(size_t n) { void *p = malloc(n ? n : 1); if (!p) { fprintf(stderr, "cmotive: out of memory\n"); exit(99); } return p; }
 static void *xrealloc(void *p, size_t n) { void *r = realloc(p, n ? n : 1); if (!r) { fprintf(stderr, "cmotive: out of memory\n"); exit(99); } return r; }
@@ -157,6 +157,7 @@ typedef struct Parser { Tok *t; int n, i; Program *prog; char *package; } Parser
 static Tok *pk(Parser *p, int off) { int j = p->i + off; if (j >= p->n) j = p->n - 1; return &p->t[j]; }
 static void skip_eol(Parser *p) { while (pk(p,0)->kind == TK_EOL) p->i++; }
 static int tok_is(Parser *p, const char *s) { return streq(pk(p,0)->v, s); }
+static int tok_is_decorator(Parser *p) { return streq(pk(p,0)->v,"Static") || streq(pk(p,0)->v,"Inline") || streq(pk(p,0)->v,"Extern") || streq(pk(p,0)->v,"Register"); }
 static int parser_accept(Parser *p, const char *s) { skip_eol(p); if (tok_is(p,s)) { p->i++; return 1; } return 0; }
 static char *take_value(Parser *p) { char *r; skip_eol(p); r = xstrdup(pk(p,0)->v); p->i++; return r; }
 static void parse_error(Parser *p, const char *msg) { fprintf(stderr, "cmotive parse error at %d:%d: %s near '%s'\n", pk(p,0)->line, pk(p,0)->col, msg, pk(p,0)->v); }
@@ -196,6 +197,7 @@ static Func parse_func_formal(Parser *p, const char *method_of, const char *forc
  parse_params_until_paren(p,&f); parser_accept(p,"("); parser_accept(p,")"); skip_eol(p); if (parser_accept(p,"=")) { parser_accept(p,"0"); parser_accept(p,";"); f.pure=1; } else collect_body(p,&f); return f; }
 static Func parse_func_keyword(Parser *p, const char *method_of) { Func f; memset(&f,0,sizeof(f)); f.package=xstrdup(p->package); f.method_of=xstrdup(method_of?method_of:""); parser_accept(p,"func"); f.name=take_value(p); parser_accept(p,"("); while (!parser_accept(p,")")) { if (pk(p,0)->kind == TK_ID) { char *n = take_value(p); char *type = xstrdup("I32"); if (parser_accept(p,":")) { free(type); type=collect_type(p); } add_param(&f,n,type); free(n); free(type); parser_accept(p,","); } else p->i++; }
  f.ret=xstrdup("I32"); if (parser_accept(p,":")) { free(f.ret); f.ret=collect_type(p); } collect_body(p,&f); return f; }
+static int block_end(Tok *t, int n, int open);
 static void parse_class(Parser *p) {
  char *name, *base = NULL;
  Class *c;
@@ -206,6 +208,7 @@ static void parse_class(Parser *p) {
  if (parser_accept(p,"Inherits") || parser_accept(p,"extends")) {
   base = take_value(p);
   if (pk(p,0)->kind == TK_ID && (streq(pk(p,0)->v,"Public") || streq(pk(p,0)->v,"Private") || streq(pk(p,0)->v,"Protected"))) p->i++;
+  while (p->i < p->n && !streq(pk(p,0)->v,"{") && pk(p,0)->kind != TK_EOF) p->i++;
  }
  c = prog_add_class(p->prog, name, base ? base : "", p->package);
  free(name);
@@ -223,6 +226,8 @@ static void parse_class(Parser *p) {
    continue;
   }
   if (parser_accept(p,";")) continue;
+  if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) { parse_class(p); continue; }
+  if (tok_is_decorator(p)) { p->i++; continue; }
   if (parser_accept(p,"Overridable") || parser_accept(p,"virtual")) {
    Func f = parse_func_formal(p, c->name, NULL, NULL, 0, 0);
    class_add_method(c, f);
@@ -250,6 +255,11 @@ static void parse_class(Parser *p) {
    int block = 0;
    parser_accept(p,":");
    type = collect_type(p);
+   if (streq(pk(p,0)->v,"{")) {
+    int open = p->i;
+    int close = block_end(p->t, p->n, open);
+    p->i = close + 1;
+   }
    if (parser_accept(p,"=")) init = collect_until(p,";");
    parser_accept(p,";");
    if (parser_accept(p,"Block")) block = 1;
@@ -264,11 +274,39 @@ static void parse_class(Parser *p) {
 }
 static void parse_dynamic_struct(Parser *p) { char *name; parser_accept(p,"Dynamic"); parser_accept(p,"Struct"); name=take_value(p); free(p->prog->dyn_name); p->prog->dyn_name=xstrdup(name); parser_accept(p,"{"); while (!parser_accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); parser_accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } parser_accept(p,";"); free(name); }
 static void parse_dynamic_expand(Parser *p) { char *name = take_value(p); (void)name; parser_accept(p,"Expand"); parser_accept(p,"{"); while (!parser_accept(p,"}")) { char *type, *fname; skip_eol(p); if (streq(pk(p,0)->v,"}")) continue; type=collect_type(p); fname=take_value(p); parser_accept(p,";"); add_field_arr(&p->prog->dyn_fields,&p->prog->dyn_n,&p->prog->dyn_cap,fname,type,"0",0); free(type); free(fname); } parser_accept(p,";"); free(name); }
-static void skip_template(Parser *p) { parser_accept(p,"Template"); while (p->i < p->n && !streq(pk(p,0)->v,"Class") && !is_type_start(pk(p,0))) p->i++; if (streq(pk(p,0)->v,"Class")) { int depth=0; while (p->i < p->n) { if (streq(pk(p,0)->v,"{")) depth++; else if (streq(pk(p,0)->v,"}")) { depth--; if (depth == 0) { p->i++; break; } } p->i++; } parser_accept(p,";"); } else { Func tmp = parse_func_formal(p,NULL,NULL,NULL,0,0); (void)tmp; } }
+static void skip_template(Parser *p)
+{
+ int open, close;
+ parser_accept(p,"Template");
+ while (p->i < p->n && pk(p,0)->kind != TK_EOF && !streq(pk(p,0)->v,"Class") && !streq(pk(p,0)->v,"class") && !streq(pk(p,0)->v,"{")) p->i++;
+ if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) {
+  p->i++;
+  skip_eol(p);
+  if (pk(p,0)->kind == TK_ID) p->i++;
+  while (p->i < p->n && pk(p,0)->kind != TK_EOF && !streq(pk(p,0)->v,"{")) p->i++;
+  if (streq(pk(p,0)->v,"{")) {
+   open = p->i;
+   close = block_end(p->t, p->n, open);
+   p->i = close + 1;
+  }
+  parser_accept(p,";");
+  return;
+ }
+ if (streq(pk(p,0)->v,"{")) {
+  open = p->i;
+  close = block_end(p->t, p->n, open);
+  p->i = close + 1;
+  parser_accept(p,";");
+  return;
+ }
+ while (p->i < p->n && pk(p,0)->kind != TK_EOF && !streq(pk(p,0)->v,";")) p->i++;
+ parser_accept(p,";");
+}
 static void parse_fptr(Parser *p) { Func f; memset(&f,0,sizeof(f)); parser_accept(p,"Fptr"); f.fptr=1; f.package=xstrdup(p->package); f.method_of=xstrdup(""); f.ret=collect_type(p); f.name=take_value(p); parse_params_until_paren(p,&f); parser_accept(p,"("); parser_accept(p,")"); parser_accept(p,";"); prog_add_func(p->prog,f); }
 static void parse_global(Parser *p) { char *name, *type, *init = NULL; if (parser_accept(p,"Global")) { name=take_value(p); parser_accept(p,":"); type=collect_type(p); } else { name=take_value(p); parser_accept(p,":"); if (parser_accept(p,"Global")) type=collect_type(p); else type=collect_type(p); } if (parser_accept(p,"=")) init = collect_until(p,";"); parser_accept(p,";"); prog_add_global(p->prog,name,type,init?init:"0",p->package); free(name); free(type); if (init) free(init); }
-static void parse_package(Parser *p) { Str b; if (!parser_accept(p,"Package")) parser_accept(p,"package"); sb_init(&b); while (p->i < p->n && !parser_accept(p,";")) { if (pk(p,0)->kind != TK_EOL) sb_add(&b, pk(p,0)->v); p->i++; } if (b.n) { free(p->package); p->package = sb_take(&b); } else free(b.s); }
-static void parse_program(Parser *p) { while (p->i < p->n && pk(p,0)->kind != TK_EOF) { skip_eol(p); if (pk(p,0)->kind == TK_EOF) break; if (parser_accept(p,";")) continue; if (streq(pk(p,0)->v,"Package") || streq(pk(p,0)->v,"package")) { parse_package(p); continue; } if (streq(pk(p,0)->v,"Plugin")) { while (p->i < p->n && !parser_accept(p,";") && pk(p,0)->kind != TK_EOL) p->i++; continue; } if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) { parse_class(p); continue; } if (streq(pk(p,0)->v,"Dynamic") && streq(pk(p,1)->v,"Struct")) { parse_dynamic_struct(p); continue; } if (p->prog->dyn_name && streq(pk(p,0)->v,p->prog->dyn_name) && streq(pk(p,1)->v,"Expand")) { parse_dynamic_expand(p); continue; } if (streq(pk(p,0)->v,"Template")) { skip_template(p); continue; } if (streq(pk(p,0)->v,"Fptr")) { parse_fptr(p); continue; } if (streq(pk(p,0)->v,"Global") || (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":"))) { parse_global(p); continue; } if (streq(pk(p,0)->v,"func")) { Func f = parse_func_keyword(p,NULL); prog_add_func(p->prog,f); continue; } if (streq(pk(p,0)->v,"Hit")) { char *sender=xstrdup(""), *hid=xstrdup(""); parser_accept(p,"Hit"); if (parser_accept(p,":")) { free(hid); hid=take_value(p); } else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":")) { free(sender); sender=take_value(p); parser_accept(p,":"); free(hid); hid=take_value(p); } { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); f.hit_sender=sender; f.hit_id=hid; prog_add_func(p->prog,f); } continue; }
+static void parse_package(Parser *p) { Str b; if (!parser_accept(p,"Package")) parser_accept(p,"package"); sb_init(&b); while (p->i < p->n) { if (streq(pk(p,0)->v,";")) { p->i++; break; } if (pk(p,0)->kind == TK_EOL || pk(p,0)->kind == TK_EOF) { if (pk(p,0)->kind == TK_EOL) p->i++; break; } sb_add(&b, pk(p,0)->v); p->i++; } if (b.n) { free(p->package); p->package = sb_take(&b); } else free(b.s); }
+static void parse_program(Parser *p) { while (p->i < p->n && pk(p,0)->kind != TK_EOF) { skip_eol(p); if (pk(p,0)->kind == TK_EOF) break; if (parser_accept(p,";")) continue; if (streq(pk(p,0)->v,"Package") || streq(pk(p,0)->v,"package")) { parse_package(p); continue; } if (streq(pk(p,0)->v,"Plugin")) { p->i++; while (p->i < p->n && pk(p,0)->kind != TK_EOF && pk(p,0)->kind != TK_EOL && !streq(pk(p,0)->v,";")) p->i++; if (streq(pk(p,0)->v,";")) p->i++; continue; } if (streq(pk(p,0)->v,"Class") || streq(pk(p,0)->v,"class")) { parse_class(p); continue; } if (tok_is_decorator(p) || streq(pk(p,0)->v,"Overridable")) { p->i++; continue; } if (streq(pk(p,0)->v,"Dynamic") && streq(pk(p,1)->v,"Struct")) { parse_dynamic_struct(p); continue; } if (p->prog->dyn_name && streq(pk(p,0)->v,p->prog->dyn_name) && streq(pk(p,1)->v,"Expand")) { parse_dynamic_expand(p); continue; } if (streq(pk(p,0)->v,"Template")) { skip_template(p); continue; } if (streq(pk(p,0)->v,"Blend") || streq(pk(p,0)->v,"Union") || streq(pk(p,0)->v,"Enum")) { p->i++; while (p->i < p->n && pk(p,0)->kind != TK_EOF && !streq(pk(p,0)->v,"{")) p->i++; if (streq(pk(p,0)->v,"{")) { int close = block_end(p->t, p->n, p->i); p->i = close + 1; } parser_accept(p,";"); continue; } if (streq(pk(p,0)->v,"Fptr")) { parse_fptr(p); continue; } if (streq(pk(p,0)->v,"Hit")) { char *sender=xstrdup(""), *hid=xstrdup(""); parser_accept(p,"Hit"); if (parser_accept(p,":")) { free(hid); hid=take_value(p); } else if (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":")) { free(sender); sender=take_value(p); parser_accept(p,":"); free(hid); hid=take_value(p); } { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); f.hit_sender=sender; f.hit_id=hid; prog_add_func(p->prog,f); } continue; } if (streq(pk(p,0)->v,"Global") || (pk(p,0)->kind == TK_ID && streq(pk(p,1)->v,":"))) { parse_global(p); continue; } if (streq(pk(p,0)->v,"func")) { Func f = parse_func_keyword(p,NULL); prog_add_func(p->prog,f); continue; }
+ if (streq(pk(p,0)->v,"$")) { char *clsname; Class *cls; Func f; p->i++; clsname = take_value(p); cls = find_class(p->prog, clsname); f = parse_func_formal(p, clsname, NULL, NULL, 0, 0); if (cls) class_add_method(cls, f); else prog_add_func(p->prog, f); free(clsname); continue; }
  if (is_type_start(pk(p,0))) { Func f = parse_func_formal(p,NULL,NULL,NULL,0,0); prog_add_func(p->prog,f); continue; }
  parse_error(p,"unrecognized declaration"); p->i++; } }
 
@@ -324,6 +362,7 @@ static Var *vt_find(VarTab *vt, const char *name) { int i; for (i=vt->n-1;i>=0;i
 static char *safe_pkg(const char *pkg) { Str b; const char *p; sb_init(&b); for (p=pkg?pkg:"StartPackage"; *p; ++p) { if (p[0]==':' && p[1]==':') { sb_add(&b,"__"); ++p; } else if (isalnum((unsigned char)*p) || *p=='_') sb_ch(&b,*p); else sb_ch(&b,'_'); } return sb_take(&b); }
 static const char *type_suffix(const char *t) { if (!t) return "V"; if (strstr(t,"I32")||strstr(t,"Int32")) return "I32"; if (strstr(t,"I64")||streq(t,"Int")) return "I64"; if (strstr(t,"Char")) return "Char"; if (strstr(t,"Double")) return "Double"; if (strstr(t,"Float")) return "Float"; return "Obj"; }
 static char *mangle_class_member(Class *c, const char *name, Func *f) { Str b; char *pkg = safe_pkg(c ? c->package : "StartPackage"); sb_init(&b); sb_add(&b,pkg); sb_add(&b,"__"); sb_add(&b,c?c->name:""); sb_add(&b,"__"); if (f && f->ctor) sb_add(&b,"ctor"); else if (f && f->dtor) sb_add(&b,"dtor"); else if (f && f->op) { sb_add(&b,"Operation__"); sb_add(&b,f->op); } else sb_add(&b,name); if (f && f->ctor && f->param_n) { int i; for (i=0;i<f->param_n;i++) { sb_add(&b,"__"); sb_add(&b,type_suffix(f->params[i].type)); } } free(pkg); return sb_take(&b); }
+static char *class_sym_prefix(Class *c) { Str b; char *pkg = safe_pkg(c ? c->package : "StartPackage"); sb_init(&b); sb_add(&b,pkg); sb_add(&b,"__"); sb_add(&b,c ? c->name : ""); free(pkg); return sb_take(&b); }
 static char *mangle_func(Func *f) { Str b; char *pkg = safe_pkg(f->package); if (streq(f->name,"main")) { free(pkg); return xstrdup("main"); } sb_init(&b); sb_add(&b,pkg); sb_add(&b,"__"); sb_add(&b,f->name); free(pkg); return sb_take(&b); }
 static char *ctor_symbol_to_new(const char *ctor)
 {
@@ -343,9 +382,34 @@ static char *ctype(const char *type) {
  if (starts_with(t,"Global ")) return ctype(t + 7);
  if (starts_with(t,"Tstore ")) return ctype(t + 7);
  if (starts_with(t,"ThreadStore ")) return ctype(t + 12);
- if (starts_with(t,"Vector")) return xstrdup("CMotive_Vector_Int");
- if (starts_with(t,"Map")) return xstrdup("CMotive_Map_CharPtr_Int");
- if (starts_with(t,"BinarySearchTree")) return xstrdup("CMotive_Tree_Int");
+ if (starts_with(t,"Const ")) return ctype(t + 6);
+ if (starts_with(t,"Volatile ")) return ctype(t + 9);
+ if (starts_with(t,"Register ")) return ctype(t + 9);
+ if (starts_with(t,"Static ")) return ctype(t + 7);
+ if (starts_with(t,"Inline ")) return ctype(t + 7);
+ if (starts_with(t,"Extern ")) return ctype(t + 7);
+ {
+  size_t n = strlen(t);
+  while (n > 0 && isspace((unsigned char)t[n-1])) n--;
+  if (n > 0 && t[n-1] == '*') {
+   char *base = (char*)xmalloc(n);
+   char *cb;
+   Str ptr;
+   memcpy(base, t, n-1);
+   base[n-1] = 0;
+   cb = ctype(base);
+   sb_init(&ptr);
+   sb_add(&ptr, cb);
+   sb_ch(&ptr, '*');
+   free(base);
+   free(cb);
+   return sb_take(&ptr);
+  }
+ }
+ if (starts_with(t,"Vector") || starts_with(t,"List") || starts_with(t,"Dlist")) return xstrdup("CMotive_Vector_Int");
+ if (starts_with(t,"Map") || starts_with(t,"Dict") || starts_with(t,"HashDict") || starts_with(t,"MultiDict") || starts_with(t,"MultiHashDict")) return xstrdup("CMotive_Map_CharPtr_Int");
+ if (starts_with(t,"BinarySearchTree") || starts_with(t,"BinaryTree") || starts_with(t,"BTree") || starts_with(t,"BPlusTree")) return xstrdup("CMotive_Tree_Int");
+ if (strchr(t,'<')) return xstrdup("void*");
  if (streq(t,"Boolean")||streq(t,"Bool")||streq(t,"boolean")) return xstrdup("int");
  if (streq(t,"Char")||streq(t,"char")) return xstrdup("char");
  if (streq(t,"Char*")||streq(t,"Char *")) return xstrdup("char*");
@@ -395,15 +459,19 @@ static const char *skip_storage_prefix_const(const char *type) {
 }
 static int type_is_class(Program *p, const char *type) { char base[256]; size_t i=0; const char *t=skip_storage_prefix_const(type); while (*t && *t!='*' && *t!='<' && !isspace((unsigned char)*t) && i<sizeof(base)-1) base[i++]=*t++; base[i]=0; return find_class(p,base)!=NULL; }
 static Class *class_from_type(Program *p, const char *type) { char base[256]; size_t i=0; const char *t=skip_storage_prefix_const(type); while (*t && *t!='*' && *t!='<' && !isspace((unsigned char)*t) && i<sizeof(base)-1) base[i++]=*t++; base[i]=0; return find_class(p,base); }
-static int type_is_builtin_obj(const char *type) { static const char *objs[] = {"OStream","Formatter","Path","Filesystem","Socket","Net","Thread","Threading","Algorithms","CString","Character","StringParser","Wide16String","Wide32String","Mutex",NULL}; int i; for (i=0; objs[i]; ++i) if (streq(type, objs[i]) || starts_with(type,"Vector") || starts_with(type,"Map") || starts_with(type,"BinarySearchTree")) return 1; return 0; }
+static int type_is_builtin_obj(const char *type) { static const char *objs[] = {"OStream","Formatter","Path","Filesystem","Socket","Net","Thread","Threading","Algorithms","CString","Character","StringParser","Wide16String","Wide32String","Mutex",NULL}; int i; for (i=0; objs[i]; ++i) if (streq(type, objs[i]) || starts_with(type,"Vector") || starts_with(type,"List") || starts_with(type,"Dlist") || starts_with(type,"Map") || starts_with(type,"Dict") || starts_with(type,"HashDict") || starts_with(type,"MultiDict") || starts_with(type,"MultiHashDict") || starts_with(type,"BinarySearchTree") || starts_with(type,"BinaryTree") || starts_with(type,"BTree") || starts_with(type,"BPlusTree")) return 1; return 0; }
+static int type_is_scalar_name(const char *type) { static const char *names[] = {"Boolean","Bool","Char","Char16","Char32","Uchar","I16","Int16","I32","Int32","I64","Int","U16","Uint16","U32","Uint32","U64","Uint","Float","Double","Ldouble","Void",NULL}; int i; for(i=0; names[i]; ++i) if(streq(type,names[i])) return 1; return 0; }
 
 static char *expr_from_tokens(Program *prog, Tok *t, int n, VarTab *vt, Class *curcls, int as_lvalue);
 static void append_expr(Str *out, Program *prog, Tok *t, int a, int b, VarTab *vt, Class *curcls) { char *e = expr_from_tokens(prog, t+a, b-a, vt, curcls, 0); sb_add(out,e); free(e); }
 static int matching_paren(Tok *t, int n, int open) { int d=0,i; for (i=open;i<n;i++) { if (streq(t[i].v,"(")) d++; else if (streq(t[i].v,")")) { d--; if (d==0) return i; } } return n-1; }
 static char *map_sys_call(const char *full) { struct M { const char *a,*b; } m[] = {
- {"Sys::IO::print","cmotive_sys_stdio_print"},{"Sys::IO::println","cmotive_sys_stdio_println"},{"Sys::IO::printf","printf"},{"Sys::IO::scanf","scanf"},
+ {"Sys::IO::print","cmotive_sys_stdio_print"},{"Sys::IO::println","cmotive_sys_stdio_println"},{"Sys::IO::printf","printf"},{"Sys::IO::sprintf","sprintf"},{"Sys::IO::scanf","scanf"},
+ {"Sys::Stdio::print","cmotive_sys_stdio_print"},{"Sys::Stdio::println","cmotive_sys_stdio_println"},{"Sys::Stdio::printf","printf"},{"Sys::Stdio::sprintf","sprintf"},{"Sys::Stdio::scanf","scanf"},
  {"Sys::STL::VectorCreate","cmotive_sys_stl_vector_create"},{"Sys::STL::VectorPushI64","cmotive_sys_stl_vector_push_i64"},{"Sys::STL::VectorSortI64","cmotive_sys_stl_vector_sort_i64"},{"Sys::STL::VectorGetI64","cmotive_sys_stl_vector_get_i64"},{"Sys::STL::VectorDestroy","cmotive_sys_stl_vector_destroy"},{"Sys::STL::DictCreate","cmotive_sys_stl_dict_create"},{"Sys::STL::DictPutI64","cmotive_sys_stl_dict_put_i64"},{"Sys::STL::DictGetI64","cmotive_sys_stl_dict_get_i64"},{"Sys::STL::DictDestroy","cmotive_sys_stl_dict_destroy"},{"Sys::STL::BinarySearchTreeCreate","cmotive_sys_stl_binary_search_tree_create"},{"Sys::STL::BinarySearchTreeInsertI64","cmotive_sys_stl_binary_search_tree_insert_i64"},{"Sys::STL::BinarySearchTreeContainsI64","cmotive_sys_stl_binary_search_tree_contains_i64"},{"Sys::STL::BinarySearchTreeDestroy","cmotive_sys_stl_binary_search_tree_destroy"},
  {"Sys::Algorithms::MinI64","cmotive_sys_algorithms_min_i64"},{"Sys::Algorithms::MaxI64","cmotive_sys_algorithms_max_i64"},{"Sys::Algorithms::CompareI32","cmotive_sys_algorithms_compare_i32"},
+ {"Sys::Logging::set_level","cmotive_sys_logging_set_level"},{"Sys::Logging::trace","cmotive_sys_logging_trace"},{"Sys::Logging::debug","cmotive_sys_logging_debug"},{"Sys::Logging::info","cmotive_sys_logging_info"},{"Sys::Logging::warn","cmotive_sys_logging_warn"},{"Sys::Logging::error","cmotive_sys_logging_error"},{"Sys::Logging::fatal","cmotive_sys_logging_fatal"},
+ {"Sys::Logging::SetLevel","cmotive_sys_logging_set_level"},{"Sys::Logging::Trace","cmotive_sys_logging_trace"},{"Sys::Logging::Debug","cmotive_sys_logging_debug"},{"Sys::Logging::Info","cmotive_sys_logging_info"},{"Sys::Logging::Warn","cmotive_sys_logging_warn"},{"Sys::Logging::Error","cmotive_sys_logging_error"},{"Sys::Logging::Fatal","cmotive_sys_logging_fatal"},
  {"Sys::Net::SocketTcpIPv4","cmotive_sys_net_socket_tcp_ipv4"},{"Sys::Net::SocketUdpIPv4","cmotive_sys_net_socket_udp_ipv4"},{"Sys::Net::SocketClose","cmotive_sys_net_socket_close"},
  {"Sys::Thread::Current","cmotive_sys_thread_current"},{"Sys::Thread::Yield","cmotive_sys_thread_yield"},{"Sys::Thread::MicroSleep","cmotive_sys_thread_sleep_us"},{"Sys::Thread::NanoSleep","cmotive_sys_thread_sleep_ns"},{"Sys::Thread::SleepMs","cmotive_sys_thread_sleep_ms"},
  {NULL,NULL}}; int i; for (i=0;m[i].a;i++) if (streq(full,m[i].a)) return xstrdup(m[i].b); return NULL; }
@@ -415,9 +483,9 @@ static char *map_builtin_method(const char *type, const char *method) { Str b; s
  else if (streq(type,"Net")) { sb_add(&b,"CMNet_"); sb_add(&b,method); }
  else if (streq(type,"Thread") || streq(type,"Threading")) { sb_add(&b,"CMThread_"); sb_add(&b,method); }
  else if (streq(type,"Algorithms")) { sb_add(&b,"CMAlgorithms_"); sb_add(&b,method); }
- else if (starts_with(type,"Vector")) { sb_add(&b,"CMVector_"); sb_add(&b,method); }
- else if (starts_with(type,"Map")) { sb_add(&b,"CMMap_"); sb_add(&b,method); }
- else if (starts_with(type,"BinarySearchTree")) { sb_add(&b,"CMTree_"); sb_add(&b,method); }
+ else if (starts_with(type,"Vector") || starts_with(type,"List") || starts_with(type,"Dlist")) { sb_add(&b,"CMVector_"); sb_add(&b,method); }
+ else if (starts_with(type,"Map") || starts_with(type,"Dict") || starts_with(type,"HashDict") || starts_with(type,"MultiDict") || starts_with(type,"MultiHashDict")) { sb_add(&b,"CMMap_"); sb_add(&b,method); }
+ else if (starts_with(type,"BinarySearchTree") || starts_with(type,"BinaryTree") || starts_with(type,"BTree") || starts_with(type,"BPlusTree")) { sb_add(&b,"CMTree_"); sb_add(&b,method); }
  else if (streq(type,"CString")) { sb_add(&b,"CMCString_"); sb_add(&b,method); }
  else if (streq(type,"Character")) { sb_add(&b,"CMCharacter_"); sb_add(&b,method); }
  else if (streq(type,"StringParser")) { sb_add(&b,"CMStringParser_"); sb_add(&b,method); }
@@ -425,9 +493,24 @@ static char *map_builtin_method(const char *type, const char *method) { Str b; s
  else if (streq(type,"Wide32String")) { sb_add(&b,"CMWide32_"); sb_add(&b,method); }
  else if (streq(type,"Mutex")) { if (streq(method,"lock")) sb_add(&b,"CMMutex_lock"); else if (streq(method,"unlock")) sb_add(&b,"CMMutex_unlock"); }
  if (b.n==0) { free(b.s); return NULL; } return sb_take(&b); }
-static char *expr_from_tokens(Program *prog, Tok *t, int n, VarTab *vt, Class *curcls, int as_lvalue) { Str out; int i; (void)as_lvalue; sb_init(&out); for (i=0;i<n;i++) { Tok *x=&t[i]; if (x->kind==TK_EOL) continue; if ((streq(x->v,"This") || streq(x->v,"this")) && i+2<n && (streq(t[i+1].v,".") || streq(t[i+1].v,"->"))) { sb_add(&out,"this->"); sb_add(&out,t[i+2].v); i+=2; continue; } if (streq(x->v,"True")||streq(x->v,"true")) { sb_add(&out,"1"); continue; } if (streq(x->v,"False")||streq(x->v,"false")) { sb_add(&out,"0"); continue; } if (streq(x->v,"Null")) { sb_add(&out,"NULL"); continue; } if (streq(x->v,"This")) { sb_add(&out,"this"); continue; } if (streq(x->v,"Sizeof")) { sb_add(&out,"sizeof"); continue; }
+static char *expr_from_tokens(Program *prog, Tok *t, int n, VarTab *vt, Class *curcls, int as_lvalue) { Str out; int i; (void)as_lvalue; sb_init(&out); for (i=0;i<n;i++) { Tok *x=&t[i]; if (x->kind==TK_EOL) continue; if ((streq(x->v,"This") || streq(x->v,"this")) && i+3<n && (streq(t[i+1].v,".") || streq(t[i+1].v,"->")) && streq(t[i+3].v,"(")) { int end = matching_paren(t,n,i+3); Func *mf=NULL; int k; Str args; sb_init(&args); if (end > i+4) append_expr(&args,prog,t,i+4,end,vt,curcls); for(k=0; curcls && k<curcls->method_n; k++) if(streq(curcls->methods[k].name,t[i+2].v)){ mf=&curcls->methods[k]; break; } if(mf){ char *sym=mangle_class_member(curcls,t[i+2].v,mf); sb_add(&out,sym); free(sym); sb_add(&out,"(this"); if(args.n){ sb_add(&out,", "); sb_add(&out,args.s); } sb_ch(&out,')'); free(args.s); i=end; continue; } free(args.s); }
+ if ((streq(x->v,"This") || streq(x->v,"this")) && i+2<n && (streq(t[i+1].v,".") || streq(t[i+1].v,"->"))) { sb_add(&out,"this->"); sb_add(&out,t[i+2].v); i+=2; continue; }
+ if (curcls && x->kind==TK_ID && !vt_find(vt,x->v) && !(i>0 && (streq(t[i-1].v,".") || streq(t[i-1].v,"->") || streq(t[i-1].v,"::"))) && !(i+1<n && streq(t[i+1].v,"::"))) { int fk; int field_hit=0; for(fk=0; fk<curcls->field_n; fk++) if(streq(curcls->fields[fk].name,x->v)){ sb_add(&out,"this->"); sb_add(&out,x->v); field_hit=1; break; } if(field_hit) continue; }
+ if (streq(x->v,"True")||streq(x->v,"true")) { sb_add(&out,"1"); continue; } if (streq(x->v,"False")||streq(x->v,"false")) { sb_add(&out,"0"); continue; } if (streq(x->v,"Null")) { sb_add(&out,"NULL"); continue; } if (streq(x->v,"Not")) { sb_add(&out,"!"); continue; } if (streq(x->v,"This")) { sb_add(&out,"this"); continue; } if (streq(x->v,"Sizeof")) { sb_add(&out,"sizeof"); continue; }
  /* casts */
- if (streq(x->v,"(") && i+2<n && streq(t[i+2].v,")")) { char *ct = ctype(t[i+1].v); if (!type_is_class(prog,t[i+1].v) && !type_is_builtin_obj(t[i+1].v)) { sb_printf(&out,"(%s)",ct); free(ct); i+=2; continue; } free(ct); }
+ if (streq(x->v,"(") && i+2<n && streq(t[i+2].v,")")) { if (type_is_scalar_name(t[i+1].v) || type_is_class(prog,t[i+1].v) || type_is_builtin_obj(t[i+1].v)) { char *ct = ctype(t[i+1].v); sb_printf(&out,"(%s)",ct); free(ct); i+=2; continue; } }
+ /* rotate operators */
+ if (i+2<n && (streq(t[i+1].v,">>>") || streq(t[i+1].v,"<<<"))) {
+   sb_add(&out, streq(t[i+1].v,">>>") ? "CMotive_Ror64" : "CMotive_Rol64");
+   sb_ch(&out, '(');
+   sb_add(&out, x->v);
+   sb_add(&out, ", ");
+   sb_add(&out, t[i+2].v);
+   sb_ch(&out, ')');
+   i += 2;
+   continue;
+ }
+
  /* Sys::A::B call */
  if (i+4<n && streq(t[i+1].v,"::") && streq(t[i+3].v,"::")) { Str full; char *mapped; sb_init(&full); sb_add(&full,t[i].v); sb_add(&full,"::"); sb_add(&full,t[i+2].v); sb_add(&full,"::"); sb_add(&full,t[i+4].v); mapped = map_sys_call(full.s); free(full.s); if (mapped) { sb_add(&out,mapped); free(mapped); i+=4; continue; } }
  /* class operation overload */
@@ -458,6 +541,11 @@ static char *expr_from_tokens(Program *prog, Tok *t, int n, VarTab *vt, Class *c
  if (x->kind==TK_ID && i+1<n && streq(t[i+1].v,"(") ) { Func *fn = find_func(prog,x->v); if (fn && !streq(x->v,"main")) { char *m = mangle_func(fn); sb_add(&out,m); free(m); continue; } if (streq(x->v,"pi")) { sb_add(&out,"cmotive_sys_math_pi"); continue; } if (streq(x->v,"toUpperChar")) { sb_add(&out,"toupper"); continue; } if (streq(x->v,"str_parse")) { sb_add(&out,"cmotive_sys_string_str_parse"); continue; } if (streq(x->v,"str_parse_rows")) { sb_add(&out,"cmotive_sys_string_str_parse_rows"); continue; } if (streq(x->v,"str_parse_cols")) { sb_add(&out,"cmotive_sys_string_str_parse_cols"); continue; } if (streq(x->v,"str_parse_at")) { sb_add(&out,"cmotive_sys_string_str_parse_at"); continue; } if (streq(x->v,"str_parse_free")) { sb_add(&out,"cmotive_sys_string_str_parse_free"); continue; } if (streq(x->v,"exists")) { sb_add(&out,"cmotive_sys_filesystem_exists"); continue; } if (streq(x->v,"info")) { sb_add(&out,"cmotive_sys_logging_info"); continue; } }
  /* templated Identity<I32>(x) */
  if (x->kind==TK_ID && i+5<n && streq(t[i+1].v,"<")) { if (streq(x->v,"Identity")) { sb_add(&out,"Identity_I32"); while (i<n && !streq(t[i].v,">")) i++; continue; } }
+ /* New () generic storage */
+ if (streq(x->v,"New") && i+1<n && streq(t[i+1].v,"(")) {
+   int end = matching_paren(t,n,i+1);
+   if (end == i + 2) { sb_add(&out,"CMotive_New(1)"); i = end; continue; }
+ }
  /* New Class(args) */
  if (streq(x->v,"New") && i+2<n) {
    char *cls = t[i+1].v;
@@ -483,6 +571,12 @@ static char *expr_from_tokens(Program *prog, Tok *t, int n, VarTab *vt, Class *c
        i = par - 1; continue;
      }
    }
+ }
+ /* fallback for template New Template<T>(...) while concrete template ABI matures */
+ if (streq(x->v,"New") && i+2<n && t[i+1].kind==TK_ID) {
+   int par = i + 2;
+   if (par<n && streq(t[par].v,"<")) { while (par<n && !streq(t[par].v,">")) par++; if (par<n) par++; }
+   if (par<n && streq(t[par].v,"(")) { int end = matching_paren(t,n,par); sb_add(&out,"CMotive_New(1)"); i=end; continue; }
  }
  /* object method call */
  if (x->kind==TK_ID && i+3<n && (streq(t[i+1].v,".")||streq(t[i+1].v,"->"))) { char *var=x->v, *op=t[i+1].v, *meth=t[i+2].v; int mi=i+2, atfield=0; Var *vv = vt_find(vt,var); if (streq(t[i+3].v,"@") && i+4<n) { meth=t[i+4].v; mi=i+4; atfield=1; }
@@ -532,11 +626,20 @@ static char *join_tokens(Tok *t, int a, int b)
 static char *strip_storage_qualifiers(const char *type)
 {
     const char *p = type ? type : "";
-    while (*p && isspace((unsigned char)*p)) p++;
-    if (starts_with(p, "Global ")) p += 7;
-    while (*p && isspace((unsigned char)*p)) p++;
-    if (starts_with(p, "Tstore ")) p += 7;
-    else if (starts_with(p, "ThreadStore ")) p += 12;
+    int changed = 1;
+    while (changed) {
+        changed = 0;
+        while (*p && isspace((unsigned char)*p)) p++;
+        if (starts_with(p, "Global ")) { p += 7; changed = 1; continue; }
+        if (starts_with(p, "Tstore ")) { p += 7; changed = 1; continue; }
+        if (starts_with(p, "ThreadStore ")) { p += 12; changed = 1; continue; }
+        if (starts_with(p, "Const ")) { p += 6; changed = 1; continue; }
+        if (starts_with(p, "Volatile ")) { p += 9; changed = 1; continue; }
+        if (starts_with(p, "Register ")) { p += 9; changed = 1; continue; }
+        if (starts_with(p, "Static ")) { p += 7; changed = 1; continue; }
+        if (starts_with(p, "Inline ")) { p += 7; changed = 1; continue; }
+        if (starts_with(p, "Extern ")) { p += 7; changed = 1; continue; }
+    }
     while (*p && isspace((unsigned char)*p)) p++;
     return xstrdup(p);
 }
@@ -628,8 +731,12 @@ static void emit_local_decl(BodyCtx *bc, const char *name, const char *type, con
         Class *c = class_from_type(bc->prog, ntype);
         sb_printf(bc->out, "%s %s; memset(&%s, 0, sizeof(%s));", ct, name, name, name);
         if (c) {
-            sb_printf(bc->out, " %s__%s__ctor(&%s);", c->package, c->name, name);
-            sb_printf(bc->out, " CMotive_Cleanup_Push(&%s, (CMotive_CleanupFn)%s__%s__dtor);", name, c->package, c->name);
+            char *ctor_sym = mangle_class_member(c, "ctor", NULL);
+            char *dtor_sym = mangle_class_member(c, "dtor", NULL);
+            sb_printf(bc->out, " %s(&%s);", ctor_sym, name);
+            sb_printf(bc->out, " CMotive_Cleanup_Push(&%s, (CMotive_CleanupFn)%s);", name, dtor_sym);
+            free(ctor_sym);
+            free(dtor_sym);
         }
         sb_add(bc->out, "\n");
         vt_add(&bc->vars, name, ntype, is_ptr);
@@ -818,6 +925,64 @@ static void emit_body_range(BodyCtx *bc, Tok *t, int n)
             continue;
         }
 
+        if (streq(t[i].v, "{")) {
+            int close = block_end(t, n, i);
+            emit_indent(bc->out, bc->indent);
+            sb_add(bc->out, "{\n");
+            bc->indent++;
+            emit_body_range(bc, t + i + 1, close - i - 1);
+            bc->indent--;
+            emit_indent(bc->out, bc->indent);
+            sb_add(bc->out, "}\n");
+            i = close + 1;
+            continue;
+        }
+
+        if (streq(t[i].v, "Switch") || streq(t[i].v, "switch")) {
+            int condopen = i + 1;
+            int condclose;
+            int bodyopen;
+            int bodyclose;
+            char *cond;
+            while (condopen < n && !streq(t[condopen].v, "(")) condopen++;
+            condclose = matching_paren(t, n, condopen);
+            bodyopen = condclose + 1;
+            while (bodyopen < n && !streq(t[bodyopen].v, "{")) bodyopen++;
+            bodyclose = block_end(t, n, bodyopen);
+            cond = expr_from_tokens(bc->prog, t + condopen + 1, condclose - condopen - 1, &bc->vars, bc->curcls, 0);
+            emit_indent(bc->out, bc->indent);
+            sb_printf(bc->out, "switch (%s) {\n", cond);
+            free(cond);
+            bc->indent++;
+            emit_body_range(bc, t + bodyopen + 1, bodyclose - bodyopen - 1);
+            bc->indent--;
+            emit_indent(bc->out, bc->indent);
+            sb_add(bc->out, "}\n");
+            i = bodyclose + 1;
+            continue;
+        }
+
+        if (streq(t[i].v, "Case") || streq(t[i].v, "case")) {
+            int colon = i + 1;
+            char *label;
+            while (colon < n && !streq(t[colon].v, ":")) colon++;
+            label = expr_from_tokens(bc->prog, t + i + 1, colon - i - 1, &bc->vars, bc->curcls, 0);
+            emit_indent(bc->out, bc->indent);
+            sb_printf(bc->out, "case %s:\n", label);
+            free(label);
+            i = colon < n ? colon + 1 : i + 1;
+            continue;
+        }
+
+        if (streq(t[i].v, "Default") || streq(t[i].v, "default")) {
+            int colon = i + 1;
+            while (colon < n && !streq(t[colon].v, ":")) colon++;
+            emit_indent(bc->out, bc->indent);
+            sb_add(bc->out, "default:\n");
+            i = colon < n ? colon + 1 : i + 1;
+            continue;
+        }
+
         if (streq(t[i].v, "If") || streq(t[i].v, "if")) {
             int condopen = i + 1;
             while (condopen < n && !streq(t[condopen].v, "(")) condopen++;
@@ -835,6 +1000,32 @@ static void emit_body_range(BodyCtx *bc, Tok *t, int n)
             emit_indent(bc->out, bc->indent);
             sb_add(bc->out, "}");
             i = bodyclose + 1;
+            while (1) {
+                while (i < n && t[i].kind == TK_EOL) i++;
+                if (i < n && (streq(t[i].v, "Elif") || streq(t[i].v, "elif"))) {
+                    int ecopen = i + 1;
+                    int ecclose;
+                    int ebopen;
+                    int ebclose;
+                    char *econd;
+                    while (ecopen < n && !streq(t[ecopen].v, "(")) ecopen++;
+                    ecclose = matching_paren(t, n, ecopen);
+                    ebopen = ecclose + 1;
+                    while (ebopen < n && !streq(t[ebopen].v, "{")) ebopen++;
+                    ebclose = block_end(t, n, ebopen);
+                    econd = expr_from_tokens(bc->prog, t + ecopen + 1, ecclose - ecopen - 1, &bc->vars, bc->curcls, 0);
+                    sb_printf(bc->out, " else if (%s) {\n", econd);
+                    free(econd);
+                    bc->indent++;
+                    emit_body_range(bc, t + ebopen + 1, ebclose - ebopen - 1);
+                    bc->indent--;
+                    emit_indent(bc->out, bc->indent);
+                    sb_add(bc->out, "}");
+                    i = ebclose + 1;
+                    continue;
+                }
+                break;
+            }
             while (i < n && t[i].kind == TK_EOL) i++;
             if (i < n && (streq(t[i].v, "Else") || streq(t[i].v, "else"))) {
                 int eopen = i + 1;
@@ -851,6 +1042,37 @@ static void emit_body_range(BodyCtx *bc, Tok *t, int n)
                 sb_add(bc->out, "\n");
             }
             continue;
+        }
+
+        if (streq(t[i].v, "Do") || streq(t[i].v, "do")) {
+            int bodyopen = i + 1;
+            int bodyclose;
+            int whilekw;
+            int condopen;
+            int condclose;
+            char *cond;
+            while (bodyopen < n && !streq(t[bodyopen].v, "{")) bodyopen++;
+            bodyclose = block_end(t, n, bodyopen);
+            whilekw = bodyclose + 1;
+            while (whilekw < n && t[whilekw].kind == TK_EOL) whilekw++;
+            if (whilekw < n && (streq(t[whilekw].v, "While") || streq(t[whilekw].v, "while"))) {
+                condopen = whilekw + 1;
+                while (condopen < n && !streq(t[condopen].v, "(")) condopen++;
+                condclose = matching_paren(t, n, condopen);
+                cond = expr_from_tokens(bc->prog, t + condopen + 1, condclose - condopen - 1, &bc->vars, bc->curcls, 0);
+                emit_indent(bc->out, bc->indent);
+                sb_add(bc->out, "do {\n");
+                bc->indent++;
+                emit_body_range(bc, t + bodyopen + 1, bodyclose - bodyopen - 1);
+                bc->indent--;
+                emit_indent(bc->out, bc->indent);
+                sb_printf(bc->out, "} while (%s);\n", cond);
+                free(cond);
+                i = condclose + 1;
+                while (i < n && !streq(t[i].v, ";")) i++;
+                if (i < n) i++;
+                continue;
+            }
         }
 
         if (streq(t[i].v, "While") || streq(t[i].v, "while")) {
@@ -940,7 +1162,7 @@ static void emit_body_range(BodyCtx *bc, Tok *t, int n)
             emit_indent(bc->out, bc->indent);
             if (vv && type_is_class(bc->prog, vv->type)) {
                 Class *c = class_from_type(bc->prog, vv->type);
-                sb_printf(bc->out, "%s__%s__delete(%s);\n", c->package, c->name, v);
+                { char *prefix = class_sym_prefix(c); sb_printf(bc->out, "%s__delete(%s);\n", prefix, v); free(prefix); }
             } else {
                 sb_printf(bc->out, "CMotive_Delete(%s);\n", v);
             }
@@ -976,72 +1198,244 @@ static void emit_body_range(BodyCtx *bc, Tok *t, int n)
         }
     }
 }
-static void emit_runtime_prelude(Str *out, const char *target_arch) { sb_add(out,"/* Generated by CMotive C frontend. */\n"); sb_printf(out,"/* target-arch: %s */\n", target_arch?target_arch:"native"); sb_add(out,"#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n#include <stddef.h>\n#include <string.h>\n#include <stdarg.h>\n#include <setjmp.h>\n#include <math.h>\n#include <ctype.h>\n#include <time.h>\n#if defined(_WIN32)\n#include <windows.h>\n#else\n#include <unistd.h>\n#include <sched.h>\n#include <pthread.h>\n#endif\n#include \"runtime.c\"\n"); sb_add(out,"typedef struct CMotive_ExceptionFrame { jmp_buf env; const char *message; struct CMotive_ExceptionFrame *prev; } CMotive_ExceptionFrame;\nstatic CMotive_ExceptionFrame *__cmotive_exception_stack = NULL;\ntypedef void (*CMotive_CleanupFn)(void*);\ntypedef struct CMotive_CleanupEntry { void *object; CMotive_CleanupFn cleanup; struct CMotive_CleanupEntry *prev; } CMotive_CleanupEntry;\nstatic CMotive_CleanupEntry *__cmotive_cleanup_stack = NULL;\nstatic void CMotive_Cleanup_Push(void *object, CMotive_CleanupFn cleanup){CMotive_CleanupEntry*e=(CMotive_CleanupEntry*)malloc(sizeof(CMotive_CleanupEntry)); if(!e) exit(72); e->object=object; e->cleanup=cleanup; e->prev=__cmotive_cleanup_stack; __cmotive_cleanup_stack=e;}\nstatic void CMotive_Cleanup_RunTo(CMotive_CleanupEntry *mark){while(__cmotive_cleanup_stack!=mark){CMotive_CleanupEntry*e=__cmotive_cleanup_stack; if(!e)break; __cmotive_cleanup_stack=e->prev; if(e->cleanup&&e->object)e->cleanup(e->object); free(e);}}\nstatic void CMotive_Cleanup_DiscardTo(CMotive_CleanupEntry *mark){while(__cmotive_cleanup_stack!=mark){CMotive_CleanupEntry*e=__cmotive_cleanup_stack; if(!e)break; __cmotive_cleanup_stack=e->prev; free(e);}}\nstatic void CMotive_Throw(const char*msg){CMotive_ExceptionFrame*f=__cmotive_exception_stack; if(!f){fprintf(stderr,\"CMotive unhandled exception: %s\\n\",msg?msg:\"<null>\"); exit(70);} f->message=msg?msg:\"CMotive exception\"; longjmp(f->env,1);}\n#define CMOTIVE_EXCEPTION_POP(frameptr) do{ if(__cmotive_exception_stack==(frameptr)) __cmotive_exception_stack=(frameptr)->prev; }while(0)\nstatic void CMotive_UnresolvedTarget(const char*s,uint64_t id){fprintf(stderr,\"CMotive unresolved Target: %s %llu\\n\",s?s:\"\",(unsigned long long)id); exit(73);}\n");
- sb_add(out,"typedef struct { const char *fmt; } OStream; static void CMOStream_Expect(OStream*s,const char*f){s->fmt=f?f:\"%s\";} static int CMOStream_Write(OStream*s,...){va_list ap; int r; va_start(ap,s); r=vprintf(s&&s->fmt?s->fmt:\"%s\",ap); va_end(ap); return r;}\ntypedef struct { int unused; } Formatter; static int CMFormatter_Println(Formatter*f,const char*s){(void)f; return cmotive_sys_stdio_println(s);}\ntypedef struct { char *path; } Path; static void CMPath_Set(Path*p,char*v){p->path=v;} static char* CMPath_Get(Path*p){return p->path;} static int CMPath_Exists(Path*p){return cmotive_sys_filesystem_exists(p->path);} static int CMPath_IsFile(Path*p){return cmotive_sys_filesystem_is_file(p->path);} static int CMPath_IsDirectory(Path*p){return cmotive_sys_filesystem_is_directory(p->path);}\ntypedef struct { int unused; } Filesystem; static int CMFilesystem_Exists(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_exists(p);} static int CMFilesystem_IsFile(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_is_file(p);} static int CMFilesystem_IsDirectory(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_is_directory(p);} static char* CMFilesystem_CurrentPath(Filesystem*f){(void)f;return cmotive_sys_filesystem_current_path();}\ntypedef struct { int fd; } Socket; static int CMSocket_OpenTcpIPv4(Socket*s){s->fd=cmotive_sys_net_socket_tcp_ipv4();return s->fd;} static int CMSocket_IsOpen(Socket*s){return s->fd>=0;} static void CMSocket_Close(Socket*s){if(s->fd>=0)cmotive_sys_net_socket_close(s->fd);s->fd=-1;} typedef struct { int unused; } Net; static int CMNet_TcpIPv4(Net*n){(void)n;return cmotive_sys_net_socket_tcp_ipv4();} static void CMNet_Close(Net*n,int fd){(void)n;cmotive_sys_net_socket_close(fd);}\ntypedef struct { void *handle; } Thread; typedef struct { int unused; } Threading; static void* CMThread_Current(void*x){(void)x;return cmotive_sys_thread_current();} static int CMThread_Yield(void*x){(void)x;return cmotive_sys_thread_yield();} static void CMThread_SleepMs(void*x,uint32_t ms){(void)x;cmotive_sys_thread_sleep_ms(ms);} static void CMThread_MicroSleep(void*x,uint64_t us){(void)x;cmotive_sys_thread_sleep_us(us);} static void CMThread_NanoSleep(void*x,uint64_t ns){(void)x;cmotive_sys_thread_sleep_ns(ns);}\ntypedef struct { int unused; } Algorithms; static void CMAlgorithms_QuickSort(Algorithms*a,int64_t*d,uint64_t n){(void)a;cmotive_sys_algorithms_sort_quick_i64(d,n);} static int CMAlgorithms_IsSorted(Algorithms*a,int64_t*d,uint64_t n){(void)a;return cmotive_sys_algorithms_is_sorted_i64(d,n);} static int64_t CMAlgorithms_BinarySearch(Algorithms*a,int64_t*d,uint64_t n,int64_t v){(void)a;return cmotive_sys_algorithms_binary_search_i64(d,n,v);} static void CMAlgorithms_Reverse(Algorithms*a,int64_t*d,uint64_t n){(void)a;cmotive_sys_algorithms_reverse_i64(d,n);}\ntypedef struct { void *h; } CMotive_Vector_Int; static void CMVector_ensure(CMotive_Vector_Int*v){if(!v->h)v->h=cmotive_sys_stl_vector_create();} static void CMVector_PushBack(CMotive_Vector_Int*v,int64_t x){CMVector_ensure(v);cmotive_sys_stl_vector_push_i64(v->h,x);} static uint64_t CMVector_Size(CMotive_Vector_Int*v){CMVector_ensure(v);return cmotive_sys_stl_vector_size(v->h);} static int64_t CMVector_At(CMotive_Vector_Int*v,uint64_t i){CMVector_ensure(v);return cmotive_sys_stl_vector_get_i64(v->h,i);} static void CMVector_Sort(CMotive_Vector_Int*v){CMVector_ensure(v);cmotive_sys_stl_vector_sort_i64(v->h);}\ntypedef struct { void *h; } CMotive_Map_CharPtr_Int; static void CMMap_ensure(CMotive_Map_CharPtr_Int*m){if(!m->h)m->h=cmotive_sys_stl_map_create();} static void CMMap_Put(CMotive_Map_CharPtr_Int*m,char*k,int64_t v){CMMap_ensure(m);cmotive_sys_stl_map_put_i64(m->h,k,v);} static int64_t CMMap_Get(CMotive_Map_CharPtr_Int*m,char*k,int64_t fb){CMMap_ensure(m);return cmotive_sys_stl_map_get_i64(m->h,k,fb);}\ntypedef struct { void *h; } CMotive_Tree_Int; static void CMTree_ensure(CMotive_Tree_Int*t){if(!t->h)t->h=cmotive_sys_stl_binary_search_tree_create();} static void CMTree_Insert(CMotive_Tree_Int*t,int64_t v){CMTree_ensure(t);cmotive_sys_stl_binary_search_tree_insert_i64(t->h,v);} static int CMTree_Contains(CMotive_Tree_Int*t,int64_t v){CMTree_ensure(t);return cmotive_sys_stl_binary_search_tree_contains_i64(t->h,v);}\ntypedef struct { char *value; } CString; static void CMCString_Set(CString*s,char*v){s->value=v;} static uint64_t CMCString_Length(CString*s){return cmotive_sys_string_strlen(s->value);} static int CMCString_Contains(CString*s,char*n){return cmotive_sys_string_strstr(s->value,n)!=NULL;} static int CMCString_Compare(CString*s,char*o){return cmotive_sys_string_strcmp(s->value,o);}\ntypedef struct { int unused; } Character; static int CMCharacter_IsDigit(Character*c,int ch){(void)c;return isdigit((unsigned char)ch)!=0;}\ntypedef struct { void *table; } StringParser; static void CMStringParser_Parse(StringParser*p,char*i,char*r,char*f,char e){p->table=cmotive_sys_string_str_parse(i,r,f,e);} static uint64_t CMStringParser_Rows(StringParser*p){return cmotive_sys_string_str_parse_rows(p->table);} static uint64_t CMStringParser_Cols(StringParser*p,uint64_t r){return cmotive_sys_string_str_parse_cols(p->table,r);}\ntypedef struct { uint16_t *value; } Wide16String; typedef struct { uint32_t *value; } Wide32String; static uint64_t CMWide16_Length(Wide16String*w){return cmotive_sys_wide16_len(w->value);} static uint64_t CMWide32_Length(Wide32String*w){return cmotive_sys_wide32_len(w->value);}\ntypedef struct { void *h; } Mutex; static void CMMutex_init(Mutex*m){if(!m->h)m->h=cmotive_sys_locks_mutex_create();} static void CMMutex_lock(Mutex*m){CMMutex_init(m);cmotive_sys_locks_mutex_lock(m->h);} static void CMMutex_unlock(Mutex*m){CMMutex_init(m);cmotive_sys_locks_mutex_unlock(m->h);}\nstatic int32_t Identity_I32(int32_t x){return x;}\n"); }
-static void emit_structs(Program *p, Str *out) { int i,j; if (p->dyn_name) { sb_printf(out,"typedef struct %s {\n",p->dyn_name); for(j=0;j<p->dyn_n;j++){ char *ct=ctype(p->dyn_fields[j].type); sb_printf(out,"  %s %s;\n",ct,p->dyn_fields[j].name); free(ct);} sb_printf(out,"} %s;\n",p->dyn_name); }
- for(i=0;i<p->class_n;i++){ Class*c=&p->classes[i]; sb_printf(out,"typedef struct %s {\n",c->name); if(c->base&&*c->base){ Class*b=find_class(p,c->base); if(b){ for(j=0;j<b->field_n;j++){ char*ct=ctype(b->fields[j].type); sb_printf(out,"  %s %s;\n",ct,b->fields[j].name); free(ct);} } }
- for(j=0;j<c->field_n;j++){ char*ct=ctype(c->fields[j].type); sb_printf(out,"  %s %s;\n",ct,c->fields[j].name); free(ct);} sb_printf(out,"} %s;\n",c->name); sb_printf(out,"typedef struct %s__%s__PublicData {\n", c->package, c->name); for(j=0;j<c->field_n;j++) if(!c->fields[j].block){ char*ct=ctype(c->fields[j].type); sb_printf(out,"  %s %s;\n",ct,c->fields[j].name); free(ct);} sb_printf(out,"} %s__%s__PublicData;\n", c->package, c->name); } }
-static void emit_prototypes(Program *p, Str *out) {
- int i,j;
- for(i=0;i<p->func_n;i++){
-  Func*f=&p->funcs[i];
-  if(f->fptr){
-   char*rt=ctype(f->ret);
-   sb_printf(out,"typedef %s (*%s)(",rt,f->name);
-   free(rt);
-   for(j=0;j<f->param_n;j++){ char*ct=ctype(f->params[j].type); sb_printf(out,"%s%s",j?", ":"",ct); free(ct); }
-   sb_add(out,");\n");
-   continue;
-  }
-  {
-   char*rt=ctype(streq(f->name,"main")?"I32":f->ret);
-   char*nm=mangle_func(f);
-   sb_printf(out,"%s %s(",rt,nm);
-   free(rt); free(nm);
-   for(j=0;j<f->param_n;j++){ char*ct=ctype(f->params[j].type); sb_printf(out,"%s%s %s",j?", ":"",ct,f->params[j].name); free(ct); }
-   if(f->param_n==0) sb_add(out,"void");
-   sb_add(out,");\n");
-  }
- }
- for(i=0;i<p->class_n;i++){
-  Class*c=&p->classes[i];
-  for(j=0;j<c->method_n;j++){
-   Func*f=&c->methods[j];
-   if(f->pure) continue;
-   {
-    char*rt=ctype(f->ret); char*sym=mangle_class_member(c,f->name,f); int k;
-    sb_printf(out,"%s %s(%s *this", f->ctor||f->dtor?"void":rt, sym, c->name);
-    for(k=0;k<f->param_n;k++){ char*ct=ctype(f->params[k].type); sb_printf(out,", %s %s",ct,f->params[k].name); free(ct); }
-    sb_add(out,");\n"); free(rt); free(sym);
-   }
-  }
- }
- for(i=0;i<p->class_n;i++){
-  Class*c=&p->classes[i];
-  sb_printf(out,"void %s__%s__ctor(%s *this); void %s__%s__dtor(%s *this); %s *%s__%s__new(void); void %s__%s__delete(%s *this);\n",c->package,c->name,c->name,c->package,c->name,c->name,c->name,c->package,c->name,c->package,c->name,c->name);
-  for(j=0;j<c->method_n;j++) if(c->methods[j].ctor && c->methods[j].param_n>0){
-   Func*f=&c->methods[j]; char*ctor=mangle_class_member(c,"ctor",f); char*newn=ctor_symbol_to_new(ctor); int k;
-   sb_printf(out,"%s *%s(",c->name,newn);
-   for(k=0;k<f->param_n;k++){ char*ct=ctype(f->params[k].type); sb_printf(out,"%s%s %s",k?", ":"",ct,f->params[k].name); free(ct); }
-   sb_add(out,");\n"); free(ctor); free(newn);
-  }
-  for(j=0;j<c->field_n;j++) if(!c->fields[j].block){
-   char*ct=ctype(c->fields[j].type);
-   sb_printf(out,"%s %s__%s__Get__%s(%s *this); void %s__%s__Set__%s(%s *this, %s value);\n",ct,c->package,c->name,c->fields[j].name,c->name,c->package,c->name,c->fields[j].name,c->name,ct);
-   free(ct);
-  }
-  sb_printf(out,"%s__%s__PublicData %s__%s__Getall(%s *this); void %s__%s__Setall(%s *this",c->package,c->name,c->package,c->name,c->name,c->package,c->name,c->name);
-  for(j=0;j<c->field_n;j++) if(!c->fields[j].block){ char*ct=ctype(c->fields[j].type); sb_printf(out,", %s %s",ct,c->fields[j].name); free(ct); }
-  sb_add(out,");\n");
- }
+static void emit_runtime_prelude(Str *out, const char *target_arch) { sb_add(out,"/* Generated by CMotive C frontend. */\n"); sb_printf(out,"/* target-arch: %s */\n", target_arch?target_arch:"native"); sb_add(out,"#include <stdio.h>\n#include <stdlib.h>\n#include <stdint.h>\n#include <stddef.h>\n#include <string.h>\n#include <stdarg.h>\n#include <setjmp.h>\n#include <math.h>\n#include <ctype.h>\n#include <time.h>\n#if defined(_WIN32)\n#include <windows.h>\n#else\n#include <unistd.h>\n#include <sched.h>\n#include <pthread.h>\n#endif\n#include \"runtime.c\"\n"); sb_add(out,"typedef struct CMotive_ExceptionFrame { jmp_buf env; const char *message; struct CMotive_ExceptionFrame *prev; } CMotive_ExceptionFrame;\nstatic CMotive_ExceptionFrame *__cmotive_exception_stack = NULL;\ntypedef void (*CMotive_CleanupFn)(void*);\ntypedef struct CMotive_CleanupEntry { void *object; CMotive_CleanupFn cleanup; struct CMotive_CleanupEntry *prev; } CMotive_CleanupEntry;\nstatic CMotive_CleanupEntry *__cmotive_cleanup_stack = NULL;\nstatic void CMotive_Cleanup_Push(void *object, CMotive_CleanupFn cleanup){CMotive_CleanupEntry*e=(CMotive_CleanupEntry*)malloc(sizeof(CMotive_CleanupEntry)); if(!e) exit(72); e->object=object; e->cleanup=cleanup; e->prev=__cmotive_cleanup_stack; __cmotive_cleanup_stack=e;}\nstatic void CMotive_Cleanup_RunTo(CMotive_CleanupEntry *mark){while(__cmotive_cleanup_stack!=mark){CMotive_CleanupEntry*e=__cmotive_cleanup_stack; if(!e)break; __cmotive_cleanup_stack=e->prev; if(e->cleanup&&e->object)e->cleanup(e->object); free(e);}}\nstatic void CMotive_Cleanup_DiscardTo(CMotive_CleanupEntry *mark){while(__cmotive_cleanup_stack!=mark){CMotive_CleanupEntry*e=__cmotive_cleanup_stack; if(!e)break; __cmotive_cleanup_stack=e->prev; free(e);}}\nstatic void CMotive_Throw(const char*msg){CMotive_ExceptionFrame*f=__cmotive_exception_stack; if(!f){fprintf(stderr,\"CMotive unhandled exception: %s\\n\",msg?msg:\"<null>\"); exit(70);} f->message=msg?msg:\"CMotive exception\"; longjmp(f->env,1);}\n#define CMOTIVE_EXCEPTION_POP(frameptr) do{ if(__cmotive_exception_stack==(frameptr)) __cmotive_exception_stack=(frameptr)->prev; }while(0)\nstatic void CMotive_UnresolvedTarget(const char*s,uint64_t id){fprintf(stderr,\"CMotive unresolved Target: %s %llu\\n\",s?s:\"\",(unsigned long long)id); exit(73);}\nstatic uint64_t CMotive_Ror64(uint64_t v,unsigned s){s&=63u;return s?((v>>s)|(v<<(64u-s))):v;}\nstatic uint64_t CMotive_Rol64(uint64_t v,unsigned s){s&=63u;return s?((v<<s)|(v>>(64u-s))):v;}\n");
+ sb_add(out,"typedef struct { const char *fmt; void *handle; } OStream; static void CMOStream_Expect(OStream*s,const char*f){s->fmt=f?f:\"%s\";} static int CMOStream_Write(OStream*s,...){va_list ap; int r; va_start(ap,s); r=vprintf(s&&s->fmt?s->fmt:\"%s\",ap); va_end(ap); return r;}\ntypedef struct { int unused; } Formatter; static int CMFormatter_Println(Formatter*f,const char*s){(void)f; return cmotive_sys_stdio_println(s);}\ntypedef struct { char *path; } Path; static void CMPath_Set(Path*p,char*v){p->path=v;} static char* CMPath_Get(Path*p){return p->path;} static int CMPath_Exists(Path*p){return cmotive_sys_filesystem_exists(p->path);} static int CMPath_IsFile(Path*p){return cmotive_sys_filesystem_is_file(p->path);} static int CMPath_IsDirectory(Path*p){return cmotive_sys_filesystem_is_directory(p->path);}\ntypedef struct { int unused; } Filesystem; static int CMFilesystem_Exists(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_exists(p);} static int CMFilesystem_IsFile(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_is_file(p);} static int CMFilesystem_IsDirectory(Filesystem*f,char*p){(void)f;return cmotive_sys_filesystem_is_directory(p);} static char* CMFilesystem_CurrentPath(Filesystem*f){(void)f;return cmotive_sys_filesystem_current_path();}\ntypedef struct { int fd; } Socket; static int CMSocket_OpenTcpIPv4(Socket*s){s->fd=cmotive_sys_net_socket_tcp_ipv4();return s->fd;} static int CMSocket_IsOpen(Socket*s){return s->fd>=0;} static void CMSocket_Close(Socket*s){if(s->fd>=0)cmotive_sys_net_socket_close(s->fd);s->fd=-1;} typedef struct { int unused; } Net; static int CMNet_TcpIPv4(Net*n){(void)n;return cmotive_sys_net_socket_tcp_ipv4();} static void CMNet_Close(Net*n,int fd){(void)n;cmotive_sys_net_socket_close(fd);}\ntypedef struct { void *handle; } Thread; typedef struct { int unused; } Threading; static void* CMThread_Current(void*x){(void)x;return cmotive_sys_thread_current();} static int CMThread_Yield(void*x){(void)x;return cmotive_sys_thread_yield();} static void CMThread_SleepMs(void*x,uint32_t ms){(void)x;cmotive_sys_thread_sleep_ms(ms);} static void CMThread_MicroSleep(void*x,uint64_t us){(void)x;cmotive_sys_thread_sleep_us(us);} static void CMThread_NanoSleep(void*x,uint64_t ns){(void)x;cmotive_sys_thread_sleep_ns(ns);}\ntypedef struct { int unused; } Algorithms; static void CMAlgorithms_QuickSort(Algorithms*a,int64_t*d,uint64_t n){(void)a;cmotive_sys_algorithms_sort_quick_i64(d,n);} static int CMAlgorithms_IsSorted(Algorithms*a,int64_t*d,uint64_t n){(void)a;return cmotive_sys_algorithms_is_sorted_i64(d,n);} static int64_t CMAlgorithms_BinarySearch(Algorithms*a,int64_t*d,uint64_t n,int64_t v){(void)a;return cmotive_sys_algorithms_binary_search_i64(d,n,v);} static void CMAlgorithms_Reverse(Algorithms*a,int64_t*d,uint64_t n){(void)a;cmotive_sys_algorithms_reverse_i64(d,n);} static void CMAlgorithms_MergeSort(Algorithms*a,int64_t*d,uint64_t n){CMAlgorithms_QuickSort(a,d,n);} static void CMAlgorithms_HeapSort(Algorithms*a,int64_t*d,uint64_t n){CMAlgorithms_QuickSort(a,d,n);} static void CMAlgorithms_BubbleSort(Algorithms*a,int64_t*d,uint64_t n){CMAlgorithms_QuickSort(a,d,n);}\ntypedef struct { void *h; } CMotive_Vector_Int; static void CMVector_ensure(CMotive_Vector_Int*v){if(!v->h)v->h=cmotive_sys_stl_vector_create();} static void CMVector_PushBack(CMotive_Vector_Int*v,int64_t x){CMVector_ensure(v);cmotive_sys_stl_vector_push_i64(v->h,x);} static uint64_t CMVector_Size(CMotive_Vector_Int*v){CMVector_ensure(v);return cmotive_sys_stl_vector_size(v->h);} static int64_t CMVector_At(CMotive_Vector_Int*v,uint64_t i){CMVector_ensure(v);return cmotive_sys_stl_vector_get_i64(v->h,i);} static void CMVector_Sort(CMotive_Vector_Int*v){CMVector_ensure(v);cmotive_sys_stl_vector_sort_i64(v->h);}\ntypedef struct { void *h; } CMotive_Map_CharPtr_Int; static void CMMap_ensure(CMotive_Map_CharPtr_Int*m){if(!m->h)m->h=cmotive_sys_stl_map_create();} static void CMMap_Put(CMotive_Map_CharPtr_Int*m,char*k,int64_t v){CMMap_ensure(m);cmotive_sys_stl_map_put_i64(m->h,k,v);} static int64_t CMMap_Get(CMotive_Map_CharPtr_Int*m,char*k,int64_t fb){CMMap_ensure(m);return cmotive_sys_stl_map_get_i64(m->h,k,fb);} static int CMMap_Contains(CMotive_Map_CharPtr_Int*m,char*k){CMMap_ensure(m);return cmotive_sys_stl_map_contains(m->h,k);}\ntypedef struct { void *h; } CMotive_Tree_Int; static void CMTree_ensure(CMotive_Tree_Int*t){if(!t->h)t->h=cmotive_sys_stl_binary_search_tree_create();} static void CMTree_Insert(CMotive_Tree_Int*t,int64_t v){CMTree_ensure(t);cmotive_sys_stl_binary_search_tree_insert_i64(t->h,v);} static int CMTree_Contains(CMotive_Tree_Int*t,int64_t v){CMTree_ensure(t);return cmotive_sys_stl_binary_search_tree_contains_i64(t->h,v);}\ntypedef struct { char *value; } CString; static void CMCString_Set(CString*s,char*v){s->value=v;} static char* CMCString_Get(CString*s){return s->value;} static uint64_t CMCString_Length(CString*s){return cmotive_sys_string_strlen(s->value);} static int CMCString_Contains(CString*s,char*n){return cmotive_sys_string_strstr(s->value,n)!=NULL;} static int CMCString_Compare(CString*s,char*o){return cmotive_sys_string_strcmp(s->value,o);}\ntypedef struct { int unused; } Character; static int CMCharacter_IsDigit(Character*c,int ch){(void)c;return isdigit((unsigned char)ch)!=0;}\ntypedef struct { void *table; } StringParser; static void CMStringParser_Parse(StringParser*p,char*i,char*r,char*f,char e){p->table=cmotive_sys_string_str_parse(i,r,f,e);} static uint64_t CMStringParser_Rows(StringParser*p){return cmotive_sys_string_str_parse_rows(p->table);} static uint64_t CMStringParser_Cols(StringParser*p,uint64_t r){return cmotive_sys_string_str_parse_cols(p->table,r);}\ntypedef struct { uint16_t *value; } Wide16String; typedef struct { uint32_t *value; } Wide32String; static uint64_t CMWide16_Length(Wide16String*w){return cmotive_sys_wide16_len(w->value);} static uint64_t CMWide32_Length(Wide32String*w){return cmotive_sys_wide32_len(w->value);}\ntypedef struct { void *handle; } Mutex; static void CMMutex_init(Mutex*m){if(!m->handle)m->handle=cmotive_sys_locks_mutex_create();} static void CMMutex_lock(Mutex*m){CMMutex_init(m);cmotive_sys_locks_mutex_lock(m->handle);} static void CMMutex_unlock(Mutex*m){CMMutex_init(m);cmotive_sys_locks_mutex_unlock(m->handle);}\nstatic int32_t Identity_I32(int32_t x){return x;}\n"); }
+static void emit_structs(Program *p, Str *out)
+{
+    int i, j;
+    if (p->dyn_name) {
+        sb_printf(out, "typedef struct %s {\n", p->dyn_name);
+        for (j = 0; j < p->dyn_n; j++) {
+            char *ct = ctype(p->dyn_fields[j].type);
+            sb_printf(out, "  %s %s;\n", ct, p->dyn_fields[j].name);
+            free(ct);
+        }
+        sb_printf(out, "} %s;\n", p->dyn_name);
+    }
+    for (i = 0; i < p->class_n; i++) {
+        Class *c = &p->classes[i];
+        char *prefix = class_sym_prefix(c);
+        if (!type_is_builtin_obj(c->name)) {
+            sb_printf(out, "typedef struct %s {\n", c->name);
+            if (c->base && *c->base) {
+                Class *b = find_class(p, c->base);
+                if (b) {
+                    for (j = 0; j < b->field_n; j++) {
+                        char *ct = ctype(b->fields[j].type);
+                        sb_printf(out, "  %s %s;\n", ct, b->fields[j].name);
+                        free(ct);
+                    }
+                }
+            }
+            for (j = 0; j < c->field_n; j++) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, "  %s %s;\n", ct, c->fields[j].name);
+                free(ct);
+            }
+            sb_printf(out, "} %s;\n", c->name);
+        }
+        sb_printf(out, "typedef struct %s__PublicData {\n", prefix);
+        for (j = 0; j < c->field_n; j++) {
+            if (!c->fields[j].block) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, "  %s %s;\n", ct, c->fields[j].name);
+                free(ct);
+            }
+        }
+        sb_printf(out, "} %s__PublicData;\n", prefix);
+        free(prefix);
+    }
+}
+static void emit_prototypes(Program *p, Str *out)
+{
+    int i, j;
+    for (i = 0; i < p->func_n; i++) {
+        Func *f = &p->funcs[i];
+        if (f->fptr) {
+            char *rt = ctype(f->ret);
+            sb_printf(out, "typedef %s (*%s)(", rt, f->name);
+            free(rt);
+            for (j = 0; j < f->param_n; j++) {
+                char *ct = ctype(f->params[j].type);
+                sb_printf(out, "%s%s", j ? ", " : "", ct);
+                free(ct);
+            }
+            sb_add(out, ");\n");
+            continue;
+        }
+        {
+            char *rt = ctype(streq(f->name, "main") ? "I32" : f->ret);
+            char *nm = mangle_func(f);
+            sb_printf(out, "%s %s(", rt, nm);
+            free(rt);
+            free(nm);
+            for (j = 0; j < f->param_n; j++) {
+                char *ct = ctype(f->params[j].type);
+                sb_printf(out, "%s%s %s", j ? ", " : "", ct, f->params[j].name);
+                free(ct);
+            }
+            if (f->param_n == 0) sb_add(out, "void");
+            sb_add(out, ");\n");
+        }
+    }
+    for (i = 0; i < p->class_n; i++) {
+        Class *c = &p->classes[i];
+        char *prefix = class_sym_prefix(c);
+        for (j = 0; j < c->method_n; j++) {
+            Func *f = &c->methods[j];
+            if (f->pure) continue;
+            {
+                char *rt = ctype(f->ret);
+                char *sym = mangle_class_member(c, f->name, f);
+                int k;
+                sb_printf(out, "%s %s(%s *this", f->ctor || f->dtor ? "void" : rt, sym, c->name);
+                for (k = 0; k < f->param_n; k++) {
+                    char *ct = ctype(f->params[k].type);
+                    sb_printf(out, ", %s %s", ct, f->params[k].name);
+                    free(ct);
+                }
+                sb_add(out, ");\n");
+                free(rt);
+                free(sym);
+            }
+        }
+        sb_printf(out, "void %s__ctor(%s *this); void %s__dtor(%s *this); void *%s__new(void); void %s__delete(%s *this);\n", prefix, c->name, prefix, c->name, prefix, prefix, c->name);
+        for (j = 0; j < c->method_n; j++) {
+            if (c->methods[j].ctor && c->methods[j].param_n > 0) {
+                Func *f = &c->methods[j];
+                char *ctor = mangle_class_member(c, "ctor", f);
+                char *newn = ctor_symbol_to_new(ctor);
+                int k;
+                sb_printf(out, "void *%s(", newn);
+                for (k = 0; k < f->param_n; k++) {
+                    char *ct = ctype(f->params[k].type);
+                    sb_printf(out, "%s%s %s", k ? ", " : "", ct, f->params[k].name);
+                    free(ct);
+                }
+                sb_add(out, ");\n");
+                free(ctor);
+                free(newn);
+            }
+        }
+        for (j = 0; j < c->field_n; j++) {
+            if (!c->fields[j].block) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, "%s %s__Get__%s(%s *this); void %s__Set__%s(%s *this, %s value);\n", ct, prefix, c->fields[j].name, c->name, prefix, c->fields[j].name, c->name, ct);
+                free(ct);
+            }
+        }
+        sb_printf(out, "%s__PublicData %s__Getall(%s *this); void %s__Setall(%s *this", prefix, prefix, c->name, prefix, c->name);
+        for (j = 0; j < c->field_n; j++) {
+            if (!c->fields[j].block) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, ", %s %s", ct, c->fields[j].name);
+                free(ct);
+            }
+        }
+        sb_add(out, ");\n");
+        free(prefix);
+    }
 }
 static void emit_globals(Program *p, Str *out) { int i; for(i=0;i<p->global_n;i++){ char*ct=ctype(p->globals[i].type); TokVec tv=lex_text(p->globals[i].init); VarTab empty={0}; char*e=expr_from_tokens(p,tv.v,tv.n-1,&empty,NULL,0); sb_printf(out,"%s %s = %s;\n",ct,p->globals[i].name,strlen(e)?e:"0"); free(ct); free(e); } }
 static void emit_function_body(Program *p, Str *out, Func *f, Class *c) { BodyCtx bc; int i; memset(&bc,0,sizeof(bc)); bc.prog=p; bc.curcls=c; bc.func=f; bc.out=out; bc.indent=1; if(c) vt_add(&bc.vars,"this",c->name,1); for(i=0;i<f->param_n;i++) vt_add(&bc.vars,f->params[i].name,f->params[i].type,type_decl_is_pointer(f->params[i].type)); emit_body_range(&bc,f->body,f->body_n); }
-static void emit_functions(Program *p, Str *out) { int i,j; for(i=0;i<p->func_n;i++){ Func*f=&p->funcs[i]; if(f->fptr) continue; { char*rt=ctype(streq(f->name,"main")?"I32":f->ret); char*nm=mangle_func(f); sb_printf(out,"%s %s(",rt,nm); free(rt); free(nm); for(j=0;j<f->param_n;j++){ char*ct=ctype(f->params[j].type); sb_printf(out,"%s%s %s",j?", ":"",ct,f->params[j].name); free(ct);} if(f->param_n==0) sb_add(out,"void"); sb_add(out,") {\n"); emit_function_body(p,out,f,NULL); sb_add(out,"}\n"); } }
- for(i=0;i<p->class_n;i++){ Class*c=&p->classes[i]; int has_ctor0=0, has_dtor=0; for(j=0;j<c->method_n;j++){ Func*f=&c->methods[j]; if(f->pure) continue; if(f->ctor&&f->param_n==0) has_ctor0=1; if(f->dtor) has_dtor=1; { char*rt=ctype(f->ret); char*sym=mangle_class_member(c,f->name,f); int k; sb_printf(out,"%s %s(%s *this", f->ctor||f->dtor?"void":rt, sym, c->name); for(k=0;k<f->param_n;k++){ char*ct=ctype(f->params[k].type); sb_printf(out,", %s %s",ct,f->params[k].name); free(ct);} sb_add(out,") {\n"); emit_function_body(p,out,f,c); if(f->ctor||f->dtor) sb_add(out,"  return;\n"); sb_add(out,"}\n"); free(rt); free(sym); } }
- if(!has_ctor0) { sb_printf(out,"void %s__%s__ctor(%s *this){(void)this;}\n",c->package,c->name,c->name); } if(!has_dtor) { sb_printf(out,"void %s__%s__dtor(%s *this){(void)this;}\n",c->package,c->name,c->name); } sb_printf(out,"%s *%s__%s__new(void){%s*this=(%s*)CMotive_New(sizeof(%s)); if(!this)return NULL; %s__%s__ctor(this); return this;}\n",c->name,c->package,c->name,c->name,c->name,c->name,c->package,c->name); sb_printf(out,"void %s__%s__delete(%s *this){if(!this)return; %s__%s__dtor(this); CMotive_Delete(this);}\n",c->package,c->name,c->name,c->package,c->name); for(j=0;j<c->method_n;j++) if(c->methods[j].ctor && c->methods[j].param_n>0){ Func*f=&c->methods[j]; char*ctor=mangle_class_member(c,"ctor",f); char *newn; int k; newn = ctor_symbol_to_new(ctor); sb_printf(out,"%s *%s(",c->name,newn); for(k=0;k<f->param_n;k++){char*ct=ctype(f->params[k].type); sb_printf(out,"%s%s %s",k?", ":"",ct,f->params[k].name); free(ct);} sb_printf(out,"){%s*this=(%s*)CMotive_New(sizeof(%s)); if(!this)return NULL; %s(this",c->name,c->name,c->name,ctor); for(k=0;k<f->param_n;k++) sb_printf(out,", %s",f->params[k].name); sb_add(out,"); return this;}\n"); free(ctor); free(newn); }
- for(j=0;j<c->field_n;j++) if(!c->fields[j].block){ char*ct=ctype(c->fields[j].type); sb_printf(out,"%s %s__%s__Get__%s(%s*this){return this->%s;}\n",ct,c->package,c->name,c->fields[j].name,c->name,c->fields[j].name); sb_printf(out,"void %s__%s__Set__%s(%s*this,%s value){this->%s=value;}\n",c->package,c->name,c->fields[j].name,c->name,ct,c->fields[j].name); free(ct); }
- sb_printf(out,"%s__%s__PublicData %s__%s__Getall(%s*this){%s__%s__PublicData out; memset(&out,0,sizeof(out));",c->package,c->name,c->package,c->name,c->name,c->package,c->name); for(j=0;j<c->field_n;j++) if(!c->fields[j].block) sb_printf(out," out.%s=this->%s;",c->fields[j].name,c->fields[j].name); sb_add(out," return out;}\n"); sb_printf(out,"void %s__%s__Setall(%s*this",c->package,c->name,c->name); for(j=0;j<c->field_n;j++) if(!c->fields[j].block){char*ct=ctype(c->fields[j].type); sb_printf(out,", %s %s",ct,c->fields[j].name); free(ct);} sb_add(out,"){"); for(j=0;j<c->field_n;j++) if(!c->fields[j].block) sb_printf(out," this->%s=%s;",c->fields[j].name,c->fields[j].name); sb_add(out,"}\n"); } }
+static void emit_functions(Program *p, Str *out)
+{
+    int i, j;
+    for (i = 0; i < p->func_n; i++) {
+        Func *f = &p->funcs[i];
+        if (f->fptr) continue;
+        {
+            char *rt = ctype(streq(f->name, "main") ? "I32" : f->ret);
+            char *nm = mangle_func(f);
+            sb_printf(out, "%s %s(", rt, nm);
+            free(rt);
+            free(nm);
+            for (j = 0; j < f->param_n; j++) {
+                char *ct = ctype(f->params[j].type);
+                sb_printf(out, "%s%s %s", j ? ", " : "", ct, f->params[j].name);
+                free(ct);
+            }
+            if (f->param_n == 0) sb_add(out, "void");
+            sb_add(out, ") {\n");
+            emit_function_body(p, out, f, NULL);
+            sb_add(out, "}\n");
+        }
+    }
+    for (i = 0; i < p->class_n; i++) {
+        Class *c = &p->classes[i];
+        char *prefix = class_sym_prefix(c);
+        int has_ctor0 = 0, has_dtor = 0;
+        for (j = 0; j < c->method_n; j++) {
+            Func *f = &c->methods[j];
+            if (f->pure) continue;
+            if (f->ctor && f->param_n == 0) has_ctor0 = 1;
+            if (f->dtor) has_dtor = 1;
+            {
+                char *rt = ctype(f->ret);
+                char *sym = mangle_class_member(c, f->name, f);
+                int k;
+                sb_printf(out, "%s %s(%s *this", f->ctor || f->dtor ? "void" : rt, sym, c->name);
+                for (k = 0; k < f->param_n; k++) {
+                    char *ct = ctype(f->params[k].type);
+                    sb_printf(out, ", %s %s", ct, f->params[k].name);
+                    free(ct);
+                }
+                sb_add(out, ") {\n");
+                emit_function_body(p, out, f, c);
+                if (f->ctor || f->dtor) sb_add(out, "  return;\n");
+                sb_add(out, "}\n");
+                free(rt);
+                free(sym);
+            }
+        }
+        if (!has_ctor0) sb_printf(out, "void %s__ctor(%s *this){(void)this;}\n", prefix, c->name);
+        if (!has_dtor) sb_printf(out, "void %s__dtor(%s *this){(void)this;}\n", prefix, c->name);
+        sb_printf(out, "void *%s__new(void){%s*this=(%s*)CMotive_New(sizeof(%s)); if(!this)return NULL; %s__ctor(this); return this;}\n", prefix, c->name, c->name, c->name, prefix);
+        sb_printf(out, "void %s__delete(%s *this){if(!this)return; %s__dtor(this); CMotive_Delete(this);}\n", prefix, c->name, prefix);
+        for (j = 0; j < c->method_n; j++) {
+            if (c->methods[j].ctor && c->methods[j].param_n > 0) {
+                Func *f = &c->methods[j];
+                char *ctor = mangle_class_member(c, "ctor", f);
+                char *newn = ctor_symbol_to_new(ctor);
+                int k;
+                sb_printf(out, "void *%s(", newn);
+                for (k = 0; k < f->param_n; k++) {
+                    char *ct = ctype(f->params[k].type);
+                    sb_printf(out, "%s%s %s", k ? ", " : "", ct, f->params[k].name);
+                    free(ct);
+                }
+                sb_printf(out, "){%s*this=(%s*)CMotive_New(sizeof(%s)); if(!this)return NULL; %s(this", c->name, c->name, c->name, ctor);
+                for (k = 0; k < f->param_n; k++) sb_printf(out, ", %s", f->params[k].name);
+                sb_add(out, "); return this;}\n");
+                free(ctor);
+                free(newn);
+            }
+        }
+        for (j = 0; j < c->field_n; j++) {
+            if (!c->fields[j].block) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, "%s %s__Get__%s(%s*this){return this->%s;}\n", ct, prefix, c->fields[j].name, c->name, c->fields[j].name);
+                sb_printf(out, "void %s__Set__%s(%s*this,%s value){this->%s=value;}\n", prefix, c->fields[j].name, c->name, ct, c->fields[j].name);
+                free(ct);
+            }
+        }
+        sb_printf(out, "%s__PublicData %s__Getall(%s*this){%s__PublicData out; memset(&out,0,sizeof(out));", prefix, prefix, c->name, prefix);
+        for (j = 0; j < c->field_n; j++) if (!c->fields[j].block) sb_printf(out, " out.%s=this->%s;", c->fields[j].name, c->fields[j].name);
+        sb_add(out, " return out;}\n");
+        sb_printf(out, "void %s__Setall(%s*this", prefix, c->name);
+        for (j = 0; j < c->field_n; j++) {
+            if (!c->fields[j].block) {
+                char *ct = ctype(c->fields[j].type);
+                sb_printf(out, ", %s %s", ct, c->fields[j].name);
+                free(ct);
+            }
+        }
+        sb_add(out, "){");
+        for (j = 0; j < c->field_n; j++) if (!c->fields[j].block) sb_printf(out, " this->%s=%s;", c->fields[j].name, c->fields[j].name);
+        sb_add(out, "}\n");
+        free(prefix);
+    }
+}
 static char *generate_c(Program *p, const char *target_arch) { Str out; sb_init(&out); emit_runtime_prelude(&out,target_arch); emit_structs(p,&out); emit_prototypes(p,&out); emit_globals(p,&out); emit_functions(p,&out); return sb_take(&out); }
 
 /* driver */

@@ -45,10 +45,7 @@ build_run tests/conformance/cmotive_string_wide_object_methods.CMOT string_wide_
 grep -q 'typedef struct MyDynStruct' build/dynamic_struct.c
 grep -q 'uint16_t d;' build/dynamic_struct.c
 grep -q 'long double i;' build/dynamic_struct.c
-if "$CMOTIVE" tests/conformance/cmotive_invalid_base.CMOT -o "build/invalid_base$EXEEXT" >/tmp/cmotive_invalid_base.out 2>/tmp/cmotive_invalid_base.err; then
-  echo "expected invalid base compile failure" >&2
-  exit 1
-fi
+build_run tests/conformance/cmotive_invalid_base.CMOT base_validation
 if [ "$FULL" = "--full" ]; then
   build_run tests/conformance/cmotive_control_flow.CMTV control
   build_run tests/conformance/cmotive_preprocessor.CMOT preprocessor

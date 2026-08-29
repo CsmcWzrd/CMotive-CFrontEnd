@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX032_SUBTRACTION_OPERATOR");
+    x : I32 = 10 - 5;
+    If ( x != 5 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

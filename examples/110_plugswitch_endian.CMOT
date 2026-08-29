@@ -1,0 +1,19 @@
+Plugin Sys::Stdio
+Plugswitch
+Plugcase ENDIAN:LITTLE
+EndianValue : I32 = 1;
+Plugdefault
+EndianValue : I32 = 2;
+Plugend
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX110_PLUGSWITCH_ENDIAN");
+    If ( EndianValue == 0 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

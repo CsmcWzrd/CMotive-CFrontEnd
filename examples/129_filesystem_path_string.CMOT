@@ -1,0 +1,10 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX129_FILESYSTEM_PATH_STRING");
+    path : Char[64] = Contains {/tmp/cmotive-example};
+    Return 0;
+}

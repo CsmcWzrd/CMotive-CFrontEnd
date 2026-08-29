@@ -1,0 +1,12 @@
+Package Examples::PluginShape;
+Plugin Sys::Stdio
+Plugin Sys::File
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX137_PLUGIN_PACKAGE_SOURCE_SHAPE");
+    value : I32 = 0;
+    Return 0;
+}

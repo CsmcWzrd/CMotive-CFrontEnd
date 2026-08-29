@@ -1,0 +1,14 @@
+Plugin Sys::Stdio
+Plugin Sys::Logging
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX130_LOGGING_ERROR_UNREACHABLE");
+    If ( False )
+    {
+        Sys::Logging::error("not reached");
+    }
+    Return 0;
+}

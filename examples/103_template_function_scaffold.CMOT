@@ -1,0 +1,16 @@
+Plugin Sys::Stdio
+
+Template
+T : Type
+{
+    // template function scaffold body
+};
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX103_TEMPLATE_FUNCTION_SCAFFOLD");
+    value : I32 = 0;
+    Return 0;
+}

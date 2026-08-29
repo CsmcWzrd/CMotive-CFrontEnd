@@ -1,0 +1,17 @@
+Plugin Sys::Stdio
+
+Void
+SayNothing
+()
+{
+    Return;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX073_VOID_FUNCTION_CALL");
+    SayNothing();
+    Return 0;
+}

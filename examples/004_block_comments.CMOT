@@ -1,0 +1,12 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX004_BLOCK_COMMENTS");
+    /* multi-line
+       CMotive comment */
+    value : I32 = 2;
+    Return 0;
+}

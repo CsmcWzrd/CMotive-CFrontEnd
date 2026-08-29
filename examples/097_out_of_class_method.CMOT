@@ -1,0 +1,28 @@
+Plugin Sys::Stdio
+
+Class
+ExternalMethodBox
+{
+    Public
+    {
+        marker : I32 = 0; Block
+    }
+};
+
+$ExternalMethodBox
+I32
+RunExternal
+value : I32
+()
+{
+    Return value;
+}
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX097_OUT_OF_CLASS_METHOD");
+    item : ExternalMethodBox;
+    Return 0;
+}

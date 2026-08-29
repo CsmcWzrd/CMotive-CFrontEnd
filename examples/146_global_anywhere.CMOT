@@ -1,0 +1,13 @@
+Plugin Sys::IO
+
+Global packageCounter: Int32 = 5;
+
+Int32
+main
+()
+{
+    Global insideCounter: Int32 = 6;
+    methodStyle: Global Int32 = 7;
+    cout.expect("CMOTIVE_EX146_GLOBAL_ANYWHERE %d\n").write(packageCounter + insideCounter + methodStyle);
+    Return packageCounter + insideCounter + methodStyle - 18;
+}

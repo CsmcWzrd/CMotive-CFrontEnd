@@ -1,0 +1,15 @@
+Plugin Sys::Stdio
+
+I32
+main
+()
+{
+    cout.expect("%s\n").write("CMOTIVE_EX049_COMPOUND_SUB");
+    x : I32 = 5;
+    x -= 2;
+    If ( x != 3 )
+    {
+        Return 1;
+    }
+    Return 0;
+}

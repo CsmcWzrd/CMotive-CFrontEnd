@@ -1,4 +1,16 @@
 Class
+MissingBase
+{
+    Public
+    {
+        MissingBase
+        ()
+        {
+        }
+    }
+};
+
+Class
 BadChild
 Inherits
 MissingBase Public
@@ -16,5 +28,6 @@ I32
 main
 ()
 {
+    child : BadChild;
     Return 0;
 }

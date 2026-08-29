@@ -1,0 +1,13 @@
+Plugin Sys::Net
+
+I32
+main
+()
+{
+    fd : I32 = Sys::Net::SocketTcpIPv4();
+    If (fd >= 0)
+    {
+        Sys::Net::SocketClose(fd);
+    }
+    Return 0;
+}
